@@ -21,17 +21,21 @@
 
     <div class="container" id="container">
         <div class="form-container sign-in">
-            <form action="#" method="post">
+            <form action="{{ route('authentication') }}" method="post">
                 @csrf
                 <h1>Log in</h1>
-                @error('username')
+                @if ($errors->has('username') || $errors->has('password'))
                     <div style="color: red">
-                        {{ $message }}
+                        @if ($errors->has('username'))
+                            {{ $errors->first('username') }}<br>
+                        @endif
+                        @if ($errors->has('password'))
+                            {{ $errors->first('password') }}
+                        @endif
                     </div>
-                @enderror
-                <input type="username" placeholder="Username" name="username" value="{{ old('username') }}" required>
-                <input type="password" class="form-control @error('password') is-invalid @enderror""
-                    placeholder="Password" name="password" value="{{ old('password') }}" required>
+                @endif
+                <input type="username" placeholder="Username" name="username" value="{{ old('username') }}">
+                <input type="password" placeholder="Password" name="password" value="{{ old('password') }}">
                 <button>Log in</button>
             </form>
         </div>
