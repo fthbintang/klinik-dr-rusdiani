@@ -7,6 +7,8 @@ use App\Http\Controllers\DashboardController;
 Route::get('/', [LoginController::class, 'index'])->name('login');
 Route::post('/sign-in', [LoginController::class, 'authenticate'])->name('authentication');
 
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 });

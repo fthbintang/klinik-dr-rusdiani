@@ -11,6 +11,11 @@
 
 <body>
     <h1>Ini Halaman Dashboard</h1>
+
+    <form action="{{ route('logout') }}" method="POST">
+        @csrf
+        <button type="submit">Logout</button>
+    </form>
 </body>
 
 </html>

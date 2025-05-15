@@ -43,4 +43,18 @@ class LoginController extends Controller
             'username' => 'Username atau password salah.',
         ]);
     }
+
+    public function logout(Request $request): RedirectResponse
+    {
+        Auth::logout(); // Logout pengguna yang sedang aktif
+
+        // Menghapus semua sesi pengguna agar tidak bisa digunakan kembali
+        $request->session()->invalidate();
+
+        // Regenerasi token CSRF untuk keamanan
+        $request->session()->regenerateToken();
+
+        // Redirect ke halaman utama setelah logout
+        return redirect('/');
+    }
 }
