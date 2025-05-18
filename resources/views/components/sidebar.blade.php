@@ -51,6 +51,14 @@
                     </a>
                 </li>
 
+                {{-- PENGGUNA --}}
+                <li class="sidebar-item {{ request()->is('pengguna') ? 'active' : '' }}">
+                    <a href="/pengguna" class="sidebar-link">
+                        <i class="bi bi-person-circle"></i>
+                        <span>Pengguna</span>
+                    </a>
+                </li>
+
             </ul>
         </div>
     </div>
