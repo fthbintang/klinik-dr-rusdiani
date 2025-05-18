@@ -3,7 +3,7 @@
         {{-- <div class="sidebar-header"> --}}
         <div class="d-flex justify-content-between align-items-center pt-4">
             <div class="logo">
-                <img src="./assets/gambar/logo.png" width="80" height="80"
+                <img src="/assets/gambar/logo.png" width="80" height="80"
                     style="border-radius: 10px; margin-left: 50px">
             </div>
             <div class="theme-toggle d-flex gap-1 align-items-center">
@@ -45,15 +45,15 @@
                 <li class="sidebar-title">Menu</li>
                 {{-- DASHBOARD --}}
                 <li class="sidebar-item {{ request()->is('dashboard') ? 'active' : '' }}">
-                    <a href="/dashboard" class="sidebar-link">
+                    <a href="{{ route('index') }}" class="sidebar-link">
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
 
                 {{-- PENGGUNA --}}
-                <li class="sidebar-item {{ request()->is('pengguna') ? 'active' : '' }}">
-                    <a href="/pengguna" class="sidebar-link">
+                <li class="sidebar-item {{ request()->is('dashboard/pengguna') ? 'active' : '' }}">
+                    <a href="{{ route('user.index') }}" class="sidebar-link">
                         <i class="bi bi-person-circle"></i>
                         <span>Pengguna</span>
                     </a>
