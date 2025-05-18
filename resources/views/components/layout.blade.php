@@ -110,6 +110,12 @@
     <script src="assets/extensions/apexcharts/apexcharts.min.js"></script>
     <script src="assets/static/js/pages/dashboard.js"></script>
 
+    {{-- DATA TABLES --}}
+    <script src="/assets/extensions/jquery/jquery.min.js"></script>
+    <script src="/assets/extensions/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/assets/extensions/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="/assets/static/js/pages/datatables.js"></script>
+
 </body>
 
 </html>

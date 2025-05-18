@@ -42,8 +42,9 @@
                             <tr>
                                 <th>No</th>
                                 <th>Nama</th>
-                                <th>No HP</th>
+                                <th>Jenis Kelamin</th>
                                 <th>Role</th>
+                                <th>Foto</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -52,8 +53,9 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $row->nama_lengkap }}</td>
-                                    <td>{{ $row->no_hp ?? '-' }}</td>
+                                    <td>{{ $row->jenis_kelamin }}</td>
                                     <td>{{ $row->role }}</td>
+                                    <td>{{ $row->foto ?? '-' }}</td>
                                     <td>
                                         <a href="#" class="btn icon btn-warning">
                                             <i class="bi bi-pencil"></i>
