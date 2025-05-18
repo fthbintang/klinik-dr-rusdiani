@@ -29,9 +29,7 @@
                         <h5 class="card-title">Data {{ $title }}</h5>
                     </div>
                     <div class="col-sm-4 d-flex justify-content-end">
-                        <button type="button" class="btn icon btn-success">
-                            Tambah Data
-                        </button>
+                        <a href="{{ route('user.create') }}" class="btn icn btn-success">Tambah Data</a>
                     </div>
                 </div>
             </div>

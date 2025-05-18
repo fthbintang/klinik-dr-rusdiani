@@ -52,7 +52,7 @@
                 </li>
 
                 {{-- PENGGUNA --}}
-                <li class="sidebar-item {{ request()->is('dashboard/pengguna') ? 'active' : '' }}">
+                <li class="sidebar-item {{ request()->is('dashboard/pengguna*') ? 'active' : '' }}">
                     <a href="{{ route('user.index') }}" class="sidebar-link">
                         <i class="bi bi-person-circle"></i>
                         <span>Pengguna</span>

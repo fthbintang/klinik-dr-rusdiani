@@ -13,4 +13,5 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     Route::get('/pengguna', [UserController::class, 'index'])->name('user.index');
+    Route::get('/pengguna/tambah', [UserController::class, 'create'])->name('user.create');
 });
