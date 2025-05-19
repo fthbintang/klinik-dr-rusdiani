@@ -9,7 +9,7 @@
                     <nav aria-label="breadcrumb" class="breadcrumb-header d-flex justify-content-end">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a href="/dashboard">Home</a>
+                                <a href="{{ route('index') }}">Home</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">
                                 {{ $title }}
@@ -29,7 +29,7 @@
                         <h5 class="card-title">Data {{ $title }}</h5>
                     </div>
                     <div class="col-sm-4 d-flex justify-content-end">
-                        <a href="{{ route('user.create') }}" class="btn icn btn-success">Tambah Data</a>
+                        <a href="{{ route('user.create') }}" class="btn btn-success">Tambah Data</a>
                     </div>
                 </div>
             </div>
