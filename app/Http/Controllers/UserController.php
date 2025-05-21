@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class UserController extends Controller
@@ -103,10 +104,58 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $User)
+    public function update(Request $request, User $user)
     {
-        //
-    }
+        $validatedData = $request->validate([
+            'nama_lengkap'     => 'required|string|max:255',
+            'nama_panggilan'   => 'required|string|max:255',
+            'jenis_kelamin'    => 'required|in:Laki-laki,Perempuan',
+            'tanggal_lahir'    => 'nullable|date',
+            'no_hp'            => 'nullable|string|max:20',
+            'role'             => 'required|string|max:255',
+            'username'         => 'required|string|max:255|unique:users,username,' . $user->id,
+            'password'         => 'nullable|string|min:6',
+            'foto'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:512',
+        ]);
+    
+        try {
+            // Simpan nama foto lama dulu
+            $fotoLama = $user->foto;
+    
+            // Proses password
+            if (!empty($validatedData['password'])) {
+                $validatedData['password'] = bcrypt($validatedData['password']);
+            } else {
+                unset($validatedData['password']);
+            }
+    
+            // Update user tanpa menyentuh foto dulu
+            $user->update($validatedData);
+    
+            // Jika ada foto baru di-upload
+            if ($request->hasFile('foto')) {
+                $foto = $request->file('foto');
+                $filename = Str::uuid() . '.' . $foto->getClientOriginalExtension();
+                $foto->storeAs('foto', $filename, 'public');
+    
+                // Hapus foto lama jika ada
+                if ($fotoLama && Storage::disk('public')->exists('foto/' . $fotoLama)) {
+                    Storage::disk('public')->delete('foto/' . $fotoLama);
+                }
+    
+                // Simpan nama file baru
+                $user->foto = $filename;
+                $user->save();
+            }
+    
+            Alert::success('Sukses!', 'Data Berhasil Diupdate');
+            return redirect()->route('user.index');
+        } catch (\Exception $e) {
+            Log::error('Gagal update user', ['error' => $e->getMessage()]);
+            Alert::error('Error', 'Terjadi kesalahan saat mengupdate data');
+            return back()->withInput();
+        }
+    }    
 
     /**
      * Remove the specified resource from storage.
