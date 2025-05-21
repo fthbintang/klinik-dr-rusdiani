@@ -22,7 +22,7 @@
                             <div class="user-img d-flex align-items-center">
                                 <div class="avatar avatar-md">
                                     @if (auth()->user()->foto)
-                                        <img src="{{ asset('storage/' . auth()->user()->foto) }}" height="40"
+                                        <img src="{{ asset('storage/foto/' . auth()->user()->foto) }}" height="40"
                                             width="40" alt="">
                                     @else
                                         <div class="default-profile-image"

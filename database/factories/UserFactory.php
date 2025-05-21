@@ -23,18 +23,19 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $gender = $this->faker->randomElement(['Laki-laki', 'Perempuan']);
+        
         return [
-            // 'name' => fake()->name(),
-            // 'email' => fake()->unique()->safeEmail(),
-            // 'email_verified_at' => now(),
-            // 'password' => static::$password ??= Hash::make('password'),
-            // 'remember_token' => Str::random(10),
-
             'nama_lengkap' => $this->faker->name(),
             'nama_panggilan' => $this->faker->firstName(),
-            'role' => 'User',
+            'jenis_kelamin' => $gender,
+            'tanggal_lahir' => $this->faker->date('Y-m-d', '2005-12-31'),
+            'no_hp' => $this->faker->phoneNumber(),
+            'foto' => null,
+            'role' => $this->faker->randomElement(['Dokter', 'Admin', 'Apotek', 'Pasien']),
             'username' => $this->faker->unique()->userName(),
-            'password' => bcrypt('password'),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
         ];
     }
 
