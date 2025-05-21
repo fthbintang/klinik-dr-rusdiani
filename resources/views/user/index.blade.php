@@ -66,7 +66,7 @@
                                     </td>
 
                                     <td>
-                                        <a href="#" class="btn icon btn-warning">
+                                        <a href="{{ route('user.edit', $row->id) }}" class="btn icon btn-warning">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <a href="#" class="btn icon btn-danger">

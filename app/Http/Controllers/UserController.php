@@ -92,9 +92,12 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $User)
+    public function edit(User $user)
     {
-        //
+        return view('user.update', [
+            'title' => 'Update User',
+            'user' => $user
+        ]);
     }
 
     /**
