@@ -17,4 +17,6 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::post('/pengguna/store', [UserController::class, 'store'])->name('user.store');
     Route::get('/pengguna/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
     Route::put('/pengguna/update/{user}', [UserController::class, 'update'])->name('user.update');
+    Route::delete('/pengguna/delete/{user}', [UserController::class, 'destroy'])->name('user.destroy');
+
 });

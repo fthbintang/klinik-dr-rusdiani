@@ -116,12 +116,16 @@
     <script src="assets/extensions/apexcharts/apexcharts.min.js"></script>
     <script src="assets/static/js/pages/dashboard.js"></script>
 
+    {{-- SWEETALERT --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     {{-- DATA TABLES --}}
     <script src="/assets/extensions/jquery/jquery.min.js"></script>
     <script src="/assets/extensions/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="/assets/extensions/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
     <script src="/assets/static/js/pages/datatables.js"></script>
 
+    {{--  DISPLAY FORM UPLOAD IMAGE --}}
     <script src="/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js"></script>
     <script src="/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js"></script>
     <script src="/assets/extensions/filepond-plugin-image-crop/filepond-plugin-image-crop.min.js"></script>

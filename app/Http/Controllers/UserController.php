@@ -160,8 +160,23 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $User)
+    public function destroy(User $user)
     {
-        //
+        try {
+            // Hapus file foto jika ada
+            if ($user->foto && Storage::disk('public')->exists('foto/' . $user->foto)) {
+                Storage::disk('public')->delete('foto/' . $user->foto);
+            }
+    
+            $user->delete();
+    
+            Alert::success('Berhasil', 'Data pengguna berhasil dihapus');
+            return redirect()->route('user.index');
+        } catch (\Exception $e) {
+            Log::error('Gagal hapus user', ['error' => $e->getMessage()]);
+            Alert::error('Gagal', 'Terjadi kesalahan saat menghapus data');
+            return back();
+        }
     }
+    
 }
