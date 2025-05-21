@@ -13,6 +13,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     Route::get('/pengguna', [UserController::class, 'index'])->name('user.index');
+    Route::get('/pengguna/show/{user}', [UserController::class, 'show'])->name('user.show');
     Route::get('/pengguna/create', [UserController::class, 'create'])->name('user.create');
     Route::post('/pengguna/store', [UserController::class, 'store'])->name('user.store');
     Route::get('/pengguna/edit/{user}', [UserController::class, 'edit'])->name('user.edit');
