@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class LoginController extends Controller
 {
@@ -37,6 +38,8 @@ class LoginController extends Controller
             // Redirect ke halaman dashboard jika login berhasil
             return redirect()->intended('dashboard');
         }
+
+        Alert::success('Sukses!', 'Login Berhasil');
 
         // Jika otentikasi gagal, kembali ke halaman login dengan pesan error
         return redirect('/')->withErrors([

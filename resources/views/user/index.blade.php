@@ -53,7 +53,18 @@
                                     <td>{{ $row->nama_lengkap }}</td>
                                     <td>{{ $row->jenis_kelamin }}</td>
                                     <td>{{ $row->role }}</td>
-                                    <td>{{ $row->foto ?? '-' }}</td>
+                                    <td>
+                                        @if ($row->foto)
+                                            <img src="{{ asset('storage/foto/' . $row->foto) }}" alt="Foto"
+                                                class="img-thumbnail rounded previewable-foto"
+                                                style="width: 150px; height: 180px; object-fit: cover; object-position: center; cursor: pointer;"
+                                                data-src-full="{{ asset('storage/foto/' . $row->foto) }}"
+                                                data-bs-toggle="modal" data-bs-target="#fotoModal">
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+
                                     <td>
                                         <a href="#" class="btn icon btn-warning">
                                             <i class="bi bi-pencil"></i>
@@ -70,4 +81,31 @@
             </div>
         </div>
     </section>
+
+    <!-- Modal Preview Gambar -->
+    <div class="modal fade" id="fotoModal" tabindex="-1" aria-labelledby="fotoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <img id="previewFoto" src="" alt="Preview Foto" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const previewableImages = document.querySelectorAll('.previewable-foto');
+            const previewModalImage = document.getElementById('previewFoto');
+
+            previewableImages.forEach(img => {
+                img.addEventListener('click', function() {
+                    const fullSrc = this.getAttribute('data-src-full');
+                    previewModalImage.src = fullSrc;
+                });
+            });
+        });
+    </script>
+
+
 </x-layout>

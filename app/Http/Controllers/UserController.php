@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class UserController extends Controller
 {
@@ -14,7 +17,7 @@ class UserController extends Controller
     {
         return view('user.index', [
             'title' => 'Pengguna',
-            'user' => User::all()
+            'user' => User::latest()->get()
         ]);
     }
 
@@ -30,11 +33,53 @@ class UserController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     */
+     */   
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'nama_lengkap'     => 'required|string|max:255',
+            'nama_panggilan'   => 'required|string|max:255',
+            'jenis_kelamin'    => 'required|in:Laki-laki,Perempuan',
+            'tanggal_lahir'    => 'nullable|date',
+            'no_hp'            => 'nullable|string|max:20',
+            'role'             => 'required|string|max:255',
+            'username'         => 'required|string|max:255|unique:users,username',
+            'password'         => 'required|string|min:6',
+            'foto'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:512',
+        ]);
+    
+        try {
+            // Simpan password dalam bentuk hash
+            $validatedData['password'] = bcrypt($validatedData['password']);
+    
+            // Simpan data user TANPA foto dulu
+            $user = User::create($validatedData);
+    
+            if ($request->hasFile('foto')) {
+                $foto = $request->file('foto');
+            
+                // Buat nama unik untuk file
+                $filename = Str::uuid() . '.' . $foto->getClientOriginalExtension();
+            
+                // Simpan file ke folder 'foto' di storage/public, tapi hanya ambil nama file-nya
+                $foto->storeAs('foto', $filename, 'public');
+            
+                // Simpan nama file-nya saja ke database
+                $user->foto = $filename;
+                $user->save();
+            }
+            
+    
+            Alert::success('Sukses!', 'Data Berhasil Ditambah');
+            return redirect()->route('user.index');
+        } catch (\Exception $e) {
+            Log::error('Gagal menyimpan user baru', ['error' => $e->getMessage()]);
+            Alert::error('Error', 'Terjadi kesalahan saat menyimpan data');
+            return back()->withInput();
+        }
     }
+    
+    
 
     /**
      * Display the specified resource.

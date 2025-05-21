@@ -28,7 +28,7 @@
         </div>
 
         <div class="card-body">
-            <form action="#" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 {{-- Nama Lengkap --}}
@@ -109,10 +109,10 @@
                     <label for="role" class="form-label"><b>Role</b><span class="text-danger">*</span></label>
                     <select name="role" id="role" class="form-select @error('role') is-invalid @enderror">
                         <option value="">-- Pilih Role --</option>
-                        <option value="Admin">Admin</option>
-                        <option value="Dokter">Dokter</option>
-                        <option value="Pasien">Pasien</option>
-                        <option value="Apotek">Apotek</option>
+                        <option value="Admin" {{ old('role') == 'Admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="Dokter" {{ old('role') == 'Dokter' ? 'selected' : '' }}>Dokter</option>
+                        <option value="Pasien" {{ old('role') == 'Pasien' ? 'selected' : '' }}>Pasien</option>
+                        <option value="Apotek" {{ old('role') == 'Apotek' ? 'selected' : '' }}>Apotek</option>
                     </select>
                     @error('role')
                         <div class="invalid-feedback">{{ $message }}</div>
