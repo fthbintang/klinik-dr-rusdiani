@@ -31,6 +31,7 @@ class UserFactory extends Factory
             'jenis_kelamin' => $gender,
             'tanggal_lahir' => $this->faker->date('Y-m-d', '2005-12-31'),
             'no_hp' => $this->faker->phoneNumber(),
+            'alamat' => $this->faker->address(),
             'foto' => null,
             'role' => $this->faker->randomElement(['Dokter', 'Admin', 'Apotek', 'Pasien']),
             'username' => $this->faker->unique()->userName(),
