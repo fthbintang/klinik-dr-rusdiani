@@ -36,9 +36,8 @@
                             <div class="mb-4">
                                 <h3 class="card-title">Data Diri</h3>
                             </div>
-                            {{-- <form action="/dashboard/profile/{{ auth()->user()->id }}" method="post"
-                                enctype="multipart/form-data"> --}}
-                            <form action="#" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('profile.update', auth()->user()->id) }}" method="POST"
+                                enctype="multipart/form-data">
                                 @method('put')
                                 @csrf
                                 <div class="form-group">

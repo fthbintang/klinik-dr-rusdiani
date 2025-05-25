@@ -14,6 +14,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile/update/{user}', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('/pengguna', [UserController::class, 'index'])->name('user.index');
     Route::get('/pengguna/show/{user}', [UserController::class, 'show'])->name('user.show');
