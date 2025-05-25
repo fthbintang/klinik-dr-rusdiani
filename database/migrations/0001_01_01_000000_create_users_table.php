@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('jenis_kelamin');
             $table->date('tanggal_lahir')->nullable();
             $table->string('no_hp')->nullable();
+            $table->text('alamat')->nullable();
             $table->string('foto')->nullable();
             $table->string('role');
             $table->string('username');

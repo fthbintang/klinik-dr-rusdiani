@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             'nama_panggilan' => 'Bintang',
             'jenis_kelamin' => 'Laki-laki',
             'role' => 'Admin',
+            'alamat' => 'Banjarmasin',
             'username' => 'bintang',
             'password' => bcrypt('bintang')
         ]);
