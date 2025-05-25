@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
@@ -11,6 +12,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
+
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 
     Route::get('/pengguna', [UserController::class, 'index'])->name('user.index');
     Route::get('/pengguna/show/{user}', [UserController::class, 'show'])->name('user.show');

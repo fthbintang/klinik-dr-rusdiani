@@ -39,7 +39,7 @@
                             <h6 class="dropdown-header">Hello, {{ Auth()->user()->nama_panggilan }}!</h6>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="/dashboard/profile"><i
+                            <a class="dropdown-item" href="{{ route('profile.index') }}"><i
                                     class="icon-mid bi bi-person me-2"></i> Profile Saya
                             </a>
                         </li>
