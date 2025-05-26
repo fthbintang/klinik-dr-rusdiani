@@ -114,6 +114,7 @@ class UserController extends Controller
             'jenis_kelamin'    => 'required|in:Laki-laki,Perempuan',
             'tanggal_lahir'    => 'nullable|date',
             'no_hp'            => 'nullable|string|max:20',
+            'alamat'           => 'nullable|string|max:255',
             'role'             => 'required|string|max:255',
             'username'         => 'required|string|max:255|unique:users,username,' . $user->id,
             'password'         => 'nullable|string|min:6',

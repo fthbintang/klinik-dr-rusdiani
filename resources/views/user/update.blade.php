@@ -97,6 +97,18 @@
                     @enderror
                 </div>
 
+                {{-- Alamat --}}
+                <div class="form-group">
+                    <label for="alamat">Alamat</label>
+                    <textarea class="form-control @error('alamat') is-invalid @enderror" name="alamat" id="alamat"
+                        placeholder="Alamat...">{{ $user->alamat }}</textarea>
+                    @error('alamat')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+
                 {{-- Foto --}}
                 <div class="form-group mb-3">
                     <label for="foto" class="form-label"><b>Foto</b></label>
