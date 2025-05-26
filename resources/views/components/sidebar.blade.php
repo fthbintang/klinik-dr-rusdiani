@@ -59,6 +59,14 @@
                     </a>
                 </li>
 
+                {{-- JADWAL DOKTER --}}
+                <li class="sidebar-item {{ request()->is('dashboard/jadwal_dokter*') ? 'active' : '' }}">
+                    <a href="{{ route('jadwal_dokter.index') }}" class="sidebar-link">
+                        <i class="bi bi-calendar-check-fill"></i>
+                        <span>Jadwal Dokter</span>
+                    </a>
+                </li>
+
             </ul>
         </div>
     </div>

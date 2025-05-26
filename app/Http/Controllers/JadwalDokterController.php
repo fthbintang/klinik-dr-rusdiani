@@ -13,7 +13,7 @@ class JadwalDokterController extends Controller
     public function index()
     {
         return view('jadwal_dokter.index', [
-            'title' => 'Halaman Jadwal Dokter',
+            'title' => 'Jadwal Dokter',
             'jadwal_dokter' => JadwalDokter::all()
         ]);
     }
