@@ -4,8 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JadwalDokterController;
+use App\Http\Controllers\ObatController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
+use App\Models\Supplier;
 
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
 Route::post('/sign-in', [LoginController::class, 'authenticate'])->name('authentication');
@@ -27,4 +30,8 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     Route::get('/jadwal_dokter', [JadwalDokterController::class, 'index'])->name('jadwal_dokter.index');
     Route::post('/jadwal_dokter/store', [JadwalDokterController::class, 'store'])->name('jadwal_dokter.store');
+
+    Route::get('/obat', [ObatController::class, 'index'])->name('obat.index');
+
+    Route::get('/obat/supplier/index', [SupplierController::class, 'index'])->name('obat.supplier.index');
 });
