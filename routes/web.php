@@ -26,4 +26,5 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::delete('/pengguna/delete/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 
     Route::get('/jadwal_dokter', [JadwalDokterController::class, 'index'])->name('jadwal_dokter.index');
+    Route::post('/jadwal_dokter/store', [JadwalDokterController::class, 'store'])->name('jadwal_dokter.store');
 });

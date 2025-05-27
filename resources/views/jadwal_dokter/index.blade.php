@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form action="#" method="POST">
+                <form action="{{ route('jadwal_dokter.store') }}" method="POST">
                     @csrf
                     <div class="table-responsive">
                         <table class="table">
@@ -50,6 +50,9 @@
                                 @endphp
 
                                 @foreach ($days as $index => $day)
+                                    @php
+                                        $data = $jadwal_dokter[$day] ?? null;
+                                    @endphp
                                     <tr>
                                         <td>
                                             {{ $day }}
@@ -58,19 +61,31 @@
                                         </td>
                                         <td>
                                             <input type="time" name="jadwal[{{ $index }}][jam_mulai]"
-                                                class="form-control" disabled>
+                                                class="form-control @error('jadwal.' . $index . '.jam_mulai') is-invalid @enderror"
+                                                value="{{ old('jadwal.' . $index . '.jam_mulai', $data?->jam_mulai) }}"
+                                                {{ old('jadwal.' . $index . '.aktif', $data ? '1' : null) ? '' : 'disabled' }}>
+                                            @error('jadwal.' . $index . '.jam_mulai')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </td>
                                         <td>
                                             <input type="time" name="jadwal[{{ $index }}][jam_selesai]"
-                                                class="form-control" disabled>
+                                                class="form-control @error('jadwal.' . $index . '.jam_selesai') is-invalid @enderror"
+                                                value="{{ old('jadwal.' . $index . '.jam_selesai', $data?->jam_selesai) }}"
+                                                {{ old('jadwal.' . $index . '.aktif', $data ? '1' : null) ? '' : 'disabled' }}>
+                                            @error('jadwal.' . $index . '.jam_selesai')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </td>
                                         <td>
                                             <input type="checkbox" name="jadwal[{{ $index }}][aktif]"
-                                                value="1" onchange="toggleInputs(this)">
+                                                value="1" onchange="toggleInputs(this)"
+                                                {{ old('jadwal.' . $index . '.aktif', $data ? '1' : null) ? 'checked' : '' }}>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
+
                         </table>
                     </div>
                     <div class="text-end mt-3">
@@ -87,5 +102,13 @@
             const inputs = row.querySelectorAll('input[type="time"]');
             inputs.forEach(input => input.disabled = !checkbox.checked);
         }
+
+        // Saat reload halaman, aktifkan input time yang checkbox-nya tercentang
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll("input[type=checkbox]").forEach(checkbox => {
+                toggleInputs(checkbox);
+            });
+        });
     </script>
+
 </x-layout>
