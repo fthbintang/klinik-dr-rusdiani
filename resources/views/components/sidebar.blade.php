@@ -67,6 +67,14 @@
                     </a>
                 </li>
 
+                {{-- OBAT --}}
+                <li class="sidebar-item {{ request()->is('dashboard/obat*') ? 'active' : '' }}">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-capsule"></i>
+                        <span>Obat</span>
+                    </a>
+                </li>
+
             </ul>
         </div>
     </div>
