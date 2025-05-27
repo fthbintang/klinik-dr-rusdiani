@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 
@@ -24,4 +25,6 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::put('/pengguna/update/{user}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/pengguna/delete/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 
+    Route::get('/jadwal_dokter', [JadwalDokterController::class, 'index'])->name('jadwal_dokter.index');
+    Route::post('/jadwal_dokter/store', [JadwalDokterController::class, 'store'])->name('jadwal_dokter.store');
 });
