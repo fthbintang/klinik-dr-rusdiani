@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Obat;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ObatController extends Controller
 {
@@ -23,7 +25,10 @@ class ObatController extends Controller
      */
     public function create()
     {
-        //
+        return view('obat.create', [
+            'title' => 'Tambah Obat',
+            'supplier' => Supplier::latest()->get()
+        ]);
     }
 
     /**
@@ -31,8 +36,28 @@ class ObatController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'nama_obat'     => 'required|string|max:255',
+            'kategori'      => 'required|string|max:255',
+            'satuan'        => 'required|string|max:255',
+            'stok'          => 'required|integer|min:0',
+            'harga'         => 'required|integer|min:0',
+            'expired_date'  => 'required|date',
+            'supplier_id'   => 'nullable|exists:supplier,id',
+            'keterangan'    => 'nullable|string',
+        ]);
+    
+        try {
+            Obat::create($validatedData);
+
+            Alert::success('Sukses!', 'Data Berhasil Ditambah');
+            return redirect()->route('obat.index');
+        } catch (\Exception $e) {
+            Alert::error('Error', 'Terjadi kesalahan saat menyimpan data');
+            return back()->withInput();
+        }
     }
+    
 
     /**
      * Display the specified resource.

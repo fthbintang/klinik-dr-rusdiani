@@ -30,7 +30,7 @@
                     </div>
                     <div class="col-sm-4 d-flex justify-content-end">
                         <a href="{{ route('obat.supplier.index') }}" class="btn btn-light me-2">Supplier</a>
-                        <a href="#" class="btn btn-success">Tambah Obat</a>
+                        <a href="{{ route('obat.create') }}" class="btn btn-success">Tambah Obat</a>
                     </div>
                 </div>
             </div>
@@ -59,14 +59,11 @@
                                     <td>{{ $row->kategori }}</td>
                                     <td>{{ $row->satuan }}</td>
                                     <td>{{ $row->stok }}</td>
-                                    <td>{{ $row->harga }}</td>
-                                    <td>{{ $row->expired_date }}</td>
+                                    <td>{{ 'Rp' . number_format($row->harga, 0, ',', '.') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($row->expired_date)->format('d-m-Y') }}</td>
                                     <td>{{ $row->supplier->nama_supplier ?? '-' }}</td>
                                     <td>{{ $row->keterangan ?? '-' }}</td>
                                     <td>
-                                        <a href="#" class="btn icon btn-info">
-                                            <i class="bi bi-eye-fill"></i>
-                                        </a>
                                         <a href="#" class="btn icon btn-warning">
                                             <i class="bi bi-pencil"></i>
                                         </a>

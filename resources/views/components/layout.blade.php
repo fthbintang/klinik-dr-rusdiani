@@ -22,6 +22,7 @@
     {{-- FORM CHOICES --}}
     <link rel="stylesheet" href="/assets/extensions/choices.js/public/assets/styles/choices.css" />
 
+    {{-- PREVIEW FORM IMAGE --}}
     <link rel="stylesheet" href="/assets/extensions/filepond/filepond.css">
     <link rel="stylesheet" href="/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.css">
     <link rel="stylesheet" href="/assets/extensions/toastify-js/src/toastify.css">
@@ -113,8 +114,8 @@
 
     <script src="/assets/compiled/js/app.js"></script>
 
-    <script src="assets/extensions/apexcharts/apexcharts.min.js"></script>
-    <script src="assets/static/js/pages/dashboard.js"></script>
+    <script src="/assets/extensions/apexcharts/apexcharts.min.js"></script>
+    <script src="/assets/static/js/pages/dashboard.js"></script>
 
     {{-- SWEETALERT --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -137,6 +138,10 @@
     <script src="/assets/extensions/filepond/filepond.js"></script>
     <script src="/assets/extensions/toastify-js/src/toastify.js"></script>
     <script src="/assets/static/js/pages/filepond.js"></script>
+
+    {{-- FORM DROPDOWN CHOICES --}}
+    <script src="/assets/extensions/choices.js/public/assets/scripts/choices.js"></script>
+    <script src="/assets/static/js/pages/form-element-select.js"></script>
 
 </body>
 
