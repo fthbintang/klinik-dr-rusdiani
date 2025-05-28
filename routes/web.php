@@ -34,4 +34,6 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/obat', [ObatController::class, 'index'])->name('obat.index');
 
     Route::get('/obat/supplier/index', [SupplierController::class, 'index'])->name('obat.supplier.index');
+    Route::get('/obat/supplier/create', [SupplierController::class, 'create'])->name('obat.supplier.create');
+    Route::post('/obat/supplier/store', [SupplierController::class, 'store'])->name('obat.supplier.store');
 });

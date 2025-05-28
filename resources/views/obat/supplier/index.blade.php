@@ -36,7 +36,7 @@
                         <h5 class="card-title">Data {{ $title }}</h5>
                     </div>
                     <div class="col-sm-4 d-flex justify-content-end">
-                        <a href="#" class="btn btn-success">Tambah Supplier</a>
+                        <a href="{{ route('obat.supplier.create') }}" class="btn btn-success">Tambah Supplier</a>
                     </div>
                 </div>
             </div>
@@ -57,8 +57,8 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $row->nama_supplier }}</td>
-                                    <td>{{ $row->telepon }}</td>
-                                    <td>{{ $row->alamat }}</td>
+                                    <td>{{ $row->telepon ?? '-' }}</td>
+                                    <td>{{ $row->alamat ?? '-' }}</td>
                                     <td>
                                         <a href="#" class="btn icon btn-warning">
                                             <i class="bi bi-pencil"></i>

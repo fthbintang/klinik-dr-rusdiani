@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Psy\Sudo;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
-use Psy\Sudo;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class SupplierController extends Controller
 {
@@ -24,7 +25,9 @@ class SupplierController extends Controller
      */
     public function create()
     {
-        //
+        return view('obat.supplier.create', [
+            'title' => 'Tambah Supplier'
+        ]);
     }
 
     /**
@@ -32,7 +35,21 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'nama_supplier'    => 'required|string|max:255',
+            'telepon'          => 'nullable|string|max:20',
+            'alamat'           => 'nullable|string|max:255',
+        ]);
+    
+        try {
+            Supplier::create($validatedData);
+
+            Alert::success('Sukses!', 'Data Berhasil Ditambah');
+            return redirect()->route('obat.supplier.index');
+        } catch (\Exception $e) {
+            Alert::error('Error', 'Terjadi kesalahan saat menyimpan data');
+            return back()->withInput();
+        }
     }
 
     /**
