@@ -98,6 +98,14 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier)
     {
-        //
+        try { 
+            $supplier->delete();
+    
+            Alert::success('Berhasil', 'Data berhasil dihapus');
+            return redirect()->route('obat.supplier.index');
+        } catch (\Exception $e) {
+            Alert::error('Gagal', 'Terjadi kesalahan saat menghapus data');
+            return back();
+        }
     }
 }
