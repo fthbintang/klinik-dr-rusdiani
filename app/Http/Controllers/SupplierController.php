@@ -65,7 +65,10 @@ class SupplierController extends Controller
      */
     public function edit(Supplier $supplier)
     {
-        //
+        return view('obat.supplier.edit', [
+            'title' => 'Edit Supplier',
+            'supplier' => $supplier
+        ]);
     }
 
     /**
@@ -73,8 +76,22 @@ class SupplierController extends Controller
      */
     public function update(Request $request, Supplier $supplier)
     {
-        //
-    }
+        $validatedData = $request->validate([
+            'nama_supplier'     => 'required|string|max:255',
+            'telepon'           => 'nullable|string|max:255',
+            'alamat'            => 'nullable|string|max:255',
+        ]);
+    
+        try {
+            $supplier->update($validatedData);
+    
+            Alert::success('Sukses!', 'Data Berhasil Diupdate');
+            return redirect()->route('obat.supplier.index');
+        } catch (\Exception $e) {
+            Alert::error('Error', 'Terjadi kesalahan saat mengupdate data');
+            return back()->withInput();
+        }
+    } 
 
     /**
      * Remove the specified resource from storage.

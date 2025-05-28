@@ -8,7 +8,6 @@ use App\Http\Controllers\ObatController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
-use App\Models\Supplier;
 
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
 Route::post('/sign-in', [LoginController::class, 'authenticate'])->name('authentication');
@@ -36,4 +35,6 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/obat/supplier/index', [SupplierController::class, 'index'])->name('obat.supplier.index');
     Route::get('/obat/supplier/create', [SupplierController::class, 'create'])->name('obat.supplier.create');
     Route::post('/obat/supplier/store', [SupplierController::class, 'store'])->name('obat.supplier.store');
+    Route::get('/obat/supplier/edit/{supplier}', [SupplierController::class, 'edit'])->name('obat.supplier.edit');
+    Route::put('/obat/supplier/update/{supplier}', [SupplierController::class, 'update'])->name('obat.supplier.update');
 });

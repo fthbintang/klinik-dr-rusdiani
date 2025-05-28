@@ -29,8 +29,9 @@
         </div>
 
         <div class="card-body">
-            <form action="{{ route('obat.supplier.store') }}" method="POST">
+            <form action="{{ route('obat.supplier.update', $supplier->id) }}" method="POST">
                 @csrf
+                @method('PUT')
 
                 {{-- Nama Supplier --}}
                 <div class="form-group mb-3">
@@ -38,7 +39,7 @@
                             class="text-danger">*</span></label>
                     <input type="text" name="nama_supplier" id="nama_supplier"
                         class="form-control @error('nama_supplier') is-invalid @enderror" placeholder="Nama Supplier..."
-                        value="{{ old('nama_supplier') }}">
+                        value="{{ old('nama_supplier', $supplier->nama_supplier) }}">
                     @error('nama_supplier')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -49,7 +50,7 @@
                     <label for="telepon" class="form-label"><b>Telepon</b></label>
                     <input type="text" name="telepon" id="telepon"
                         class="form-control @error('telepon') is-invalid @enderror" placeholder="08xxxxxxxxxx"
-                        value="{{ old('telepon') }}">
+                        value="{{ old('telepon', $supplier->telepon) }}">
                     @error('telepon')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -59,7 +60,7 @@
                 <div class="form-group">
                     <label for="alamat"><b>Alamat</b></label>
                     <textarea class="form-control @error('alamat') is-invalid @enderror" name="alamat" id="alamat"
-                        placeholder="Alamat..."></textarea>
+                        placeholder="Alamat...">{{ old('alamat', $supplier->alamat) }}</textarea>
                     @error('alamat')
                         <div class="invalid-feedback">
                             {{ $message }}
