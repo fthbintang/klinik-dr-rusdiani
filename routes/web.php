@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\ObatController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\JadwalDokterController;
+use App\Http\Controllers\PasienController;
 
 // AUTENTIKASI
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
@@ -50,4 +51,8 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/obat/supplier/edit/{supplier}', [SupplierController::class, 'edit'])->name('obat.supplier.edit');
     Route::put('/obat/supplier/update/{supplier}', [SupplierController::class, 'update'])->name('obat.supplier.update');
     Route::delete('/obat/supplier/delete/{supplier}', [SupplierController::class, 'destroy'])->name('obat.supplier.destroy');
+
+    // PASIEN
+    Route::get('/pasien', [PasienController::class, 'index'])->name('pasien.index');
+
 });
