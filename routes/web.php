@@ -41,6 +41,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::post('/obat/store', [ObatController::class, 'store'])->name('obat.store');
     Route::get('/obat/edit/{obat}', [ObatController::class, 'edit'])->name('obat.edit');
     Route::put('/obat/update/{obat}', [ObatController::class, 'update'])->name('obat.update');
+    Route::delete('/obat/delete/{obat}', [ObatController::class, 'destroy'])->name('obat.destroy');
 
     // SUPPLIER
     Route::get('/obat/supplier/index', [SupplierController::class, 'index'])->name('obat.supplier.index');

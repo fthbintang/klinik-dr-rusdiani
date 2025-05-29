@@ -111,6 +111,14 @@ class ObatController extends Controller
      */
     public function destroy(Obat $obat)
     {
-        //
+        try { 
+            $obat->delete();
+    
+            Alert::success('Berhasil', 'Data berhasil dihapus');
+            return redirect()->route('obat.index');
+        } catch (\Exception $e) {
+            Alert::error('Gagal', 'Terjadi kesalahan saat menghapus data');
+            return back();
+        }
     }
 }
