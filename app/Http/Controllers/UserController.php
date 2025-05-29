@@ -97,8 +97,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('user.update', [
-            'title' => 'Update User',
+        return view('user.edit', [
+            'title' => 'Edit User',
             'user' => $user
         ]);
     }
