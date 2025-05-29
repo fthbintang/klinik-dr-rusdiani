@@ -64,7 +64,7 @@
                                     <td>{{ $row->supplier->nama_supplier ?? '-' }}</td>
                                     <td>{{ $row->keterangan ?? '-' }}</td>
                                     <td>
-                                        <a href="#" class="btn icon btn-warning">
+                                        <a href="{{ route('obat.edit', $row->id) }}" class="btn icon btn-warning">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <form action="#" method="POST" class="d-inline form-delete-user">
