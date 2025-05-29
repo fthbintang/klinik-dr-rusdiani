@@ -75,6 +75,14 @@
                     </a>
                 </li>
 
+                {{-- PASIEN --}}
+                <li class="sidebar-item {{ request()->is('dashboard/pasien*') ? 'active' : '' }}">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-person-square"></i>
+                        <span>Pasien</span>
+                    </a>
+                </li>
+
             </ul>
         </div>
     </div>
