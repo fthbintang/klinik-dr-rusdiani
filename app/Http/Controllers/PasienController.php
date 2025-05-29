@@ -14,7 +14,7 @@ class PasienController extends Controller
     {
         return view('pasien.index', [
             'title' => 'Pasien',
-            'pasien' => Pasien::latest()->get()
+            'pasien' => Pasien::with('user')->get()
         ]);
     }
 
