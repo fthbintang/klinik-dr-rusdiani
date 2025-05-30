@@ -64,17 +64,19 @@
                                     <td>{{ $row->supplier->nama_supplier ?? '-' }}</td>
                                     <td>{{ $row->keterangan ?? '-' }}</td>
                                     <td>
-                                        <a href="{{ route('obat.edit', $row->id) }}" class="btn icon btn-warning">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <form action="{{ route('obat.destroy', $row->id) }}" method="POST"
-                                            class="d-inline form-delete-user">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="btn icon btn-danger btn-delete-user">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
+                                        <div class="d-flex gap-1">
+                                            <a href="{{ route('obat.edit', $row->id) }}" class="btn icon btn-warning">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form action="{{ route('obat.destroy', $row->id) }}" method="POST"
+                                                class="d-inline form-delete-user">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="btn icon btn-danger btn-delete-user">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

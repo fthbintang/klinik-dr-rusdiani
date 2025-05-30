@@ -64,22 +64,23 @@
                                             <span class="text-muted">-</span>
                                         @endif
                                     </td>
-
                                     <td>
-                                        <a href="{{ route('user.show', $row->id) }}" class="btn icon btn-info">
-                                            <i class="bi bi-eye-fill"></i>
-                                        </a>
-                                        <a href="{{ route('user.edit', $row->id) }}" class="btn icon btn-warning">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <form action="{{ route('user.destroy', $row->id) }}" method="POST"
-                                            class="d-inline form-delete-user">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="btn icon btn-danger btn-delete-user">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
+                                        <div class="d-flex gap-1">
+                                            <a href="{{ route('user.show', $row->id) }}" class="btn icon btn-info">
+                                                <i class="bi bi-eye-fill"></i>
+                                            </a>
+                                            <a href="{{ route('user.edit', $row->id) }}" class="btn icon btn-warning">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form action="{{ route('user.destroy', $row->id) }}" method="POST"
+                                                class="d-inline form-delete-user">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="btn icon btn-danger btn-delete-user">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

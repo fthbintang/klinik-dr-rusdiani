@@ -71,7 +71,6 @@ class UserController extends Controller
                 $user->save();
             }
             
-    
             Alert::success('Sukses!', 'Data Berhasil Ditambah');
             return redirect()->route('user.index');
         } catch (\Exception $e) {

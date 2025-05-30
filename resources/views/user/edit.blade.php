@@ -132,8 +132,6 @@
                         </option>
                         <option value="Dokter" {{ old('role', $user->role) == 'Dokter' ? 'selected' : '' }}>Dokter
                         </option>
-                        <option value="Pasien" {{ old('role', $user->role) == 'Pasien' ? 'selected' : '' }}>Pasien
-                        </option>
                         <option value="Apotek" {{ old('role', $user->role) == 'Apotek' ? 'selected' : '' }}>Apotek
                         </option>
                     </select>

@@ -60,18 +60,20 @@
                                     <td>{{ $row->telepon ?? '-' }}</td>
                                     <td>{{ $row->alamat ?? '-' }}</td>
                                     <td>
-                                        <a href="{{ route('obat.supplier.edit', $row->id) }}"
-                                            class="btn icon btn-warning">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <form action="{{ route('obat.supplier.destroy', $row->id) }}" method="POST"
-                                            class="d-inline form-delete-user">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="btn icon btn-danger btn-delete-user">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
+                                        <div class="d-flex gap-1">
+                                            <a href="{{ route('obat.supplier.edit', $row->id) }}"
+                                                class="btn icon btn-warning">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form action="{{ route('obat.supplier.destroy', $row->id) }}"
+                                                method="POST" class="d-inline form-delete-user">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="btn icon btn-danger btn-delete-user">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

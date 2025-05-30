@@ -123,7 +123,6 @@
                         <option value="">-- Pilih Role --</option>
                         <option value="Admin" {{ old('role') == 'Admin' ? 'selected' : '' }}>Admin</option>
                         <option value="Dokter" {{ old('role') == 'Dokter' ? 'selected' : '' }}>Dokter</option>
-                        <option value="Pasien" {{ old('role') == 'Pasien' ? 'selected' : '' }}>Pasien</option>
                         <option value="Apotek" {{ old('role') == 'Apotek' ? 'selected' : '' }}>Apotek</option>
                     </select>
                     @error('role')

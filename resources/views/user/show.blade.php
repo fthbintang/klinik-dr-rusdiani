@@ -18,8 +18,12 @@
         </div>
     </div>
 
-    <div class="text-end mb-3">
+    {{-- <div class="text-end mb-3">
         <a href="{{ route('user.index') }}" class="btn btn-info">Kembali</a>
+    </div> --}}
+
+    <div class="text-end mb-3">
+        <a href="{{ url()->previous() }}" class="btn btn-info">Kembali</a>
     </div>
 
     <div class="card">
@@ -87,7 +91,7 @@
 
             {{-- Alamat --}}
             <div class="form-group">
-                <label for="alamat">Alamat</label>
+                <label for="alamat"><b>Alamat</b></label>
                 <textarea class="form-control @error('alamat') is-invalid @enderror" name="alamat" id="alamat"
                     placeholder="Alamat..." readonly>{{ $user->alamat }}</textarea>
                 @error('alamat')
@@ -101,13 +105,16 @@
             <div class="form-group mb-3">
                 <label for="foto" class="form-label"><b>Foto</b></label>
                 @if ($user->foto)
-                    <img src="{{ asset('storage/foto/' . $user->foto) }}" alt="Foto"
-                        style="height: 150px; width: auto;" class="img-thumbnail mt-1">
+                    <div class="mt-1">
+                        <img src="{{ asset('storage/foto/' . $user->foto) }}" alt="Foto"
+                            style="height: 150px; width: auto;" class="img-thumbnail">
+                    </div>
                 @endif
                 @error('foto')
                     <div class="invalid-feedback d-block">{{ $message }}</div>
                 @enderror
             </div>
+
 
             {{-- Role --}}
             <div class="form-group mb-3">

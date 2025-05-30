@@ -29,7 +29,7 @@
                         <h5 class="card-title">Data {{ $title }}</h5>
                     </div>
                     <div class="col-sm-4 d-flex justify-content-end">
-                        <a href="#" class="btn btn-success">Tambah Obat</a>
+                        <a href="{{ route('pasien.create') }}" class="btn btn-success">Tambah Data</a>
                     </div>
                 </div>
             </div>
@@ -44,6 +44,7 @@
                                 <th>No HP</th>
                                 <th>Golongan Darah</th>
                                 <th>Foto</th>
+                                <th>Akun</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -67,20 +68,33 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="#" class="btn icon btn-info">
-                                            <i class="bi bi-eye-fill"></i>
-                                        </a>
-                                        <a href="#" class="btn icon btn-warning">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <form action="#" method="POST" class="d-inline form-delete-user">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="btn icon btn-danger btn-delete-user">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
+                                        @if ($row->user_id)
+                                            <a href="{{ route('user.show', $row->user_id) }}">
+                                                <i class="bi bi-check-circle-fill text-success"
+                                                    title="Sudah punya akun"></i>
+                                            </a>
+                                        @else
+                                            <i class="bi bi-x-circle-fill text-danger" title="Belum punya akun"></i>
+                                        @endif
                                     </td>
+                                    <td>
+                                        <div class="d-flex gap-1">
+                                            <a href="#" class="btn icon btn-info">
+                                                <i class="bi bi-eye-fill"></i>
+                                            </a>
+                                            <a href="#" class="btn icon btn-warning">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <form action="#" method="POST" class="d-inline form-delete-user">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="btn icon btn-danger btn-delete-user">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+
                                 </tr>
                             @endforeach
                         </tbody>

@@ -54,5 +54,6 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     // PASIEN
     Route::get('/pasien', [PasienController::class, 'index'])->name('pasien.index');
-
+    Route::get('/pasien/create', [PasienController::class, 'create'])->name('pasien.create');
+    Route::post('/pasien/store', [PasienController::class, 'store'])->name('pasien.store');
 });
