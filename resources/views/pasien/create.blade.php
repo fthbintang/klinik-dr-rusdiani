@@ -28,7 +28,7 @@
         </div>
 
         <div class="card-body">
-            <form action="{{ route('pasien.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="form-pasien" action="{{ route('pasien.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 {{-- Nama Lengkap --}}
@@ -204,9 +204,38 @@
 
                 {{-- Tombol Submit --}}
                 <div class="text-end">
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button id="btn-simpan" type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        document.getElementById('form-pasien').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            function bersihkanPassword(str) {
+                return str.replace(/\W/g, '').toLowerCase();
+            }
+
+            const nik = document.getElementById('nik').value || '(kosong)';
+            let namaPanggilan = document.getElementById('nama_panggilan').value || '(kosong)';
+            let passwordBersih = bersihkanPassword(namaPanggilan);
+
+            Swal.fire({
+                title: 'Yakin simpan data pasien?',
+                html: `Username akun pasien adalah <b>${nik}</b> dan password-nya adalah <b>${passwordBersih}</b>.<br>Pastikan data sudah benar.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, simpan!',
+                cancelButtonText: 'Batal',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.removeEventListener('submit', arguments.callee);
+                    this.submit();
+                }
+            });
+        });
+    </script>
 </x-layout>

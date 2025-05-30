@@ -57,7 +57,7 @@
                                     <td>{{ $row->no_hp }}</td>
                                     <td>{{ $row->golongan_darah ?? '-' }}</td>
                                     <td>
-                                        @if ($row->user->foto)
+                                        @if ($row->user && $row->user->foto)
                                             <img src="{{ asset('storage/foto/' . $row->user->foto) }}" alt="Foto"
                                                 class="img-thumbnail rounded previewable-foto"
                                                 style="width: 150px; height: 180px; object-fit: cover; object-position: center; cursor: pointer;"
@@ -86,7 +86,8 @@
                                                 class="btn icon btn-warning">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <form action="#" method="POST" class="d-inline form-delete-user">
+                                            <form action="{{ route('pasien.destroy', $row->id) }}" method="POST"
+                                                class="d-inline form-delete-user">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" class="btn icon btn-danger btn-delete-user">
@@ -116,6 +117,35 @@
         </div>
     </div>
 
+    {{-- DELETE --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.btn-delete-user');
+
+            deleteButtons.forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    const form = this.closest('form');
+
+                    Swal.fire({
+                        title: 'Yakin ingin menghapus?',
+                        text: "Jika data ini dihapus, pasien tidak akan bisa login kembali karena seluruh data akun akan ikut terhapus secara permanen.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+    {{-- MENAMPILKAN FOTO --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const previewableImages = document.querySelectorAll('.previewable-foto');

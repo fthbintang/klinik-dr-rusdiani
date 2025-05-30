@@ -58,4 +58,5 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::post('/pasien/store', [PasienController::class, 'store'])->name('pasien.store');
     Route::get('/pasien/edit/{pasien}', [PasienController::class, 'edit'])->name('pasien.edit');
     Route::put('/pasien/update/{pasien}', [PasienController::class, 'update'])->name('pasien.update');
+    Route::delete('/pasien/delete/{pasien}', [PasienController::class, 'destroy'])->name('pasien.destroy');
 });

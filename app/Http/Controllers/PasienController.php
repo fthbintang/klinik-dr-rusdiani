@@ -211,6 +211,25 @@ class PasienController extends Controller
      */
     public function destroy(Pasien $pasien)
     {
-        //
+        try {
+            // Jika user terhubung, hapus foto dan akun user
+            if ($pasien->user) {
+                if ($pasien->user->foto && Storage::disk('public')->exists('foto/' . $pasien->user->foto)) {
+                    Storage::disk('public')->delete('foto/' . $pasien->user->foto);
+                }
+    
+                $pasien->user->delete(); // Hapus akun user
+            }
+    
+            $pasien->delete(); // Hapus data pasien
+    
+            Alert::success('Berhasil', 'Data pasien & akun berhasil dihapus');
+            return redirect()->route('pasien.index');
+        } catch (\Exception $e) {
+            Log::error('Gagal hapus user', ['error' => $e->getMessage()]);
+            Alert::error('Gagal', 'Terjadi kesalahan saat menghapus data');
+            return back();
+        }
     }
+    
 }
