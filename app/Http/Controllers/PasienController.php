@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PasienController extends Controller
@@ -82,7 +83,16 @@ class PasienController extends Controller
             $user->no_hp            = $validatedData['no_hp'] ?? null;
             $user->alamat           = $validatedData['alamat'] ?? null;
             $user->username         = $validatedData['nik'];
-            $user->password         = Hash::make(strtolower($validatedData['nama_panggilan']));
+
+            // Ambil nama_panggilan, ubah ke lowercase
+            $namaPanggilan = strtolower($validatedData['nama_panggilan']);
+
+            // Hilangkan semua spasi dan tanda baca
+            $namaPanggilanBersih = preg_replace('/[\s\p{P}]+/u', '', $namaPanggilan);
+
+            // Hash password dari nama_panggilan yang sudah dibersihkan
+            $user->password = Hash::make($namaPanggilanBersih);
+            
             $user->role             = 'Pasien';
 
             // Proses upload foto jika ada
@@ -127,7 +137,10 @@ class PasienController extends Controller
      */
     public function edit(Pasien $pasien)
     {
-        //
+        return view('pasien.edit', [
+            'title' => 'Edit Pasien',
+            'pasien' => $pasien,
+        ]);
     }
 
     /**
@@ -135,8 +148,63 @@ class PasienController extends Controller
      */
     public function update(Request $request, Pasien $pasien)
     {
-        //
+        $validatedData = $request->validate([
+            'nama_lengkap'       => 'required|string|max:255',
+            'nama_panggilan'     => 'required|string|max:255',
+            'jenis_kelamin'      => 'required|in:Laki-laki,Perempuan',
+            'no_hp'              => 'required|string|max:20',
+            'tempat_lahir'       => 'nullable|string|max:100',
+            'tanggal_lahir'      => 'nullable|date',
+            'alamat'             => 'nullable|string|max:255',
+            'pekerjaan'          => 'nullable|string|max:100',
+            'status_perkawinan'  => 'nullable|in:Belum Menikah,Menikah,Cerai',
+            'golongan_darah'     => 'nullable|in:A,B,AB,O',
+            'agama'              => 'nullable|in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu',
+            'foto'               => 'nullable|image|mimes:jpeg,png,jpg,gif|max:512',
+        ]);
+    
+        try {
+            // Update data pasien
+            $pasien->update($validatedData);
+    
+            // Update data user yang terhubung
+            $user = $pasien->user;
+    
+            if ($user) {
+                $user->nama_lengkap     = $validatedData['nama_lengkap'];
+                $user->nama_panggilan   = $validatedData['nama_panggilan'];
+                $user->jenis_kelamin    = $validatedData['jenis_kelamin'];
+                $user->tanggal_lahir    = $validatedData['tanggal_lahir'] ?? null;
+                $user->no_hp            = $validatedData['no_hp'] ?? null;
+                $user->alamat           = $validatedData['alamat'] ?? null;
+    
+                // Jika ada foto baru di-upload
+                if ($request->hasFile('foto')) {
+                    $foto = $request->file('foto');
+                    $filename = Str::uuid() . '.' . $foto->getClientOriginalExtension();
+                    $foto->storeAs('foto', $filename, 'public');
+    
+                    // Hapus foto lama jika ada
+                    if ($user->foto && Storage::disk('public')->exists('foto/' . $user->foto)) {
+                        Storage::disk('public')->delete('foto/' . $user->foto);
+                    }
+    
+                    $user->foto = $filename;
+                }
+    
+                $user->save();
+            }
+    
+            Alert::success('Sukses!', 'Data pasien berhasil diperbarui');
+            return redirect()->route('pasien.index');
+    
+        } catch (\Exception $e) {
+            Log::error('Gagal memperbarui data pasien', ['error' => $e->getMessage()]);
+            Alert::error('Error', 'Terjadi kesalahan saat memperbarui data');
+            return back()->withInput();
+        }
     }
+    
 
     /**
      * Remove the specified resource from storage.

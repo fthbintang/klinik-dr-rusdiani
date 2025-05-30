@@ -82,7 +82,8 @@
                                             <a href="#" class="btn icon btn-info">
                                                 <i class="bi bi-eye-fill"></i>
                                             </a>
-                                            <a href="#" class="btn icon btn-warning">
+                                            <a href="{{ route('pasien.edit', $row->id) }}"
+                                                class="btn icon btn-warning">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                             <form action="#" method="POST" class="d-inline form-delete-user">
