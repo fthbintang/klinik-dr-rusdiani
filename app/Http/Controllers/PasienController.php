@@ -231,5 +231,31 @@ class PasienController extends Controller
             return back();
         }
     }
+
+    public function hubungkanAkunForm($id)
+    {
+        $pasien = Pasien::findOrFail($id);
+        $users = User::where('role', 'pasien')->whereDoesntHave('pasien')->get();
+
+        return view('pasien.hubungkan-akun', [
+            'title' => 'Hubungkan Akun',
+            'pasien' => $pasien,
+            'users' => $users
+        ]);
+    }
+
+    public function hubungkanAkun(Request $request, $id)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id'
+        ]);
+
+        $pasien = Pasien::findOrFail($id);
+        $pasien->user_id = $request->user_id;
+        $pasien->save();
+
+        Alert::success('Berhasil', 'Akun berhasil dihubungkan.');
+        return redirect()->route('pasien.index');
+    }
     
 }

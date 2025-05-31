@@ -68,13 +68,24 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($row->user_id)
+                                        {{-- @if ($row->user_id)
                                             <a href="{{ route('user.show', $row->user_id) }}">
                                                 <i class="bi bi-check-circle-fill text-success"
                                                     title="Sudah punya akun"></i>
                                             </a>
                                         @else
                                             <i class="bi bi-x-circle-fill text-danger" title="Belum punya akun"></i>
+                                        @endif --}}
+                                        @if ($row->user_id)
+                                            <a href="{{ route('user.show', $row->user_id) }}">
+                                                <i class="bi bi-check-circle-fill text-success"
+                                                    title="Sudah punya akun"></i>
+                                            </a>
+                                        @else
+                                            <a href="{{ route('pasien.hubungkan-akun', $row->id) }}"
+                                                class="text-danger" title="Hubungkan akun">
+                                                <i class="bi bi-x-circle-fill"></i>
+                                            </a>
                                         @endif
                                     </td>
                                     <td>
