@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\ObatController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\JadwalDokterController;
+use App\Http\Controllers\PasienController;
 
 // AUTENTIKASI
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
@@ -50,4 +51,16 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/obat/supplier/edit/{supplier}', [SupplierController::class, 'edit'])->name('obat.supplier.edit');
     Route::put('/obat/supplier/update/{supplier}', [SupplierController::class, 'update'])->name('obat.supplier.update');
     Route::delete('/obat/supplier/delete/{supplier}', [SupplierController::class, 'destroy'])->name('obat.supplier.destroy');
+
+    // PASIEN
+    Route::get('/pasien', [PasienController::class, 'index'])->name('pasien.index');
+    Route::get('/pasien/create', [PasienController::class, 'create'])->name('pasien.create');
+    Route::get('/pasien/{id}/hubungkan-akun', [PasienController::class, 'hubungkanAkunForm'])->name('pasien.hubungkan-akun');
+    Route::get('/pasien/edit/{pasien}', [PasienController::class, 'edit'])->name('pasien.edit');
+    Route::get('/pasien/show/{pasien}', [PasienController::class, 'show'])->name('pasien.show');
+    Route::post('/pasien/store', [PasienController::class, 'store'])->name('pasien.store');
+    Route::post('/pasien/{id}/hubungkan-akun', [PasienController::class, 'hubungkanAkun'])->name('pasien.hubungkan-akun.store');
+    Route::put('/pasien/update/{pasien}', [PasienController::class, 'update'])->name('pasien.update');
+    Route::delete('/pasien/delete/{pasien}', [PasienController::class, 'destroy'])->name('pasien.destroy');
+
 });

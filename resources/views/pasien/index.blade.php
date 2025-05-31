@@ -29,7 +29,7 @@
                         <h5 class="card-title">Data {{ $title }}</h5>
                     </div>
                     <div class="col-sm-4 d-flex justify-content-end">
-                        <a href="{{ route('user.create') }}" class="btn btn-success">Tambah Data</a>
+                        <a href="{{ route('pasien.create') }}" class="btn btn-success">Tambah Data</a>
                     </div>
                 </div>
             </div>
@@ -38,41 +38,58 @@
                     <table class="table" id="table1">
                         <thead>
                             <tr>
-                                <th>No</th>
+                                <th>No.RM</th>
                                 <th>Nama</th>
                                 <th>Jenis Kelamin</th>
-                                <th>Role</th>
+                                <th>No HP</th>
+                                <th>Golongan Darah</th>
                                 <th>Foto</th>
+                                <th>Akun</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($user as $row)
+                            @foreach ($pasien as $row)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $row->no_rm }}</td>
                                     <td>{{ $row->nama_lengkap }}</td>
                                     <td>{{ $row->jenis_kelamin }}</td>
-                                    <td>{{ $row->role }}</td>
+                                    <td>{{ $row->no_hp }}</td>
+                                    <td>{{ $row->golongan_darah ?? '-' }}</td>
                                     <td>
-                                        @if ($row->foto)
-                                            <img src="{{ asset('storage/foto/' . $row->foto) }}" alt="Foto"
+                                        @if ($row->user && $row->user->foto)
+                                            <img src="{{ asset('storage/foto/' . $row->user->foto) }}" alt="Foto"
                                                 class="img-thumbnail rounded previewable-foto"
                                                 style="width: 150px; height: 180px; object-fit: cover; object-position: center; cursor: pointer;"
-                                                data-src-full="{{ asset('storage/foto/' . $row->foto) }}"
+                                                data-src-full="{{ asset('storage/foto/' . $row->user->foto) }}"
                                                 data-bs-toggle="modal" data-bs-target="#fotoModal">
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
                                     </td>
                                     <td>
+                                        @if ($row->user_id)
+                                            <a href="{{ route('user.show', $row->user_id) }}">
+                                                <i class="bi bi-check-circle-fill text-success"
+                                                    title="Sudah punya akun"></i>
+                                            </a>
+                                        @else
+                                            <a href="{{ route('pasien.hubungkan-akun', $row->id) }}"
+                                                class="text-danger" title="Hubungkan akun">
+                                                <i class="bi bi-x-circle-fill"></i>
+                                            </a>
+                                        @endif
+                                    </td>
+                                    <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ route('user.show', $row->id) }}" class="btn icon btn-info">
+                                            <a href="{{ route('pasien.show', $row->id) }}" class="btn icon btn-info">
                                                 <i class="bi bi-eye-fill"></i>
                                             </a>
-                                            <a href="{{ route('user.edit', $row->id) }}" class="btn icon btn-warning">
+                                            <a href="{{ route('pasien.edit', $row->id) }}"
+                                                class="btn icon btn-warning">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <form action="{{ route('user.destroy', $row->id) }}" method="POST"
+                                            <form action="{{ route('pasien.destroy', $row->id) }}" method="POST"
                                                 class="d-inline form-delete-user">
                                                 @csrf
                                                 @method('DELETE')
@@ -82,6 +99,7 @@
                                             </form>
                                         </div>
                                     </td>
+
                                 </tr>
                             @endforeach
                         </tbody>
@@ -102,20 +120,6 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const previewableImages = document.querySelectorAll('.previewable-foto');
-            const previewModalImage = document.getElementById('previewFoto');
-
-            previewableImages.forEach(img => {
-                img.addEventListener('click', function() {
-                    const fullSrc = this.getAttribute('data-src-full');
-                    previewModalImage.src = fullSrc;
-                });
-            });
-        });
-    </script>
-
     {{-- DELETE --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -127,7 +131,7 @@
 
                     Swal.fire({
                         title: 'Yakin ingin menghapus?',
-                        text: "Data pengguna akan dihapus secara permanen.",
+                        text: "Jika data ini dihapus, pasien tidak akan bisa login kembali karena seluruh data akun akan ikut terhapus secara permanen.",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33',
@@ -144,5 +148,19 @@
         });
     </script>
 
+    {{-- MENAMPILKAN FOTO --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const previewableImages = document.querySelectorAll('.previewable-foto');
+            const previewModalImage = document.getElementById('previewFoto');
+
+            previewableImages.forEach(img => {
+                img.addEventListener('click', function() {
+                    const fullSrc = this.getAttribute('data-src-full');
+                    previewModalImage.src = fullSrc;
+                });
+            });
+        });
+    </script>
 
 </x-layout>

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Obat;
+use App\Models\Pasien;
 use App\Models\Supplier;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
         User::factory(5)->create();
         Supplier::factory(5)->create();
         Obat::factory(5)->create();
+        Pasien::factory(5)->create();
 
         User::create([
             'nama_lengkap' => 'Muhammad Bintang Fathehah',
