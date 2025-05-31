@@ -68,14 +68,6 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{-- @if ($row->user_id)
-                                            <a href="{{ route('user.show', $row->user_id) }}">
-                                                <i class="bi bi-check-circle-fill text-success"
-                                                    title="Sudah punya akun"></i>
-                                            </a>
-                                        @else
-                                            <i class="bi bi-x-circle-fill text-danger" title="Belum punya akun"></i>
-                                        @endif --}}
                                         @if ($row->user_id)
                                             <a href="{{ route('user.show', $row->user_id) }}">
                                                 <i class="bi bi-check-circle-fill text-success"
@@ -90,7 +82,7 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="#" class="btn icon btn-info">
+                                            <a href="{{ route('pasien.show', $row->id) }}" class="btn icon btn-info">
                                                 <i class="bi bi-eye-fill"></i>
                                             </a>
                                             <a href="{{ route('pasien.edit', $row->id) }}"

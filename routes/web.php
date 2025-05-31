@@ -56,9 +56,10 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/pasien', [PasienController::class, 'index'])->name('pasien.index');
     Route::get('/pasien/create', [PasienController::class, 'create'])->name('pasien.create');
     Route::get('/pasien/{id}/hubungkan-akun', [PasienController::class, 'hubungkanAkunForm'])->name('pasien.hubungkan-akun');
+    Route::get('/pasien/edit/{pasien}', [PasienController::class, 'edit'])->name('pasien.edit');
+    Route::get('/pasien/show/{pasien}', [PasienController::class, 'show'])->name('pasien.show');
     Route::post('/pasien/store', [PasienController::class, 'store'])->name('pasien.store');
     Route::post('/pasien/{id}/hubungkan-akun', [PasienController::class, 'hubungkanAkun'])->name('pasien.hubungkan-akun.store');
-    Route::get('/pasien/edit/{pasien}', [PasienController::class, 'edit'])->name('pasien.edit');
     Route::put('/pasien/update/{pasien}', [PasienController::class, 'update'])->name('pasien.update');
     Route::delete('/pasien/delete/{pasien}', [PasienController::class, 'destroy'])->name('pasien.destroy');
 

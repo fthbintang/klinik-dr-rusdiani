@@ -129,7 +129,10 @@ class PasienController extends Controller
      */
     public function show(Pasien $pasien)
     {
-        //
+        return view('pasien.show', [
+            'title' => 'Edit Pasien',
+            'pasien' => $pasien,
+        ]);
     }
 
     /**
