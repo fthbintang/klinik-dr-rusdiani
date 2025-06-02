@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('diagnosis')->nullable();
             $table->text('tindakan')->nullable();
             $table->text('catatan')->nullable()->nullable();
+            $table->integer('biaya_total')->nullable();
             $table->timestamps();
         });
     }

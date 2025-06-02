@@ -72,6 +72,7 @@
                                 <th class="text-center align-middle">Keluhan</th>
                                 <th class="text-center align-middle">Diagnosis</th>
                                 <th class="text-center align-middle">Tindakan</th>
+                                <th class="text-center align-middle">Biaya</th>
                                 <th class="text-center align-middle">Aksi</th>
                             </tr>
                         </thead>
@@ -133,6 +134,13 @@
                                     <td>{{ $row->keluhan ?? '-' }}</td>
                                     <td>{{ $row->diagnosis ?? '-' }}</td>
                                     <td>{{ $row->tindakan ?? '-' }}</td>
+                                    <td>
+                                        @if ($row->biaya_total)
+                                            {{ 'Rp' . number_format($row->biaya_total, 0, ',', '.') }}
+                                        @else
+                                            <span class="badge bg-danger">Belum Bayar</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="d-flex gap-1">
                                             <a href="#" class="btn icon btn-info">

@@ -28,6 +28,7 @@ class RekamMedisFactory extends Factory
             'diagnosis' => $this->faker->sentence(8),
             'tindakan' => $this->faker->sentence(5),
             'catatan' => $this->faker->paragraph(),
+            'biaya_total' => $this->faker->numberBetween(10000, 500000),
             'created_at' => now(),
             'updated_at' => now(),
         ];

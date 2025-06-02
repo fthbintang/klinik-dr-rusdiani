@@ -68,17 +68,19 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($row->user_id)
-                                            <a href="{{ route('user.show', $row->user_id) }}">
-                                                <i class="bi bi-check-circle-fill text-success"
-                                                    title="Sudah punya akun"></i>
-                                            </a>
-                                        @else
-                                            <a href="{{ route('pasien.hubungkan-akun', $row->id) }}"
-                                                class="text-danger" title="Hubungkan akun">
-                                                <i class="bi bi-x-circle-fill"></i>
-                                            </a>
-                                        @endif
+                                        <div class="text-center">
+                                            @if ($row->user_id)
+                                                <a href="{{ route('user.show', $row->user_id) }}">
+                                                    <i class="bi bi-check-circle-fill text-success"
+                                                        title="Sudah punya akun"></i>
+                                                </a>
+                                            @else
+                                                <a href="{{ route('pasien.hubungkan-akun', $row->id) }}"
+                                                    class="text-danger" title="Hubungkan akun">
+                                                    <i class="bi bi-x-circle-fill"></i>
+                                                </a>
+                                            @endif
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
@@ -133,7 +135,7 @@
 
                     Swal.fire({
                         title: 'Yakin ingin menghapus?',
-                        text: "Jika data ini dihapus, pasien tidak akan bisa login kembali karena seluruh data akun akan ikut terhapus secara permanen.",
+                        text: "Jika data ini dihapus, pasien tidak akan bisa login kembali karena seluruh data akun akan ikut terhapus secara permanen. Selain itu, seluruh data rekam medis yang berkaitan dengan pasien ini juga akan ikut terhapus dari sistem.",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33',
