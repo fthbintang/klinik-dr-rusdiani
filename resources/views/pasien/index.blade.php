@@ -55,7 +55,7 @@
                                     <td>{{ $row->nama_lengkap }}</td>
                                     <td>{{ $row->jenis_kelamin }}</td>
                                     <td>{{ $row->no_hp }}</td>
-                                    <td>{{ $row->golongan_darah ?? '-' }}</td>
+                                    <td class="text-center align-middle">{{ $row->golongan_darah ?? '-' }}</td>
                                     <td>
                                         @if ($row->user && $row->user->foto)
                                             <img src="{{ asset('storage/foto/' . $row->user->foto) }}" alt="Foto"
@@ -64,7 +64,7 @@
                                                 data-src-full="{{ asset('storage/foto/' . $row->user->foto) }}"
                                                 data-bs-toggle="modal" data-bs-target="#fotoModal">
                                         @else
-                                            <span class="text-muted">-</span>
+                                            <p class="text-center align-middle">-</p>
                                         @endif
                                     </td>
                                     <td>
@@ -82,6 +82,8 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
+                                            <a href="{{ route('pasien.rekam_medis.index', $row->id) }}"
+                                                class="btn icon btn-primary"><i class="bi bi-clipboard2-pulse"></i></a>
                                             <a href="{{ route('pasien.show', $row->id) }}" class="btn icon btn-info">
                                                 <i class="bi bi-eye-fill"></i>
                                             </a>

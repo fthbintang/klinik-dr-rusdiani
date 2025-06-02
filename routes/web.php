@@ -9,6 +9,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\PasienController;
+use App\Http\Controllers\RekamMedisController;
 
 // AUTENTIKASI
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
@@ -62,5 +63,8 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::post('/pasien/{id}/hubungkan-akun', [PasienController::class, 'hubungkanAkun'])->name('pasien.hubungkan-akun.store');
     Route::put('/pasien/update/{pasien}', [PasienController::class, 'update'])->name('pasien.update');
     Route::delete('/pasien/delete/{pasien}', [PasienController::class, 'destroy'])->name('pasien.destroy');
+
+    // REKAM MEDIS
+    Route::get('/pasien/rekam_medis/{pasien}', [RekamMedisController::class, 'index'])->name('pasien.rekam_medis.index');
 
 });

@@ -14,15 +14,15 @@ return new class extends Migration
         Schema::create('rekam_medis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pasien_id')->constrained('pasien')->onDelete('cascade');
-            $table->date('tanggal_kunjungan');
-            $table->string('status_kedatangan');
-            $table->time('jam_datang');
-            $table->time('jam_diperiksa');
-            $table->time('jam_selesai');
-            $table->text('keluhan');
-            $table->text('diagnosis');
-            $table->text('tindakan');
-            $table->text('catatan')->nullable();
+            $table->date('tanggal_kunjungan')->nullable();
+            $table->string('status_kedatangan')->nullable();
+            $table->time('jam_datang')->nullable();
+            $table->time('jam_diperiksa')->nullable();
+            $table->time('jam_selesai')->nullable();
+            $table->text('keluhan')->nullable();
+            $table->text('diagnosis')->nullable();
+            $table->text('tindakan')->nullable();
+            $table->text('catatan')->nullable()->nullable();
             $table->timestamps();
         });
     }
