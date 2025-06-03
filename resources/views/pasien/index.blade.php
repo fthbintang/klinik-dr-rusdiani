@@ -55,7 +55,7 @@
                                     <td>{{ $row->nama_lengkap }}</td>
                                     <td>{{ $row->jenis_kelamin }}</td>
                                     <td>{{ $row->no_hp }}</td>
-                                    <td>{{ $row->golongan_darah ?? '-' }}</td>
+                                    <td class="text-center align-middle">{{ $row->golongan_darah ?? '-' }}</td>
                                     <td>
                                         @if ($row->user && $row->user->foto)
                                             <img src="{{ asset('storage/foto/' . $row->user->foto) }}" alt="Foto"
@@ -64,24 +64,28 @@
                                                 data-src-full="{{ asset('storage/foto/' . $row->user->foto) }}"
                                                 data-bs-toggle="modal" data-bs-target="#fotoModal">
                                         @else
-                                            <span class="text-muted">-</span>
+                                            <p class="text-center align-middle">-</p>
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($row->user_id)
-                                            <a href="{{ route('user.show', $row->user_id) }}">
-                                                <i class="bi bi-check-circle-fill text-success"
-                                                    title="Sudah punya akun"></i>
-                                            </a>
-                                        @else
-                                            <a href="{{ route('pasien.hubungkan-akun', $row->id) }}"
-                                                class="text-danger" title="Hubungkan akun">
-                                                <i class="bi bi-x-circle-fill"></i>
-                                            </a>
-                                        @endif
+                                        <div class="text-center">
+                                            @if ($row->user_id)
+                                                <a href="{{ route('user.show', $row->user_id) }}">
+                                                    <i class="bi bi-check-circle-fill text-success"
+                                                        title="Sudah punya akun"></i>
+                                                </a>
+                                            @else
+                                                <a href="{{ route('pasien.hubungkan-akun', $row->id) }}"
+                                                    class="text-danger" title="Hubungkan akun">
+                                                    <i class="bi bi-x-circle-fill"></i>
+                                                </a>
+                                            @endif
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
+                                            <a href="{{ route('pasien.rekam_medis.index', $row->id) }}"
+                                                class="btn icon btn-primary"><i class="bi bi-clipboard2-pulse"></i></a>
                                             <a href="{{ route('pasien.show', $row->id) }}" class="btn icon btn-info">
                                                 <i class="bi bi-eye-fill"></i>
                                             </a>
@@ -131,7 +135,7 @@
 
                     Swal.fire({
                         title: 'Yakin ingin menghapus?',
-                        text: "Jika data ini dihapus, pasien tidak akan bisa login kembali karena seluruh data akun akan ikut terhapus secara permanen.",
+                        text: "Jika data ini dihapus, pasien tidak akan bisa login kembali karena seluruh data akun akan ikut terhapus secara permanen. Selain itu, seluruh data rekam medis yang berkaitan dengan pasien ini juga akan ikut terhapus dari sistem.",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33',

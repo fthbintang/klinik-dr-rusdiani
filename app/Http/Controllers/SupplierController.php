@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Psy\Sudo;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
