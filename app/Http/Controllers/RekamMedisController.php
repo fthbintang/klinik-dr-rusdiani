@@ -49,5 +49,18 @@ class RekamMedisController extends Controller
             Alert::error('Error', 'Terjadi kesalahan saat mengupdate data');
             return back()->withInput();
         }
-    } 
+    }
+
+    public function destroy(RekamMedis $rekam_medis)
+    {
+        try { 
+            $rekam_medis->delete();
+    
+            Alert::success('Berhasil', 'Data berhasil dihapus');
+            return redirect()->route('pasien.rekam_medis.index', $rekam_medis->pasien->id);
+        } catch (\Exception $e) {
+            Alert::error('Gagal', 'Terjadi kesalahan saat menghapus data');
+            return back();
+        }
+    }
 }

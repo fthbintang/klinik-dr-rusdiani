@@ -68,5 +68,6 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/pasien/rekam_medis/{pasien}', [RekamMedisController::class, 'index'])->name('pasien.rekam_medis.index');
     Route::get('/pasien/rekam_medis/{pasien}/edit/{rekam_medis}', [RekamMedisController::class, 'edit'])->name('pasien.rekam_medis.edit');
     Route::put('/pasien/rekam_medis/update/{rekam_medis}', [RekamMedisController::class, 'update'])->name('pasien.rekam_medis.update');
+    Route::delete('/pasien/rekam_medis/delete/{rekam_medis}', [RekamMedisController::class, 'destroy'])->name('pasien.rekam_medis.destroy');
 
 });
