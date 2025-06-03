@@ -146,7 +146,8 @@
                                             <a href="#" class="btn icon btn-info">
                                                 <i class="bi bi-capsule"></i>
                                             </a>
-                                            <a href="#" class="btn icon btn-warning">
+                                            <a href="{{ route('pasien.rekam_medis.edit', ['pasien' => $row->pasien->id, 'rekam_medis' => $row->id]) }}"
+                                                class="btn icon btn-warning">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                             <form action="#" method="POST" class="d-inline form-delete-user">
