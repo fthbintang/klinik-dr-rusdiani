@@ -89,14 +89,25 @@
                         <label for="nama_obat" class="form-label"><b>Obat</b><span class="text-danger">*</span></label>
                         <select id="nama_obat" class="form-select">
                             <option value="">-- Pilih Obat --</option>
-                            @foreach ($daftar_obat as $obat)
-                                <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
-                                    data-kategori="{{ $obat->kategori }}" data-satuan="{{ $obat->satuan }}"
-                                    data-expired="{{ $obat->expired_date }}" data-harga="{{ $obat->harga }}">
-                                    {{ $obat->nama_obat }} - {{ $obat->kategori }} - {{ $obat->satuan }} - stok:
-                                    {{ $obat->stok }}
-                                </option>
-                            @endforeach
+                            @if ($rekam_medis->disetujui_dokter == 0)
+                                @foreach ($obat_bebas_dan_tidak_bebas as $obat)
+                                    <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
+                                        data-kategori="{{ $obat->kategori }}" data-satuan="{{ $obat->satuan }}"
+                                        data-expired="{{ $obat->expired_date }}" data-harga="{{ $obat->harga }}">
+                                        {{ $obat->nama_obat }} - {{ $obat->kategori }} - {{ $obat->satuan }} - stok:
+                                        {{ $obat->stok }}
+                                    </option>
+                                @endforeach
+                            @else
+                                @foreach ($daftar_obat_tidak_bebas as $obat)
+                                    <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
+                                        data-kategori="{{ $obat->kategori }}" data-satuan="{{ $obat->satuan }}"
+                                        data-expired="{{ $obat->expired_date }}" data-harga="{{ $obat->harga }}">
+                                        {{ $obat->nama_obat }} - {{ $obat->kategori }} - {{ $obat->satuan }} - stok:
+                                        {{ $obat->stok }}
+                                    </option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
                     <div class="col-md-1">
@@ -151,100 +162,6 @@
             </div>
         </div>
     </section>
-
-    {{-- <script>
-        $(document).ready(function() {
-            $('#nama_obat').select2({
-                placeholder: "-- Pilih Obat --",
-                width: '100%'
-            });
-        });
-
-        let no = 1;
-        let totalSemua = 0;
-
-        document.getElementById('btn-tambah-obat').addEventListener('click', function() {
-            const select = document.getElementById('nama_obat');
-            const selected = select.options[select.selectedIndex];
-            const qty = parseInt(document.getElementById('kuantitas').value) || 1;
-            const catatan = document.getElementById('catatan').value.trim();
-
-            if (!selected.value) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Obat belum dipilih!',
-                    text: 'Silakan pilih obat sebelum menambahkan.',
-                    confirmButtonColor: '#3085d6'
-                });
-                return;
-            }
-
-            const nama = selected.dataset.nama;
-            const kategori = selected.dataset.kategori;
-            const satuan = selected.dataset.satuan;
-            const expired = selected.dataset.expired;
-            const harga = parseInt(selected.dataset.harga);
-            const total = harga * qty;
-            totalSemua += total;
-
-            const tbody = document.querySelector('#tabel-obat-terpilih tbody');
-            const tr = document.createElement('tr');
-
-            tr.innerHTML = `
-                    <td>${no++}</td>
-                    <td>${nama}</td>
-                    <td>${kategori}</td>
-                    <td>${satuan}</td>
-                    <td>${expired}</td>
-                    <td>Rp${harga.toLocaleString('id-ID')}</td>
-                    <td>${qty}</td>
-                    <td>Rp${total.toLocaleString('id-ID')}</td>
-                    <td>${catatan || '-'}</td>
-                    <td><button class="btn btn-danger btn-sm btn-hapus">Hapus</button></td>
-                `;
-
-            tbody.appendChild(tr);
-            document.getElementById('total-semua').textContent = 'Rp' + totalSemua.toLocaleString('id-ID');
-
-            // Reset input
-            document.getElementById('kuantitas').value = 1;
-            document.getElementById('catatan').value = '';
-            $('#nama_obat').val(null).trigger('change');
-        });
-
-        document.querySelector('#tabel-obat-terpilih tbody').addEventListener('click', function(e) {
-            if (e.target.classList.contains('btn-hapus')) {
-                const row = e.target.closest('tr');
-                const total = row.children[7].textContent.replace(/[^\d]/g, '');
-
-                Swal.fire({
-                    title: 'Yakin ingin menghapus?',
-                    text: "Data obat ini akan dihapus dari daftar.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Ya, hapus',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        totalSemua -= parseInt(total);
-                        document.getElementById('total-semua').textContent = 'Rp' + totalSemua
-                            .toLocaleString('id-ID');
-                        row.remove();
-
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Dihapus!',
-                            text: 'Data obat telah dihapus.',
-                            timer: 1000,
-                            showConfirmButton: false
-                        });
-                    }
-                });
-            }
-        });
-    </script> --}}
 
     <script>
         $(document).ready(function() {

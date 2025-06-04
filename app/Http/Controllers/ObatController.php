@@ -45,6 +45,7 @@ class ObatController extends Controller
             'expired_date'  => 'required|date',
             'supplier_id'   => 'nullable|exists:supplier,id',
             'keterangan'    => 'nullable|string',
+            'obat_bebas'    => 'required|boolean',
         ]);
     
         try {

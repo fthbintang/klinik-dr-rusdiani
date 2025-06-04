@@ -17,12 +17,16 @@ class ResepObatController extends Controller
     {
         $resep_obat = ResepObat::with('rekam_medis.pasien')->where('rekam_medis_id', $rekam_medis->id)->get();
         $pasien = Pasien::with('user')->findOrFail($pasien);
+        $obat_tidak_bebas = Obat::where('obat_bebas', 0)->get();
+        $obat_bebas_dan_tidak_bebas = Obat::all();
 
         return view('resep_obat.index', [
             'title' => 'Resep Obat',
-            'daftar_obat' => Obat::latest()->get(),
+            'daftar_obat_tidak_bebas' => $obat_tidak_bebas,
+            'obat_bebas_dan_tidak_bebas' => $obat_bebas_dan_tidak_bebas,
             'pasien' => $pasien,
-            'resep_obat' => $resep_obat
+            'resep_obat' => $resep_obat,
+            'rekam_medis' => $rekam_medis
         ]);
     }
 

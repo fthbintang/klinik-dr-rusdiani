@@ -48,6 +48,7 @@
                                 <th>Expired</th>
                                 <th>Supplier</th>
                                 <th>Keterangan</th>
+                                <th>Obat Bebas</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -60,9 +61,17 @@
                                     <td>{{ $row->satuan }}</td>
                                     <td>{{ $row->stok }}</td>
                                     <td>{{ 'Rp' . number_format($row->harga, 0, ',', '.') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($row->expired_date)->format('d-m-Y') }}</td>
+                                    <td style="white-space: nowrap;">
+                                        {{ \Carbon\Carbon::parse($row->expired_date)->format('d-m-Y') }}</td>
                                     <td>{{ $row->supplier->nama_supplier ?? '-' }}</td>
                                     <td>{{ $row->keterangan ?? '-' }}</td>
+                                    <td>
+                                        @if ($row->obat_bebas == 1)
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        @else
+                                            <i class="bi bi-x-circle-fill text-danger"></i>
+                                        @endif
+                                    </td>
                                     <td>
                                         <div class="d-flex gap-1">
                                             <a href="{{ route('obat.edit', $row->id) }}" class="btn icon btn-warning">

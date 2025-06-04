@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('expired_date');
             $table->foreignId('supplier_id')->nullable()->constrained('supplier')->onDelete('set null');
             $table->text('keterangan')->nullable();
+            $table->boolean('obat_bebas')->nullable()->default(false);
             $table->timestamps();
         });
     }
