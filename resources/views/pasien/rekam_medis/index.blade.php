@@ -143,7 +143,8 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="#" class="btn icon btn-info">
+                                            <a href="{{ route('resep_obat.index', ['pasien' => $row->pasien->id, 'rekam_medis' => $row->id]) }}"
+                                                class="btn icon btn-info">
                                                 <i class="bi bi-capsule"></i>
                                             </a>
                                             <a href="{{ route('pasien.rekam_medis.edit', ['pasien' => $row->pasien->id, 'rekam_medis' => $row->id]) }}"

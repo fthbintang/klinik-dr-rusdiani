@@ -17,4 +17,9 @@ class ResepObat extends Model
     {
         return $this->belongsTo(Obat::class);
     }
+
+    public function rekam_medis(): BelongsTo
+    {
+        return $this->belongsTo(RekamMedis::class);
+    }
 }

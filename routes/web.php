@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\RekamMedisController;
+use App\Http\Controllers\ResepObatController;
 
 // AUTENTIKASI
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
@@ -46,7 +47,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::delete('/obat/delete/{obat}', [ObatController::class, 'destroy'])->name('obat.destroy');
 
     // SUPPLIER
-    Route::get('/obat/supplier/index', [SupplierController::class, 'index'])->name('obat.supplier.index');
+    Route::get('/obat/supplier', [SupplierController::class, 'index'])->name('obat.supplier.index');
     Route::get('/obat/supplier/create', [SupplierController::class, 'create'])->name('obat.supplier.create');
     Route::post('/obat/supplier/store', [SupplierController::class, 'store'])->name('obat.supplier.store');
     Route::get('/obat/supplier/edit/{supplier}', [SupplierController::class, 'edit'])->name('obat.supplier.edit');
@@ -69,5 +70,8 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/pasien/rekam_medis/{pasien}/edit/{rekam_medis}', [RekamMedisController::class, 'edit'])->name('pasien.rekam_medis.edit');
     Route::put('/pasien/rekam_medis/update/{rekam_medis}', [RekamMedisController::class, 'update'])->name('pasien.rekam_medis.update');
     Route::delete('/pasien/rekam_medis/delete/{rekam_medis}', [RekamMedisController::class, 'destroy'])->name('pasien.rekam_medis.destroy');
+
+    // RESEP OBAT
+    Route::get('/pasien/rekam_medis/{pasien}/resep_obat/{rekam_medis}', [ResepObatController::class, 'index'])->name('resep_obat.index');
 
 });

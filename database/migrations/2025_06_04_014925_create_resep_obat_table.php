@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('expired_date')->nullable();
             $table->integer('harga_per_obat');
             $table->integer('kuantitas');
+            $table->text('catatan')->nullable();
             $table->integer('harga_final');
             $table->timestamps();
         });
