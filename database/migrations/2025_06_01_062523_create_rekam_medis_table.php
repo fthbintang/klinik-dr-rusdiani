@@ -23,6 +23,8 @@ return new class extends Migration
             $table->text('diagnosis')->nullable();
             $table->text('tindakan')->nullable();
             $table->text('catatan')->nullable()->nullable();
+            $table->boolean('disetujui_dokter')->nullable()->default(false);
+            $table->integer('biaya_jasa')->nullable();
             $table->integer('biaya_total')->nullable();
             $table->timestamps();
         });

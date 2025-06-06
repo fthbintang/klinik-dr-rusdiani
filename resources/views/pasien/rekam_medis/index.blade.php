@@ -72,6 +72,7 @@
                                 <th class="text-center align-middle">Keluhan</th>
                                 <th class="text-center align-middle">Diagnosis</th>
                                 <th class="text-center align-middle">Tindakan</th>
+                                <th class="text-center align-middle">Resep Dokter</th>
                                 <th class="text-center align-middle">Biaya</th>
                                 <th class="text-center align-middle">Aksi</th>
                             </tr>
@@ -112,6 +113,10 @@
                                                     $badgeClass = 'bg-secondary';
                                                     break;
 
+                                                case 'Pengambilan Obat':
+                                                    $badgeClass = 'bg-dark';
+                                                    break;
+
                                                 default:
                                                     $badgeClass = 'bg-secondary';
                                                     break;
@@ -135,6 +140,15 @@
                                     <td>{{ $row->diagnosis ?? '-' }}</td>
                                     <td>{{ $row->tindakan ?? '-' }}</td>
                                     <td>
+                                        <div class="text-center">
+                                            @if ($row->disetujui_dokter == 1)
+                                                <i class="bi bi-check-circle-fill text-success"></i>
+                                            @else
+                                                <i class="bi bi-x-circle-fill text-danger"></i>
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td>
                                         @if ($row->biaya_total)
                                             {{ 'Rp' . number_format($row->biaya_total, 0, ',', '.') }}
                                         @else
@@ -143,7 +157,8 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="#" class="btn icon btn-info">
+                                            <a href="{{ route('resep_obat.index', ['pasien' => $row->pasien->id, 'rekam_medis' => $row->id]) }}"
+                                                class="btn icon btn-info">
                                                 <i class="bi bi-capsule"></i>
                                             </a>
                                             <a href="{{ route('pasien.rekam_medis.edit', ['pasien' => $row->pasien->id, 'rekam_medis' => $row->id]) }}"

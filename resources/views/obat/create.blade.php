@@ -145,6 +145,28 @@
                             @enderror
                         </div>
 
+                        {{-- Obat Bebas --}}
+                        <div class="form-group mb-3">
+                            <label class="form-label d-block"><b>Obat Bebas</b><span
+                                    class="text-danger">*</span></label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input @error('obat_bebas') is-invalid @enderror"
+                                    type="radio" name="obat_bebas" id="obat_bebas_ya" value="1"
+                                    {{ old('obat_bebas') == '1' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="obat_bebas_ya">Ya</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input @error('obat_bebas') is-invalid @enderror"
+                                    type="radio" name="obat_bebas" id="obat_bebas_tidak" value="0"
+                                    {{ old('obat_bebas') === '0' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="obat_bebas_tidak">Tidak</label>
+                            </div>
+                            @error('obat_bebas')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+
                         {{-- Keterangan --}}
                         <div class="form-group mb-3">
                             <label for="keterangan" class="form-label"><b>Keterangan</b></label>
