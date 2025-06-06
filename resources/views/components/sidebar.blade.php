@@ -85,7 +85,7 @@
 
                 {{-- TRANSAKSI  --}}
                 <li class="sidebar-item {{ request()->is('dashboard/transaksi*') ? 'active' : '' }}">
-                    <a href="#" class="sidebar-link">
+                    <a href="{{ route('transaksi.index') }}" class="sidebar-link">
                         <i class="bi bi-cash-stack"></i>
                         <span>Transaksi</span>
                     </a>

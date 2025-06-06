@@ -11,6 +11,7 @@ use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\ResepObatController;
+use App\Http\Controllers\TransaksiController;
 
 // AUTENTIKASI
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
@@ -76,4 +77,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::post('/pasien/rekam_medis/resep_obat/{rekam_medis}/store', [ResepObatController::class, 'store'])->name('resep_obat.store');
     Route::post('/pasien/rekam_medis/resep_obat/{rekam_medis}/proses-apotek', [ResepObatController::class, 'proses_apotek'])->name('resep_obat.proses_apotek');
     Route::delete('/pasien/rekam_medis/resep_obat/{resep_obat}/delete', [ResepObatController::class, 'destroy'])->name('resep_obat.destroy');
+
+    // TRANSAKSI
+    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
 });
