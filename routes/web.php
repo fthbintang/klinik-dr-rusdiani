@@ -75,5 +75,5 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/pasien/rekam_medis/{pasien}/resep_obat/{rekam_medis}', [ResepObatController::class, 'index'])->name('resep_obat.index');
     Route::post('/pasien/rekam_medis/resep_obat/{rekam_medis}/store', [ResepObatController::class, 'store'])->name('resep_obat.store');
     Route::post('/pasien/rekam_medis/resep_obat/{rekam_medis}/proses-apotek', [ResepObatController::class, 'proses_apotek'])->name('resep_obat.proses_apotek');
-
+    Route::delete('/pasien/rekam_medis/resep_obat/{resep_obat}/delete', [ResepObatController::class, 'destroy'])->name('resep_obat.destroy');
 });

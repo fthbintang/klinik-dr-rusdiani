@@ -9,6 +9,7 @@ use App\Models\RekamMedis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ResepObatController extends Controller
 {
@@ -157,8 +158,16 @@ class ResepObatController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ResepObat $resepObat)
+    public function destroy(ResepObat $resep_obat)
     {
-        //
+        try { 
+            $resep_obat->delete();
+    
+            Alert::success('Berhasil', 'Data berhasil dihapus');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Alert::error('Gagal', 'Terjadi kesalahan saat menghapus data');
+            return back();
+        }
     }
 }

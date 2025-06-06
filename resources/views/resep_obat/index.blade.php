@@ -170,7 +170,8 @@
                                     <td>{{ $item->catatan ?? '-' }}</td>
                                     @if (!$rekam_medis->biaya_total)
                                         <td>
-                                            <form action="#" method="POST" class="d-inline form-delete-user">
+                                            <form action="{{ route('resep_obat.destroy', $item->id) }}" method="POST"
+                                                class="d-inline form-delete-user">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" class="btn icon btn-danger btn-delete-user">
@@ -193,9 +194,9 @@
                 </div>
 
                 <div class="mt-4 float-end">
-                    <button id="btn-simpan-dokter" class="btn btn-success">✅ Disetujui Dokter</button>
+                    <button id="btn-simpan-dokter" class="btn btn-success">✅ Simpan</button>
                     <button id="btn-simpan-apotek" class="btn btn-primary"
-                        @if (!$rekam_medis->disetujui_dokter) disabled @endif>
+                        @if (!$rekam_medis->disetujui_dokter || $rekam_medis->biaya_total) disabled @endif>
                         💊 Diproses Apotek
                     </button>
                 </div>
@@ -491,4 +492,31 @@
         });
     </script>
 
+    {{-- DELETE --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.btn-delete-user');
+
+            deleteButtons.forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    const form = this.closest('form');
+
+                    Swal.fire({
+                        title: 'Yakin ingin menghapus?',
+                        text: "Data ini akan dihapus secara permanen.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 </x-layout>
