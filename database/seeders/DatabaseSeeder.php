@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         Obat::factory(5)->create();
         Pasien::factory(5)->create();
         RekamMedis::factory(10)->create();
-        ResepObat::factory(30)->create();
+        // ResepObat::factory(30)->create();
 
         User::create([
             'nama_lengkap' => 'Muhammad Bintang Fathehah',

@@ -144,7 +144,31 @@
                                 <th>Aksi</th>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody>
+                            @foreach ($resep_obat as $index => $item)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $item->nama_obat }}</td>
+                                    <td>{{ $item->kategori ?? '-' }}</td>
+                                    <td>{{ $item->satuan ?? '-' }}</td>
+                                    <td>{{ $item->expired_date ? \Carbon\Carbon::parse($item->expired_date)->format('d-m-Y') : '-' }}
+                                    </td>
+                                    <td>Rp{{ number_format($item->harga_per_obat, 0, ',', '.') }}</td>
+                                    <td>{{ $item->kuantitas }}</td>
+                                    <td>Rp{{ number_format($item->harga_final, 0, ',', '.') }}</td>
+                                    <td>{{ $item->catatan ?? '-' }}</td>
+                                    <td>
+                                        <form action="#" method="POST" class="d-inline form-delete-user">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" class="btn icon btn-danger btn-delete-user">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
                         <tfoot>
                             <tr>
                                 <th colspan="7" class="text-end">Grand Total</th>
@@ -164,70 +188,225 @@
     </section>
 
     <script>
+        const obatSudahTersimpan = @json($obatTersimpan);
+
         $(document).ready(function() {
             $('#nama_obat').select2({
                 placeholder: "-- Pilih Obat --",
                 width: '100%'
             });
-        });
 
-        function formatDateToDMY(dateString) {
-            if (!dateString) return '-';
-            const parts = dateString.split('-');
-            if (parts.length !== 3) return dateString;
-            return `${parts[2]}-${parts[1]}-${parts[0]}`;
-        }
+            let no = document.querySelectorAll('#tabel-obat-terpilih tbody tr').length + 1;
 
-        let no = 1;
-        let totalSemua = 0;
-
-        document.getElementById('btn-tambah-obat').addEventListener('click', function() {
-            const select = document.getElementById('nama_obat');
-            const selected = select.options[select.selectedIndex];
-            const qty = parseInt(document.getElementById('kuantitas').value) || 1;
-            const catatan = document.getElementById('catatan').value.trim();
-
-            if (!selected.value) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Obat belum dipilih!',
-                    text: 'Silakan pilih obat sebelum menambahkan.',
-                    confirmButtonColor: '#3085d6'
+            // Hitung ulang grand total dari tabel yang sudah ada
+            function hitungGrandTotal() {
+                let total = 0;
+                document.querySelectorAll('#tabel-obat-terpilih tbody tr').forEach(row => {
+                    let hargaText = row.cells[7].textContent || 'Rp0';
+                    let hargaNumber = parseInt(hargaText.replace(/[^0-9]/g, '')) || 0;
+                    total += hargaNumber;
                 });
-                return;
+                document.getElementById('total-semua').textContent = 'Rp' + total.toLocaleString('id-ID');
+                return total;
             }
 
-            const nama = selected.dataset.nama;
-            const kategori = selected.dataset.kategori;
-            const satuan = selected.dataset.satuan;
-            const expired = formatDateToDMY(selected.dataset.expired);
-            const harga = parseInt(selected.dataset.harga);
-            const total = harga * qty;
-            totalSemua += total;
+            function formatDateToDMY(dateString) {
+                if (!dateString) return '-';
+                const parts = dateString.split('-');
+                if (parts.length !== 3) return dateString;
+                return `${parts[2]}-${parts[1]}-${parts[0]}`;
+            }
 
-            const tbody = document.querySelector('#tabel-obat-terpilih tbody');
-            const tr = document.createElement('tr');
+            // Inisialisasi totalSemua dengan hitung ulang
+            let totalSemua = hitungGrandTotal();
 
-            tr.innerHTML = `
-            <td>${no++}</td>
-            <td>${nama}</td>
-            <td>${kategori}</td>
-            <td>${satuan}</td>
-            <td>${expired}</td>
-            <td>Rp${harga.toLocaleString('id-ID')}</td>
-            <td>${qty}</td>
-            <td>Rp${total.toLocaleString('id-ID')}</td>
-            <td>${catatan || '-'}</td>
-            <td><button class="btn btn-danger btn-sm btn-hapus">Hapus</button></td>
-        `;
+            // Tambah obat baru ke tabel
+            document.getElementById('btn-tambah-obat').addEventListener('click', function() {
+                const select = document.getElementById('nama_obat');
+                const selected = select.options[select.selectedIndex];
+                const qty = parseInt(document.getElementById('kuantitas').value) || 1;
+                const catatan = document.getElementById('catatan').value.trim();
 
-            tbody.appendChild(tr);
-            document.getElementById('total-semua').textContent = 'Rp' + totalSemua.toLocaleString('id-ID');
+                if (!selected.value) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Obat belum dipilih!',
+                        text: 'Silakan pilih obat sebelum menambahkan.',
+                        confirmButtonColor: '#3085d6'
+                    });
+                    return;
+                }
 
-            // Reset input
-            document.getElementById('kuantitas').value = 1;
-            document.getElementById('catatan').value = '';
-            $('#nama_obat').val(null).trigger('change');
+                const obatId = parseInt(selected.value);
+
+                // ✅ Cek apakah obat sudah ada di tabel sementara
+                const existingRow = document.querySelector(
+                    `#tabel-obat-terpilih tbody tr[data-obat-id="${obatId}"]`
+                );
+                if (existingRow) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Obat sudah ditambahkan!',
+                        text: 'Obat yang sama tidak boleh dimasukkan lebih dari satu kali.',
+                        confirmButtonColor: '#3085d6'
+                    });
+                    return;
+                }
+
+                // ✅ Cek apakah obat sudah pernah disimpan sebelumnya
+                if (obatSudahTersimpan.includes(obatId)) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Obat sudah disimpan sebelumnya!',
+                        text: 'Obat ini sudah disetujui oleh dokter dan tidak boleh diduplikasi.',
+                        confirmButtonColor: '#3085d6'
+                    });
+                    return;
+                }
+
+                // Tambah ke tabel
+                const nama = selected.dataset.nama;
+                const kategori = selected.dataset.kategori;
+                const satuan = selected.dataset.satuan;
+                const expiredRaw = selected.dataset.expired;
+                const expiredFormatted = formatDateToDMY(expiredRaw);
+                const harga = parseInt(selected.dataset.harga);
+                const total = harga * qty;
+
+                const tbody = document.querySelector('#tabel-obat-terpilih tbody');
+                const tr = document.createElement('tr');
+
+                tr.setAttribute('data-obat-id', obatId);
+                tr.setAttribute('data-harga', harga);
+                tr.setAttribute('data-kuantitas', qty);
+                tr.setAttribute('data-catatan', catatan || '-');
+                tr.setAttribute('data-expired', expiredRaw);
+
+                let no = document.querySelectorAll('#tabel-obat-terpilih tbody tr').length + 1;
+
+                tr.innerHTML = `
+                    <td>${no}</td>
+                    <td>${nama}</td>
+                    <td>${kategori}</td>
+                    <td>${satuan}</td>
+                    <td>${expiredFormatted}</td>
+                    <td>Rp${harga.toLocaleString('id-ID')}</td>
+                    <td>${qty}</td>
+                    <td>Rp${total.toLocaleString('id-ID')}</td>
+                    <td>${catatan || '-'}</td>
+                    <td><button class="btn btn-danger btn-sm btn-hapus">Hapus</button></td>
+                `;
+
+                tbody.appendChild(tr);
+
+                hitungGrandTotal();
+
+                // Reset input
+                document.getElementById('kuantitas').value = 1;
+                document.getElementById('catatan').value = '';
+                $('#nama_obat').val(null).trigger('change');
+            });
+
+
+
+
+            // Hapus baris obat
+            document.querySelector('#tabel-obat-terpilih tbody').addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn-hapus')) {
+                    const row = e.target.closest('tr');
+                    row.remove();
+
+                    // Update nomor urut setelah hapus
+                    let rows = document.querySelectorAll('#tabel-obat-terpilih tbody tr');
+                    no = 1;
+                    rows.forEach(r => {
+                        r.cells[0].textContent = no++;
+                    });
+
+                    // Hitung ulang total agar valid
+                    totalSemua = hitungGrandTotal();
+                }
+            });
+
+            // Simpan resep
+            document.getElementById('btn-simpan-dokter').addEventListener('click', function() {
+                const rows = document.querySelectorAll('#tabel-obat-terpilih tbody tr');
+                if (rows.length === 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Belum ada obat yang ditambahkan!',
+                        text: 'Silakan tambahkan obat terlebih dahulu.',
+                        confirmButtonColor: '#3085d6'
+                    });
+                    return;
+                }
+
+                let dataObat = [];
+                rows.forEach(row => {
+                    // Parsing integer dengan fallback jika gagal parse
+                    const hargaPerObat = parseInt(row.getAttribute('data-harga')) || 0;
+                    const kuantitas = parseInt(row.getAttribute('data-kuantitas')) || 1;
+                    const hargaFinal = hargaPerObat * kuantitas;
+
+                    dataObat.push({
+                        obat_id: row.getAttribute('data-obat-id'),
+                        nama_obat: row.cells[1].textContent,
+                        kategori: row.cells[2].textContent,
+                        satuan: row.cells[3].textContent,
+                        expired_date: row.getAttribute('data-expired'),
+                        harga_per_obat: hargaPerObat,
+                        kuantitas: kuantitas,
+                        harga_final: hargaFinal,
+                        catatan: row.getAttribute('data-catatan')
+                    });
+                });
+
+                fetch("{{ route('resep_obat.store', $rekam_medis->id) }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify({
+                            resep: dataObat
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error("Network response was not ok");
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: 'Data resep telah disimpan.',
+                                confirmButtonColor: '#3085d6'
+                            }).then(() => {
+                                window.location.href =
+                                    "{{ route('resep_obat.index', ['pasien' => $pasien->id, 'rekam_medis' => $rekam_medis->id]) }}";
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal!',
+                                text: data.message || 'Terjadi kesalahan saat menyimpan resep.',
+                                confirmButtonColor: '#3085d6'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: error.message || 'Terjadi kesalahan jaringan.',
+                            confirmButtonColor: '#3085d6'
+                        });
+                    });
+            });
+
         });
     </script>
+
 </x-layout>
