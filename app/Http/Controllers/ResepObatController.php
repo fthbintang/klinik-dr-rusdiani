@@ -132,30 +132,6 @@ class ResepObatController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(ResepObat $resepObat)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ResepObat $resepObat)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ResepObat $resepObat)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
     public function destroy(ResepObat $resep_obat)
