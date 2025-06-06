@@ -104,6 +104,12 @@ class ResepObatController extends Controller
                 ]);
             }
 
+            // Update kolom disetujui_dokter menjadi true
+            $rekam_medis->update([
+                'disetujui_dokter' => true,
+                'status_kedatangan' => 'Pengambilan Obat'
+            ]);
+
             DB::commit();
             return response()->json(['success' => true]);
         } catch (\Exception $e) {

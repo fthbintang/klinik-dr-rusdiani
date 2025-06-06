@@ -56,6 +56,9 @@
             <div class="card-header text-center">
                 <h3>{{ $title }}</h3>
                 <h4 class="card-title">a.n {{ $pasien->nama_lengkap }} ({{ $pasien->no_rm }})</h4>
+                <span class="badge bg-success">
+                    Resep Obat Telah Disetujui Dokter
+                </span>
 
                 @if ($pasien->user->foto)
                     <div class="text-center mt-2">
@@ -162,7 +165,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="button" class="btn icon btn-danger btn-delete-user">
-                                                <i class="bi bi-trash"></i>
+                                                <i class="bi bi-trash"> (Sudah Tersimpan)</i>
                                             </button>
                                         </form>
                                     </td>
@@ -181,7 +184,10 @@
 
                 <div class="mt-4 float-end">
                     <button id="btn-simpan-dokter" class="btn btn-success">✅ Disetujui Dokter</button>
-                    <button id="btn-simpan-apotek" class="btn btn-primary">💊 Diproses Apotek</button>
+                    <button id="btn-simpan-apotek" class="btn btn-primary"
+                        @if (!$rekam_medis->disetujui_dokter) disabled @endif>
+                        💊 Diproses Apotek
+                    </button>
                 </div>
             </div>
         </div>
@@ -258,7 +264,7 @@
                     Swal.fire({
                         icon: 'warning',
                         title: 'Obat sudah disimpan sebelumnya!',
-                        text: 'Obat ini sudah disetujui oleh dokter dan tidak boleh diduplikasi.',
+                        text: 'Obat yang sama tidak boleh dimasukkan lebih dari satu kali.',
                         confirmButtonColor: '#3085d6'
                     });
                     return;
@@ -294,7 +300,7 @@
                     <td>${qty}</td>
                     <td>Rp${total.toLocaleString('id-ID')}</td>
                     <td>${catatan || '-'}</td>
-                    <td><button class="btn btn-danger btn-sm btn-hapus">Hapus</button></td>
+                    <td><button class="btn btn-danger btn-sm btn-hapus"><i class="bi bi-trash"></i> (Belum Disimpan)</button></td>
                 `;
 
                 tbody.appendChild(tr);
@@ -306,9 +312,6 @@
                 document.getElementById('catatan').value = '';
                 $('#nama_obat').val(null).trigger('change');
             });
-
-
-
 
             // Hapus baris obat
             document.querySelector('#tabel-obat-terpilih tbody').addEventListener('click', function(e) {
@@ -341,70 +344,89 @@
                     return;
                 }
 
-                let dataObat = [];
-                rows.forEach(row => {
-                    // Parsing integer dengan fallback jika gagal parse
-                    const hargaPerObat = parseInt(row.getAttribute('data-harga')) || 0;
-                    const kuantitas = parseInt(row.getAttribute('data-kuantitas')) || 1;
-                    const hargaFinal = hargaPerObat * kuantitas;
+                // Tambahkan konfirmasi SweetAlert di sini
+                Swal.fire({
+                    title: 'Apakah Anda sudah Yakin?',
+                    text: "Apakah Anda sudah yakin ingin menyimpan resep ini?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, simpan!',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let dataObat = [];
+                        rows.forEach(row => {
+                            const hargaPerObat = parseInt(row.getAttribute('data-harga')) ||
+                                0;
+                            const kuantitas = parseInt(row.getAttribute(
+                                'data-kuantitas')) || 1;
+                            const hargaFinal = hargaPerObat * kuantitas;
 
-                    dataObat.push({
-                        obat_id: row.getAttribute('data-obat-id'),
-                        nama_obat: row.cells[1].textContent,
-                        kategori: row.cells[2].textContent,
-                        satuan: row.cells[3].textContent,
-                        expired_date: row.getAttribute('data-expired'),
-                        harga_per_obat: hargaPerObat,
-                        kuantitas: kuantitas,
-                        harga_final: hargaFinal,
-                        catatan: row.getAttribute('data-catatan')
-                    });
-                });
-
-                fetch("{{ route('resep_obat.store', $rekam_medis->id) }}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRF-TOKEN": "{{ csrf_token() }}",
-                            "Accept": "application/json"
-                        },
-                        body: JSON.stringify({
-                            resep: dataObat
-                        })
-                    })
-                    .then(response => {
-                        if (!response.ok) throw new Error("Network response was not ok");
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil!',
-                                text: 'Data resep telah disimpan.',
-                                confirmButtonColor: '#3085d6'
-                            }).then(() => {
-                                window.location.href =
-                                    "{{ route('resep_obat.index', ['pasien' => $pasien->id, 'rekam_medis' => $rekam_medis->id]) }}";
+                            dataObat.push({
+                                obat_id: row.getAttribute('data-obat-id'),
+                                nama_obat: row.cells[1].textContent,
+                                kategori: row.cells[2].textContent,
+                                satuan: row.cells[3].textContent,
+                                expired_date: row.getAttribute('data-expired'),
+                                harga_per_obat: hargaPerObat,
+                                kuantitas: kuantitas,
+                                harga_final: hargaFinal,
+                                catatan: row.getAttribute('data-catatan')
                             });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal!',
-                                text: data.message || 'Terjadi kesalahan saat menyimpan resep.',
-                                confirmButtonColor: '#3085d6'
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: error.message || 'Terjadi kesalahan jaringan.',
-                            confirmButtonColor: '#3085d6'
                         });
-                    });
+
+                        fetch("{{ route('resep_obat.store', $rekam_medis->id) }}", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                                    "Accept": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    resep: dataObat
+                                })
+                            })
+                            .then(response => {
+                                if (!response.ok) throw new Error(
+                                    "Network response was not ok");
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Berhasil!',
+                                        text: 'Data resep telah disimpan.',
+                                        confirmButtonColor: '#3085d6'
+                                    }).then(() => {
+                                        window.location.href =
+                                            "{{ route('resep_obat.index', ['pasien' => $pasien->id, 'rekam_medis' => $rekam_medis->id]) }}";
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Gagal!',
+                                        text: data.message ||
+                                            'Terjadi kesalahan saat menyimpan resep.',
+                                        confirmButtonColor: '#3085d6'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: error.message ||
+                                        'Terjadi kesalahan jaringan.',
+                                    confirmButtonColor: '#3085d6'
+                                });
+                            });
+                    }
+                });
             });
+
 
         });
     </script>
