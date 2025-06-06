@@ -87,47 +87,53 @@
             </div>
 
             <div class="card-body">
-                <div class="row align-items-end g-2">
-                    <div class="col-md-4">
-                        <label for="nama_obat" class="form-label"><b>Obat</b><span class="text-danger">*</span></label>
-                        <select id="nama_obat" class="form-select">
-                            <option value="">-- Pilih Obat --</option>
-                            @if ($rekam_medis->disetujui_dokter == 0)
-                                @foreach ($obat_bebas_dan_tidak_bebas as $obat)
-                                    <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
-                                        data-kategori="{{ $obat->kategori }}" data-satuan="{{ $obat->satuan }}"
-                                        data-expired="{{ $obat->expired_date }}" data-harga="{{ $obat->harga }}">
-                                        {{ $obat->nama_obat }} - {{ $obat->kategori }} - {{ $obat->satuan }} - stok:
-                                        {{ $obat->stok }}
-                                    </option>
-                                @endforeach
-                            @else
-                                @foreach ($daftar_obat_tidak_bebas as $obat)
-                                    <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
-                                        data-kategori="{{ $obat->kategori }}" data-satuan="{{ $obat->satuan }}"
-                                        data-expired="{{ $obat->expired_date }}" data-harga="{{ $obat->harga }}">
-                                        {{ $obat->nama_obat }} - {{ $obat->kategori }} - {{ $obat->satuan }} - stok:
-                                        {{ $obat->stok }}
-                                    </option>
-                                @endforeach
-                            @endif
-                        </select>
+                @if (!$rekam_medis->biaya_total)
+                    <div class="row align-items-end g-2">
+                        <div class="col-md-4">
+                            <label for="nama_obat" class="form-label"><b>Obat</b><span
+                                    class="text-danger">*</span></label>
+                            <select id="nama_obat" class="form-select">
+                                <option value="">-- Pilih Obat --</option>
+                                @if ($rekam_medis->disetujui_dokter == 0)
+                                    @foreach ($obat_bebas_dan_tidak_bebas as $obat)
+                                        <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
+                                            data-kategori="{{ $obat->kategori }}" data-satuan="{{ $obat->satuan }}"
+                                            data-expired="{{ $obat->expired_date }}" data-harga="{{ $obat->harga }}">
+                                            {{ $obat->nama_obat }} - {{ $obat->kategori }} - {{ $obat->satuan }} -
+                                            stok:
+                                            {{ $obat->stok }}
+                                        </option>
+                                    @endforeach
+                                @else
+                                    @foreach ($daftar_obat_tidak_bebas as $obat)
+                                        <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
+                                            data-kategori="{{ $obat->kategori }}" data-satuan="{{ $obat->satuan }}"
+                                            data-expired="{{ $obat->expired_date }}" data-harga="{{ $obat->harga }}">
+                                            {{ $obat->nama_obat }} - {{ $obat->kategori }} - {{ $obat->satuan }} -
+                                            stok:
+                                            {{ $obat->stok }}
+                                        </option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="kuantitas" class="form-label"><b>Qty</b><span
+                                    class="text-danger">*</span></label>
+                            <input type="number" id="kuantitas" class="form-control" min="1" value="1">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="catatan" class="form-label"><b>Catatan / Petunjuk Konsumsi</b></label>
+                            <input type="text" id="catatan" class="form-control"
+                                placeholder="cth: 3x sehari setelah makan">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" id="btn-tambah-obat" class="btn btn-primary w-100">
+                                Tambah
+                            </button>
+                        </div>
                     </div>
-                    <div class="col-md-1">
-                        <label for="kuantitas" class="form-label"><b>Qty</b><span class="text-danger">*</span></label>
-                        <input type="number" id="kuantitas" class="form-control" min="1" value="1">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="catatan" class="form-label"><b>Catatan / Petunjuk Konsumsi</b></label>
-                        <input type="text" id="catatan" class="form-control"
-                            placeholder="cth: 3x sehari setelah makan">
-                    </div>
-                    <div class="col-md-2">
-                        <button type="button" id="btn-tambah-obat" class="btn btn-primary w-100">
-                            Tambah
-                        </button>
-                    </div>
-                </div>
+                @endif
 
                 <hr>
 
@@ -144,7 +150,9 @@
                                 <th>Qty</th>
                                 <th>Total</th>
                                 <th>Catatan</th>
-                                <th>Aksi</th>
+                                @if (!$rekam_medis->biaya_total)
+                                    <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -160,15 +168,17 @@
                                     <td>{{ $item->kuantitas }}</td>
                                     <td>Rp{{ number_format($item->harga_final, 0, ',', '.') }}</td>
                                     <td>{{ $item->catatan ?? '-' }}</td>
-                                    <td>
-                                        <form action="#" method="POST" class="d-inline form-delete-user">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="button" class="btn icon btn-danger btn-delete-user">
-                                                <i class="bi bi-trash"> (Sudah Tersimpan)</i>
-                                            </button>
-                                        </form>
-                                    </td>
+                                    @if (!$rekam_medis->biaya_total)
+                                        <td>
+                                            <form action="#" method="POST" class="d-inline form-delete-user">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="btn icon btn-danger btn-delete-user">
+                                                    <i class="bi bi-trash"> (Sudah Tersimpan)</i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
@@ -427,7 +437,57 @@
                 });
             });
 
-
+            // Simpan Apotek
+            document.getElementById('btn-simpan-apotek').addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Apakah pasien sudah ambil obat?',
+                    text: "Data akan disimpan dan pasien dianggap selesai.",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, simpan!',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch("{{ route('resep_obat.proses_apotek', $rekam_medis->id) }}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Accept': 'application/json'
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Berhasil!',
+                                        text: 'Data pasien diperbarui.',
+                                        confirmButtonColor: '#3085d6'
+                                    }).then(() => location.reload());
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Gagal!',
+                                        text: data.message || 'Terjadi kesalahan.',
+                                        confirmButtonColor: '#3085d6'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: error.message ||
+                                        'Terjadi kesalahan jaringan.',
+                                    confirmButtonColor: '#3085d6'
+                                });
+                            });
+                    }
+                });
+            });
         });
     </script>
 

@@ -12,9 +12,6 @@ use App\Http\Controllers\Controller;
 
 class ResepObatController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index($pasien, RekamMedis $rekam_medis)
     {
         $resep_obat = ResepObat::with('rekam_medis.pasien')
@@ -40,17 +37,6 @@ class ResepObatController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request, RekamMedis $rekam_medis)
     {
         $validated = $request->validate([
@@ -114,6 +100,29 @@ class ResepObatController extends Controller
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
             DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function proses_apotek(RekamMedis $rekam_medis)
+    {
+        try {
+            // Hitung total dari resep_obat
+            $total = ResepObat::where('rekam_medis_id', $rekam_medis->id)
+                ->sum(DB::raw('harga_per_obat * kuantitas'));
+
+            // Update rekam_medis: biaya_total dan status_kedatangan jadi 'Selesai'
+            $rekam_medis->update([
+                'biaya_total' => $total,
+                'status_kedatangan' => 'Selesai',
+                'jam_selesai' => now()
+            ]);
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
