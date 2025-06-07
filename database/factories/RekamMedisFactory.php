@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class RekamMedisFactory extends Factory
 {
+    private static int $counter = 1;
     /**
      * Define the model's default state.
      *
@@ -17,9 +18,13 @@ class RekamMedisFactory extends Factory
      */
     public function definition(): array
     {
+        $noAntrean = 'UM-' . str_pad(self::$counter++, 2, '0', STR_PAD_LEFT);
+        
         return [
             'pasien_id' => $this->faker->randomElement(Pasien::pluck('id')->toArray()),
-            'tanggal_kunjungan' => $this->faker->date(),
+            // 'tanggal_kunjungan' => $this->faker->date(),
+            'tanggal_kunjungan' => now()->toDateString(),
+            'no_antrean' => $noAntrean,
             'status_kedatangan' => $this->faker->randomElement(['Booking', 'Datang', 'Tidak Datang', 'Diperiksa', 'Selesai', 'Beli Obat']),
             'jam_datang' => $this->faker->time(),
             'jam_diperiksa' => $this->faker->time(),
