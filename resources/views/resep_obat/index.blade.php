@@ -56,9 +56,11 @@
             <div class="card-header text-center">
                 <h3>{{ $title }}</h3>
                 <h4 class="card-title">a.n {{ $pasien->nama_lengkap }} ({{ $pasien->no_rm }})</h4>
-                <span class="badge bg-success">
-                    Resep Obat Telah Disetujui Dokter
-                </span>
+                @if ($pasien->rekam_medis->disetujui_dokter == 1)
+                    <span class="badge bg-success">
+                        Resep Obat Telah Disetujui Dokter
+                    </span>
+                @endif
 
                 @if ($pasien->user->foto)
                     <div class="text-center mt-2">
