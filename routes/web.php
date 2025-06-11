@@ -1,17 +1,18 @@
 <?php
 
+use App\Models\RekamMedis;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ObatController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PasienController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\JadwalDokterController;
-use App\Http\Controllers\PasienController;
-use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\ResepObatController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\RekamMedisController;
+use App\Http\Controllers\JadwalDokterController;
 
 // AUTENTIKASI
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
@@ -74,10 +75,12 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     // RESEP OBAT
     Route::get('/pasien/rekam_medis/{pasien}/resep_obat/{rekam_medis}', [ResepObatController::class, 'index'])->name('resep_obat.index');
+    Route::post('/pasien/rekam_medis/resep_obat/{rekam_medis}/store_keluhan_diagnosis_tindakan', [ResepObatController::class, 'store_keluhan_diagnosis_tindakan'])->name('resep_obat.store_keluhan_diagnosis_tindakan');
     Route::post('/pasien/rekam_medis/resep_obat/{rekam_medis}/store', [ResepObatController::class, 'store'])->name('resep_obat.store');
     Route::post('/pasien/rekam_medis/resep_obat/{rekam_medis}/proses-apotek', [ResepObatController::class, 'proses_apotek'])->name('resep_obat.proses_apotek');
     Route::delete('/pasien/rekam_medis/resep_obat/{resep_obat}/delete', [ResepObatController::class, 'destroy'])->name('resep_obat.destroy');
 
     // TRANSAKSI
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
+    Route::get('/transaksi/pasien/{pasien}/rekam_medis/{rekam_medis}/resep_obat', [TransaksiController::class, 'transaksi_resep_obat'])->name('transaksi.resep_obat');
 });

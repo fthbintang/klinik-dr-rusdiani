@@ -21,10 +21,6 @@
         </div>
     </div>
 
-    <div class="text-end mb-3">
-        <a href="{{ route('pasien.index') }}" class="btn btn-info">Kembali</a>
-    </div>
-
     <section class="section">
         <div class="card">
             <div class="card-header">
@@ -90,30 +86,39 @@
                                                 'Selesai' => 'bg-success',
                                                 'Tidak Datang' => 'bg-danger',
                                                 'Beli Obat' => 'bg-secondary',
-                                                'Pengambilan Obat' => 'bg-dark',
+                                                'Menunggu Obat' => 'bg-dark',
                                                 default => 'bg-secondary',
                                             };
                                         @endphp
                                         <span class="badge {{ $badgeClass }}">{{ $status ?? '-' }}</span>
                                     </td>
                                     <td class="text-center">
-                                        @if ($row->disetujui_dokter == 1)
-                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        @if ($row->disetujui_dokter === 1)
+                                            <span class="badge bg-success">Sudah Diberi</span>
+                                        @elseif ($row->disetujui_dokter === 0)
+                                            <span class="badge bg-danger">Belum Diberi</span>
                                         @else
-                                            <i class="bi bi-x-circle-fill text-danger"></i>
+                                            <span class="badge bg-secondary">Tanpa Resep</span>
                                         @endif
                                     </td>
                                     <td class="text-center">
                                         @if ($row->biaya_total)
-                                            {{ 'Rp' . number_format($row->biaya_total, 0, ',', '.') }}
+                                            <b>{{ 'Rp' . number_format($row->biaya_total, 0, ',', '.') }}</b>
                                         @else
-                                            <span class="badge bg-danger">Belum Bayar</span>
+                                            <p><b>-</b></p>
                                         @endif
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1 justify-content-center">
-                                            <a href="#" class="btn icon btn-info"><i
-                                                    class="bi bi-capsule"></i></a>
+                                            @if (
+                                                $row->status_kedatangan == 'Booking' ||
+                                                    $row->status_kedatangan == 'Diperiksa' ||
+                                                    $row->status_kedatangan == 'Beli Obat')
+                                                <a href="{{ route('transaksi.resep_obat', ['pasien' => $row->pasien->id, 'rekam_medis' => $row->id]) }}"
+                                                    class="btn icon btn-info">
+                                                    <i class="bi bi-clipboard2"></i>
+                                                </a>
+                                            @endif
                                             <form action="#" method="POST" class="d-inline form-delete-user">
                                                 @csrf
                                                 @method('DELETE')

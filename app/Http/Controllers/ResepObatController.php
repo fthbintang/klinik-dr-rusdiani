@@ -28,13 +28,14 @@ class ResepObatController extends Controller
             ->toArray();
 
         return view('resep_obat.index', [
-            'title' => 'Resep Obat',
+            'title' => 'Detail Pemeriksaan dan Resep Obat',
             'daftar_obat_tidak_bebas' => $obat_tidak_bebas,
             'obat_bebas_dan_tidak_bebas' => $obat_bebas_dan_tidak_bebas,
             'pasien' => $pasien,
             'resep_obat' => $resep_obat,
             'rekam_medis' => $rekam_medis,
-            'obatTersimpan' => $obatTersimpan
+            'obatTersimpan' => $obatTersimpan,
+            'from' => 'rekam_medis'
         ]);
     }
 
@@ -105,6 +106,31 @@ class ResepObatController extends Controller
                 'success' => false,
                 'message' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function store_keluhan_diagnosis_tindakan(Request $request)
+    {
+        $validatedData = $request->validate([
+            'rekam_medis_id' => 'required|exists:rekam_medis,id',
+            'keluhan'        => 'nullable|string|max:255',
+            'diagnosis'      => 'nullable|string|max:255',
+            'tindakan'       => 'nullable|string|max:255',
+        ]);
+    
+        try {
+            RekamMedis::where('id', $validatedData['rekam_medis_id'])
+                ->update([
+                    'keluhan' => $validatedData['keluhan'],
+                    'diagnosis' => $validatedData['diagnosis'],
+                    'tindakan' => $validatedData['tindakan'],
+                ]);
+    
+            Alert::success('Sukses!', 'Data Berhasil Disimpan');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Alert::error('Error', 'Terjadi kesalahan saat menyimpan data');
+            return back()->withInput();
         }
     }
 
