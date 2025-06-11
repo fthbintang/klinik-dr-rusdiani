@@ -110,6 +110,12 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1 justify-content-center">
+                                            @if ($row->status_kedatangan == 'Datang')
+                                                <a href="#" class="btn icon btn-info btn-call-pasien"
+                                                    data-id="{{ $row->id }}">
+                                                    <i class="bi bi-forward-fill"></i>
+                                                </a>
+                                            @endif
                                             @if (
                                                 $row->status_kedatangan == 'Booking' ||
                                                     $row->status_kedatangan == 'Diperiksa' ||
@@ -142,5 +148,53 @@
             </div>
         </div>
     </section>
+
+    {{-- UPDATE STATUS KEDATANGAN MENJADI DIPERIKSA --}}
+    <script>
+        $(document).ready(function() {
+            $('.btn-call-pasien').click(function(e) {
+                e.preventDefault();
+                const rekamMedisId = $(this).data('id');
+
+                // Ambil route dengan placeholder dan ganti placeholder dengan ID sesungguhnya
+                let urlTemplate = "{{ route('transaksi.update_status', ['id' => ':id']) }}";
+                let url = urlTemplate.replace(':id', rekamMedisId);
+
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: 'Apakah yakin akan memanggil pasien ini?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, panggil',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            type: 'PUT',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            data: {
+                                status_kedatangan: 'Diperiksa',
+                            },
+                            success: function(response) {
+                                Swal.fire('Sukses', 'Status pasien sudah diperbarui',
+                                        'success')
+                                    .then(() => {
+                                        location.reload();
+                                    });
+                            },
+                            error: function(xhr) {
+                                Swal.fire('Error', 'Gagal memperbarui status', 'error');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+
 
 </x-layout>

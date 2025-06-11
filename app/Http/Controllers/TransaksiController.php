@@ -7,6 +7,7 @@ use App\Models\Pasien;
 use App\Models\ResepObat;
 use App\Models\RekamMedis;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -16,7 +17,7 @@ class TransaksiController extends Controller
     {
         $rekam_medis = RekamMedis::with('pasien')
             ->whereDate('tanggal_kunjungan', now())
-            ->orderByRaw("FIELD(status_kedatangan, 'Booking', 'Datang', 'Diperiksa', 'Menunggu Obat', 'Selesai', 'Beli Obat', 'Tidak Datang')")
+            ->orderByRaw("FIELD(status_kedatangan, 'Booking', 'Datang', 'Diperiksa', 'Pengambilan Obat', 'Selesai', 'Beli Obat', 'Tidak Datang')")
             ->orderBy('jam_datang', 'asc')
             ->get();
     
@@ -40,9 +41,13 @@ class TransaksiController extends Controller
             'tanggal_kunjungan'  => 'required|date|after_or_equal:today',
             'pasien_id'          => 'required|exists:pasien,id',
             'keluhan'            => 'required|string|max:255',
+            'biaya_jasa'         => 'required|string', 
         ]);
     
         try {
+            // Konversi biaya_jasa dari format 10.000 menjadi 10000 (integer)
+            $validatedData['biaya_jasa'] = (int) str_replace('.', '', $validatedData['biaya_jasa']);
+    
             $tanggalKunjungan = $validatedData['tanggal_kunjungan'];
             $isToday = $tanggalKunjungan === now()->toDateString();
     
@@ -61,12 +66,36 @@ class TransaksiController extends Controller
             Alert::success('Sukses!', 'Data Berhasil Ditambah');
             return redirect()->route('transaksi.index');
         } catch (\Exception $e) {
+            Log::error('Gagal menyimpan rekam medis: ' . $e->getMessage());
             Alert::error('Error', 'Terjadi kesalahan saat menyimpan data');
             return back()->withInput();
         }
     }
     
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status_kedatangan' => 'required|string|in:Diperiksa',
+        ]);
     
+        try {
+            $rekamMedis = RekamMedis::findOrFail($id);
+            $rekamMedis->status_kedatangan = $request->status_kedatangan;
+            $rekamMedis->save();
+    
+            return response()->json(['message' => 'Status berhasil diperbarui']);
+        } catch (\Exception $e) {
+            // Catat error ke log Laravel
+            Log::error('Gagal update status_kedatangan rekam medis', [
+                'rekam_medis_id' => $id,
+                'error_message' => $e->getMessage(),
+                'stack_trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json(['message' => 'Gagal memperbarui status'], 500);
+        }
+    }
 
     public function transaksi_resep_obat($pasien, RekamMedis $rekam_medis)
     {

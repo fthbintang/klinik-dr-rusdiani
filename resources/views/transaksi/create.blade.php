@@ -41,6 +41,18 @@
                     @enderror
                 </div>
 
+                <div class="form-group mb-3">
+                    <label for="biaya_jasa" class="form-label"><b>Biaya Jasa</b></label>
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="text" name="biaya_jasa" id="biaya_jasa" value="{{ old('biaya_jasa') }}"
+                            class="form-control @error('biaya_jasa') is-invalid @enderror"
+                            placeholder="Masukkan Biaya Jasa">
+                    </div>
+                    @error('biaya_jasa')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
                 <div class="form-group mb-3">
                     <label for="pasien_id" class="form-label"><b>Pilih Pasien</b></label>
@@ -61,7 +73,7 @@
                 <div class="form-group mb-3">
                     <label for="keluhan" class="form-label"><b>Keluhan</b></label>
                     <textarea name="keluhan" id="keluhan" class="form-control @error('keluhan') is-invalid @enderror" rows="3"
-                        placeholder="keluhan...">{{ old('keluhan') }}</textarea>
+                        placeholder="Keluhan...">{{ old('keluhan') }}</textarea>
                     @error('keluhan')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -81,6 +93,20 @@
                 placeholder: "-- Pilih Pasien --",
                 allowClear: true
             });
+
+            $('#biaya_jasa').on('input', function() {
+                let value = $(this).val().replace(/\./g, '');
+                if (!isNaN(value)) {
+                    $(this).val(Number(value).toLocaleString('id-ID'));
+                }
+            });
+
+            // Hapus titik sebelum submit
+            $('form').on('submit', function() {
+                let raw = $('#biaya_jasa').val().replace(/\./g, '');
+                $('#biaya_jasa').val(raw);
+            });
         });
     </script>
+
 </x-layout>
