@@ -17,48 +17,87 @@
         }
     </style>
 
-    <div class="page-heading">
-        <div class="page-title">
-            <div class="row">
-                <div class="col-12 col-md-6 order-md-1 order-last">
-                    <h3>Halaman {{ $title }}</h3>
-                </div>
-                <div class="col-12 col-md-6 order-md-2 order-first">
-                    <nav aria-label="breadcrumb" class="breadcrumb-header d-flex justify-content-end">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('index') }}">Home</a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('pasien.index') }}">Pasien</a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('pasien.rekam_medis.index', $pasien->id) }}">
-                                    Rekam Medis ({{ $pasien->nama_lengkap }})
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page">
-                                {{ $title }}
-                            </li>
-                        </ol>
-                    </nav>
+    @if ($from === 'rekam_medis')
+        <div class="page-heading">
+            <div class="page-title">
+                <div class="row">
+                    <div class="col-12 col-md-6 order-md-1 order-last">
+                        <h3>Halaman {{ $title }}</h3>
+                    </div>
+                    <div class="col-12 col-md-6 order-md-2 order-first">
+                        <nav aria-label="breadcrumb" class="breadcrumb-header d-flex justify-content-end">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('index') }}">Home</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('pasien.index') }}">Pasien</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('pasien.rekam_medis.index', $pasien->id) }}">
+                                        Rekam Medis ({{ $pasien->nama_lengkap }})
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {{ $title }}
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="text-end mb-3">
-        <a href="{{ route('pasien.rekam_medis.index', $pasien->id) }}" class="btn btn-info">Kembali</a>
-    </div>
+        <div class="text-end mb-3">
+            <a href="{{ route('pasien.rekam_medis.index', $pasien->id) }}" class="btn btn-info">Kembali</a>
+        </div>
+    @endif
+
+    @if ($from === 'transaksi')
+        <div class="page-heading">
+            <div class="page-title">
+                <div class="row">
+                    <div class="col-12 col-md-6 order-md-1 order-last">
+                        <h3>Halaman {{ $title }}</h3>
+                    </div>
+                    <div class="col-12 col-md-6 order-md-2 order-first">
+                        <nav aria-label="breadcrumb" class="breadcrumb-header d-flex justify-content-end">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('index') }}">Home</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('transaksi.index') }}">Transaksi</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {{ $title }}
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-end mb-3">
+            <a href="{{ route('transaksi.index') }}" class="btn btn-info">Kembali</a>
+        </div>
+    @endif
 
     <section class="section">
         <div class="card">
             <div class="card-header text-center">
-                <h3>{{ $title }}</h3>
+                {{-- <h3>{{ $title }}</h3> --}}
+                <h3>Detail Pemeriksaan @if ($rekam_medis->keluhan && $rekam_medis->diagnosis && $rekam_medis->tindakan)
+                        ✅
+                    @endif
+                </h3>
                 <h4 class="card-title">a.n {{ $pasien->nama_lengkap }} ({{ $pasien->no_rm }})</h4>
-                <span class="badge bg-success">
-                    Resep Obat Telah Disetujui Dokter
-                </span>
+                @if ($pasien->rekam_medis->disetujui_dokter == 1)
+                    <span class="badge bg-success">
+                        Resep Obat Telah Disetujui Dokter
+                    </span>
+                @endif
 
                 @if ($pasien->user->foto)
                     <div class="text-center mt-2">
@@ -87,121 +126,192 @@
             </div>
 
             <div class="card-body">
-                @if (!$rekam_medis->biaya_total)
-                    <div class="row align-items-end g-2">
-                        <div class="col-md-4">
-                            <label for="nama_obat" class="form-label"><b>Obat</b><span
-                                    class="text-danger">*</span></label>
-                            <select id="nama_obat" class="form-select">
-                                <option value="">-- Pilih Obat --</option>
-                                @if ($rekam_medis->disetujui_dokter == 0)
-                                    @foreach ($obat_bebas_dan_tidak_bebas as $obat)
-                                        <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
-                                            data-kategori="{{ $obat->kategori }}" data-satuan="{{ $obat->satuan }}"
-                                            data-expired="{{ $obat->expired_date }}" data-harga="{{ $obat->harga }}">
-                                            {{ $obat->nama_obat }} - {{ $obat->kategori }} - {{ $obat->satuan }} -
-                                            stok:
-                                            {{ $obat->stok }}
-                                        </option>
-                                    @endforeach
-                                @else
-                                    @foreach ($daftar_obat_tidak_bebas as $obat)
-                                        <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
-                                            data-kategori="{{ $obat->kategori }}" data-satuan="{{ $obat->satuan }}"
-                                            data-expired="{{ $obat->expired_date }}" data-harga="{{ $obat->harga }}">
-                                            {{ $obat->nama_obat }} - {{ $obat->kategori }} - {{ $obat->satuan }} -
-                                            stok:
-                                            {{ $obat->stok }}
-                                        </option>
-                                    @endforeach
-                                @endif
-                            </select>
-                        </div>
-                        <div class="col-md-1">
-                            <label for="kuantitas" class="form-label"><b>Qty</b><span
-                                    class="text-danger">*</span></label>
-                            <input type="number" id="kuantitas" class="form-control" min="1" value="1">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="catatan" class="form-label"><b>Catatan / Petunjuk Konsumsi</b></label>
-                            <input type="text" id="catatan" class="form-control"
-                                placeholder="cth: 3x sehari setelah makan">
-                        </div>
-                        <div class="col-md-2">
-                            <button type="button" id="btn-tambah-obat" class="btn btn-primary w-100">
-                                Tambah
-                            </button>
-                        </div>
+                <form action="{{ route('resep_obat.store_keluhan_diagnosis_tindakan', $rekam_medis->id) }}"
+                    method="POST">
+                    @csrf
+
+                    <input type="hidden" name="rekam_medis_id" value="{{ $rekam_medis->id }}">
+
+                    <div class="form-group">
+                        <label for="keluhan" class="form-label"><b>Keluhan</b><span
+                                class="text-danger">*</span></label>
+                        <textarea class="form-control @error('keluhan') is-invalid @enderror" name="keluhan" id="keluhan">{{ $rekam_medis->keluhan }}</textarea>
+                        @error('keluhan')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
                     </div>
-                @endif
 
-                <hr>
+                    <div class="form-group">
+                        <label for="diagnosis" class="form-label"><b>Diagnosis</b><span
+                                class="text-danger">*</span></label>
+                        <textarea class="form-control @error('diagnosis') is-invalid @enderror" name="diagnosis" id="diagnosis">{{ $rekam_medis->diagnosis }}</textarea>
+                        @error('diagnosis')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
 
-                <div class="table-responsive mt-3">
-                    <table class="table table-bordered" id="tabel-obat-terpilih">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Obat</th>
-                                <th>Kategori</th>
-                                <th>Satuan</th>
-                                <th>Expired</th>
-                                <th>Harga</th>
-                                <th>Qty</th>
-                                <th>Total</th>
-                                <th>Catatan</th>
-                                @if (!$rekam_medis->biaya_total)
-                                    <th>Aksi</th>
-                                @endif
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($resep_obat as $index => $item)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $item->nama_obat }}</td>
-                                    <td>{{ $item->kategori ?? '-' }}</td>
-                                    <td>{{ $item->satuan ?? '-' }}</td>
-                                    <td>{{ $item->expired_date ? \Carbon\Carbon::parse($item->expired_date)->format('d-m-Y') : '-' }}
-                                    </td>
-                                    <td>Rp{{ number_format($item->harga_per_obat, 0, ',', '.') }}</td>
-                                    <td>{{ $item->kuantitas }}</td>
-                                    <td>Rp{{ number_format($item->harga_final, 0, ',', '.') }}</td>
-                                    <td>{{ $item->catatan ?? '-' }}</td>
-                                    @if (!$rekam_medis->biaya_total)
-                                        <td>
-                                            <form action="{{ route('resep_obat.destroy', $item->id) }}" method="POST"
-                                                class="d-inline form-delete-user">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="btn icon btn-danger btn-delete-user">
-                                                    <i class="bi bi-trash"> (Sudah Tersimpan)</i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    @endif
-                                </tr>
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th colspan="7" class="text-end">Grand Total</th>
-                                <th id="total-semua">Rp0</th>
-                                <th colspan="2"></th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+                    <div class="form-group">
+                        <label for="tindakan" class="form-label"><b>Tindakan</b><span
+                                class="text-danger">*</span></label>
+                        <textarea class="form-control @error('tindakan') is-invalid @enderror" name="tindakan" id="tindakan">{{ $rekam_medis->tindakan }}</textarea>
+                        @error('tindakan')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
 
-                <div class="mt-4 float-end">
-                    <button id="btn-simpan-dokter" class="btn btn-success">✅ Simpan</button>
-                    <button id="btn-simpan-apotek" class="btn btn-primary"
-                        @if (!$rekam_medis->disetujui_dokter || $rekam_medis->biaya_total) disabled @endif>
-                        💊 Diproses Apotek
-                    </button>
-                </div>
+                    {{-- Tombol Submit --}}
+                    <div class="text-end mt-3">
+                        <button type="submit" class="btn btn-success">Simpan</button>
+                    </div>
+
+                </form>
             </div>
         </div>
+
+        @if ($rekam_medis->keluhan && $rekam_medis->diagnosis && $rekam_medis->tindakan)
+            <div class="card">
+                <div class="card-header text-center">
+                    <h3>Resep Obat</h3>
+                    @if ($pasien->rekam_medis->disetujui_dokter == 1)
+                        <span class="badge bg-success">
+                            Resep Obat Telah Disetujui Dokter
+                        </span>
+                    @endif
+                </div>
+
+                <div class="card-body">
+                    @if (!$rekam_medis->biaya_total)
+                        <div class="row align-items-end g-2">
+                            <div class="col-md-4">
+                                <label for="nama_obat" class="form-label"><b>Obat</b><span
+                                        class="text-danger">*</span></label>
+                                <select id="nama_obat" class="form-select">
+                                    <option value="">-- Pilih Obat --</option>
+                                    @if ($rekam_medis->disetujui_dokter == 0)
+                                        @foreach ($obat_bebas_dan_tidak_bebas as $obat)
+                                            <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
+                                                data-kategori="{{ $obat->kategori }}"
+                                                data-satuan="{{ $obat->satuan }}"
+                                                data-expired="{{ $obat->expired_date }}"
+                                                data-harga="{{ $obat->harga }}">
+                                                {{ $obat->nama_obat }} - {{ $obat->kategori }} - {{ $obat->satuan }}
+                                                -
+                                                stok:
+                                                {{ $obat->stok }}
+                                            </option>
+                                        @endforeach
+                                    @else
+                                        @foreach ($daftar_obat_tidak_bebas as $obat)
+                                            <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
+                                                data-kategori="{{ $obat->kategori }}"
+                                                data-satuan="{{ $obat->satuan }}"
+                                                data-expired="{{ $obat->expired_date }}"
+                                                data-harga="{{ $obat->harga }}">
+                                                {{ $obat->nama_obat }} - {{ $obat->kategori }} - {{ $obat->satuan }}
+                                                -
+                                                stok:
+                                                {{ $obat->stok }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="col-md-1">
+                                <label for="kuantitas" class="form-label"><b>Qty</b><span
+                                        class="text-danger">*</span></label>
+                                <input type="number" id="kuantitas" class="form-control" min="1"
+                                    value="1">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="catatan" class="form-label"><b>Catatan / Petunjuk Konsumsi</b></label>
+                                <input type="text" id="catatan" class="form-control"
+                                    placeholder="cth: 3x sehari setelah makan">
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" id="btn-tambah-obat" class="btn btn-primary w-100">
+                                    Tambah
+                                </button>
+                            </div>
+                        </div>
+                    @endif
+
+                    <hr>
+
+                    <div class="table-responsive mt-3">
+                        <table class="table table-bordered" id="tabel-obat-terpilih">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Obat</th>
+                                    <th>Kategori</th>
+                                    <th>Satuan</th>
+                                    <th>Expired</th>
+                                    <th>Harga</th>
+                                    <th>Qty</th>
+                                    <th>Total</th>
+                                    <th>Catatan</th>
+                                    @if (!$rekam_medis->biaya_total)
+                                        <th>Aksi</th>
+                                    @endif
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($resep_obat as $index => $item)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $item->nama_obat }}</td>
+                                        <td>{{ $item->kategori ?? '-' }}</td>
+                                        <td>{{ $item->satuan ?? '-' }}</td>
+                                        <td>{{ $item->expired_date ? \Carbon\Carbon::parse($item->expired_date)->format('d-m-Y') : '-' }}
+                                        </td>
+                                        <td>Rp{{ number_format($item->harga_per_obat, 0, ',', '.') }}</td>
+                                        <td>{{ $item->kuantitas }}</td>
+                                        <td>Rp{{ number_format($item->harga_final, 0, ',', '.') }}</td>
+                                        <td>{{ $item->catatan ?? '-' }}</td>
+                                        @if (!$rekam_medis->biaya_total)
+                                            <td>
+                                                <form action="{{ route('resep_obat.destroy', $item->id) }}"
+                                                    method="POST" class="d-inline form-delete-user">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button"
+                                                        class="btn icon btn-danger btn-delete-user">
+                                                        <i class="bi bi-trash"> (Sudah Tersimpan)</i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="7" class="text-end">Grand Total</th>
+                                    <th id="total-semua">Rp0</th>
+                                    <th colspan="2"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="mt-4 float-end">
+                        <button id="btn-simpan-dokter"
+                            class="btn btn-success @if ($rekam_medis->biaya_total) disabled @endif">✅
+                            Simpan</button>
+                        <button id="btn-simpan-apotek" class="btn btn-primary"
+                            @if (!$rekam_medis->disetujui_dokter || $rekam_medis->biaya_total) disabled @endif>
+                            💊 Diproses Apotek
+                        </button>
+                    </div>
+                </div>
+            </div>
+        @endif
     </section>
 
     <script>
@@ -413,7 +523,7 @@
                                         confirmButtonColor: '#3085d6'
                                     }).then(() => {
                                         window.location.href =
-                                            "{{ route('resep_obat.index', ['pasien' => $pasien->id, 'rekam_medis' => $rekam_medis->id]) }}";
+                                            "{{ route('transaksi.resep_obat', ['pasien' => $pasien->id, 'rekam_medis' => $rekam_medis->id]) }}";
                                     });
                                 } else {
                                     Swal.fire({

@@ -8,6 +8,7 @@ use App\Models\ResepObat;
 use App\Models\RekamMedis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -28,13 +29,14 @@ class ResepObatController extends Controller
             ->toArray();
 
         return view('resep_obat.index', [
-            'title' => 'Resep Obat',
+            'title' => 'Detail Pemeriksaan dan Resep Obat',
             'daftar_obat_tidak_bebas' => $obat_tidak_bebas,
             'obat_bebas_dan_tidak_bebas' => $obat_bebas_dan_tidak_bebas,
             'pasien' => $pasien,
             'resep_obat' => $resep_obat,
             'rekam_medis' => $rekam_medis,
-            'obatTersimpan' => $obatTersimpan
+            'obatTersimpan' => $obatTersimpan,
+            'from' => 'rekam_medis'
         ]);
     }
 
@@ -108,52 +110,62 @@ class ResepObatController extends Controller
         }
     }
 
+    public function store_keluhan_diagnosis_tindakan(Request $request)
+    {
+        $validatedData = $request->validate([
+            'rekam_medis_id' => 'required|exists:rekam_medis,id',
+            'keluhan'        => 'nullable|string|max:255',
+            'diagnosis'      => 'nullable|string|max:255',
+            'tindakan'       => 'nullable|string|max:255',
+        ]);
+    
+        try {
+            RekamMedis::where('id', $validatedData['rekam_medis_id'])
+                ->update([
+                    'keluhan' => $validatedData['keluhan'],
+                    'diagnosis' => $validatedData['diagnosis'],
+                    'tindakan' => $validatedData['tindakan'],
+                ]);
+    
+            Alert::success('Sukses!', 'Data Berhasil Disimpan');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Alert::error('Error', 'Terjadi kesalahan saat menyimpan data');
+            return back()->withInput();
+        }
+    }
+
     public function proses_apotek(RekamMedis $rekam_medis)
     {
         try {
             // Hitung total dari resep_obat
-            $total = ResepObat::where('rekam_medis_id', $rekam_medis->id)
+            $totalObat = ResepObat::where('rekam_medis_id', $rekam_medis->id)
                 ->sum(DB::raw('harga_per_obat * kuantitas'));
-
-            // Update rekam_medis: biaya_total dan status_kedatangan jadi 'Selesai'
+    
+            // Ambil biaya jasa dari rekam medis
+            $biayaJasa = $rekam_medis->biaya_jasa ?? 0;
+    
+            // Total keseluruhan = total obat + biaya jasa
+            $biayaTotal = $totalObat + $biayaJasa;
+    
+            // Update rekam_medis
             $rekam_medis->update([
-                'biaya_total' => $total,
+                'biaya_total' => $biayaTotal,
                 'status_kedatangan' => 'Selesai',
                 'jam_selesai' => now()
             ]);
-
+    
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
+            Log::error('Gagal memproses apotek: ' . $e->getMessage());
+    
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => 'Terjadi kesalahan saat memproses data'
             ], 500);
         }
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(ResepObat $resepObat)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ResepObat $resepObat)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ResepObat $resepObat)
-    {
-        //
-    }
+    
 
     /**
      * Remove the specified resource from storage.

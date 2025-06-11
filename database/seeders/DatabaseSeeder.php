@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
         User::factory(5)->create();
         Supplier::factory(5)->create();
         Obat::factory(5)->create();
-        Pasien::factory(5)->create();
-        RekamMedis::factory(10)->create();
+        Pasien::factory(30)->create();
+        // RekamMedis::factory(30)->create();
         // ResepObat::factory(30)->create();
 
         User::create([

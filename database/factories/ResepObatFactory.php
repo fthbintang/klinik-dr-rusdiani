@@ -24,7 +24,6 @@ class ResepObatFactory extends Factory
         $kuantitas = $this->faker->numberBetween(1, 5);
 
         return [
-            // 'rekam_medis_id' => RekamMedis::factory(), // atau sesuaikan jika ingin existing
             'rekam_medis_id' => $this->faker->randomElement(RekamMedis::pluck('id')->toArray()),
             'obat_id' => $obat?->id,
             'nama_obat' => $obat?->nama ?? $this->faker->word(),
