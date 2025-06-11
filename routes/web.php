@@ -82,5 +82,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     // TRANSAKSI
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
+    Route::get('/transaksi/create', [TransaksiController::class, 'create'])->name('transaksi.create');
     Route::get('/transaksi/pasien/{pasien}/rekam_medis/{rekam_medis}/resep_obat', [TransaksiController::class, 'transaksi_resep_obat'])->name('transaksi.resep_obat');
+    Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
 });

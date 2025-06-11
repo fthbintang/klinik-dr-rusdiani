@@ -8,6 +8,7 @@ use App\Models\ResepObat;
 use App\Models\RekamMedis;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class TransaksiController extends Controller
 {
@@ -24,6 +25,48 @@ class TransaksiController extends Controller
             'rekam_medis' => $rekam_medis
         ]);
     }
+
+    public function create()
+    {
+        return view('transaksi.create', [
+            'title' => 'Tambah Transaksi',
+            'pasien' => Pasien::all()
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'tanggal_kunjungan'  => 'required|date|after_or_equal:today',
+            'pasien_id'          => 'required|exists:pasien,id',
+            'keluhan'            => 'required|string|max:255',
+        ]);
+    
+        try {
+            $tanggalKunjungan = $validatedData['tanggal_kunjungan'];
+            $isToday = $tanggalKunjungan === now()->toDateString();
+    
+            // Hitung jumlah antrean berdasarkan tanggal kunjungan
+            $jumlahAntrean = RekamMedis::whereDate('tanggal_kunjungan', $tanggalKunjungan)->count();
+            $nomorAntrean = str_pad($jumlahAntrean + 1, 2, '0', STR_PAD_LEFT);
+            $noAntrean = 'UM-' . $nomorAntrean;
+    
+            // Tambahan field otomatis
+            $validatedData['no_antrean'] = $noAntrean;
+            $validatedData['status_kedatangan'] = $isToday ? 'Datang' : 'Booking';
+            $validatedData['jam_datang'] = $isToday ? now()->format('H:i:s') : null;
+    
+            RekamMedis::create($validatedData);
+    
+            Alert::success('Sukses!', 'Data Berhasil Ditambah');
+            return redirect()->route('transaksi.index');
+        } catch (\Exception $e) {
+            Alert::error('Error', 'Terjadi kesalahan saat menyimpan data');
+            return back()->withInput();
+        }
+    }
+    
+    
 
     public function transaksi_resep_obat($pasien, RekamMedis $rekam_medis)
     {
