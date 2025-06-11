@@ -48,7 +48,7 @@
                                 <th class="text-center align-middle">No RM</th>
                                 <th class="text-center align-middle">Pasien</th>
                                 <th class="text-center align-middle">Status</th>
-                                <th class="text-center align-middle">Resep Dokter</th>
+                                {{-- <th class="text-center align-middle">Resep Dokter</th> --}}
                                 <th class="text-center align-middle">Biaya</th>
                                 <th class="text-center align-middle">Aksi</th>
                             </tr>
@@ -92,7 +92,7 @@
                                         @endphp
                                         <span class="badge {{ $badgeClass }}">{{ $status ?? '-' }}</span>
                                     </td>
-                                    <td class="text-center">
+                                    {{-- <td class="text-center">
                                         @if ($row->disetujui_dokter === 1)
                                             <span class="badge bg-success">Sudah Diberi</span>
                                         @elseif ($row->disetujui_dokter === 0)
@@ -100,7 +100,7 @@
                                         @else
                                             <span class="badge bg-secondary">Tanpa Resep</span>
                                         @endif
-                                    </td>
+                                    </td> --}}
                                     <td class="text-center">
                                         @if ($row->biaya_total)
                                             <b>{{ 'Rp' . number_format($row->biaya_total, 0, ',', '.') }}</b>
@@ -119,7 +119,9 @@
                                             @if (
                                                 $row->status_kedatangan == 'Booking' ||
                                                     $row->status_kedatangan == 'Diperiksa' ||
-                                                    $row->status_kedatangan == 'Beli Obat')
+                                                    $row->status_kedatangan == 'Beli Obat' ||
+                                                    $row->status_kedatangan == 'Pengambilan Obat' ||
+                                                    $row->status_kedatangan == 'Selesai')
                                                 <a href="{{ route('transaksi.resep_obat', ['pasien' => $row->pasien->id, 'rekam_medis' => $row->id]) }}"
                                                     class="btn icon btn-info">
                                                     <i class="bi bi-clipboard2"></i>

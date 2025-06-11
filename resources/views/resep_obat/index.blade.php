@@ -128,7 +128,6 @@
             <div class="card-body">
                 <form action="{{ route('resep_obat.store_keluhan_diagnosis_tindakan', $rekam_medis->id) }}"
                     method="POST">
-                    {{-- @method('PUT') --}}
                     @csrf
 
                     <input type="hidden" name="rekam_medis_id" value="{{ $rekam_medis->id }}">
@@ -302,7 +301,9 @@
                     </div>
 
                     <div class="mt-4 float-end">
-                        <button id="btn-simpan-dokter" class="btn btn-success">✅ Simpan</button>
+                        <button id="btn-simpan-dokter"
+                            class="btn btn-success @if ($rekam_medis->biaya_total) disabled @endif">✅
+                            Simpan</button>
                         <button id="btn-simpan-apotek" class="btn btn-primary"
                             @if (!$rekam_medis->disetujui_dokter || $rekam_medis->biaya_total) disabled @endif>
                             💊 Diproses Apotek
@@ -522,7 +523,7 @@
                                         confirmButtonColor: '#3085d6'
                                     }).then(() => {
                                         window.location.href =
-                                            "{{ route('resep_obat.index', ['pasien' => $pasien->id, 'rekam_medis' => $rekam_medis->id]) }}";
+                                            "{{ route('transaksi.resep_obat', ['pasien' => $pasien->id, 'rekam_medis' => $rekam_medis->id]) }}";
                                     });
                                 } else {
                                     Swal.fire({

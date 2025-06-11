@@ -8,6 +8,7 @@ use App\Models\ResepObat;
 use App\Models\RekamMedis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -138,24 +139,33 @@ class ResepObatController extends Controller
     {
         try {
             // Hitung total dari resep_obat
-            $total = ResepObat::where('rekam_medis_id', $rekam_medis->id)
+            $totalObat = ResepObat::where('rekam_medis_id', $rekam_medis->id)
                 ->sum(DB::raw('harga_per_obat * kuantitas'));
-
-            // Update rekam_medis: biaya_total dan status_kedatangan jadi 'Selesai'
+    
+            // Ambil biaya jasa dari rekam medis
+            $biayaJasa = $rekam_medis->biaya_jasa ?? 0;
+    
+            // Total keseluruhan = total obat + biaya jasa
+            $biayaTotal = $totalObat + $biayaJasa;
+    
+            // Update rekam_medis
             $rekam_medis->update([
-                'biaya_total' => $total,
+                'biaya_total' => $biayaTotal,
                 'status_kedatangan' => 'Selesai',
                 'jam_selesai' => now()
             ]);
-
+    
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
+            Log::error('Gagal memproses apotek: ' . $e->getMessage());
+    
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => 'Terjadi kesalahan saat memproses data'
             ], 500);
         }
     }
+    
 
     /**
      * Remove the specified resource from storage.
