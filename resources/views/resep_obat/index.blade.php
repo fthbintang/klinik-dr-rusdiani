@@ -292,12 +292,30 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th colspan="7" class="text-end">Grand Total</th>
+                                    <th colspan="7" class="text-end">Total Obat</th>
                                     <th id="total-semua">Rp0</th>
                                     <th colspan="2"></th>
                                 </tr>
                             </tfoot>
                         </table>
+
+                        <table class="table table-bordered mt-4">
+                            <tr>
+                                <th width="30%">Biaya Jasa</th>
+                                <td id="biaya-jasa" class="text-end">
+                                    Rp{{ number_format($rekam_medis->biaya_jasa, 0, ',', '.') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Total Obat</th>
+                                <td id="biaya-obat" class="text-end">Rp0</td>
+                            </tr>
+                            <tr>
+                                <th class="text-4xl">Grand Total</th>
+                                <td id="grand-total" class="text-end fw-bold text-4xl">Rp0</td>
+                            </tr>
+                        </table>
+
+
                     </div>
 
                     <div class="mt-4 float-end">
@@ -327,15 +345,31 @@
 
             // Hitung ulang grand total dari tabel yang sudah ada
             function hitungGrandTotal() {
-                let total = 0;
+                let totalObat = 0;
                 document.querySelectorAll('#tabel-obat-terpilih tbody tr').forEach(row => {
                     let hargaText = row.cells[7].textContent || 'Rp0';
                     let hargaNumber = parseInt(hargaText.replace(/[^0-9]/g, '')) || 0;
-                    total += hargaNumber;
+                    totalObat += hargaNumber;
                 });
-                document.getElementById('total-semua').textContent = 'Rp' + total.toLocaleString('id-ID');
-                return total;
+
+                // Tampilkan total obat
+                document.getElementById('biaya-obat').textContent = 'Rp' + totalObat.toLocaleString('id-ID');
+
+                // Ambil biaya jasa dari blade (sudah ditampilkan sebelumnya)
+                let biayaJasaText = document.getElementById('biaya-jasa').textContent || 'Rp0';
+                let biayaJasa = parseInt(biayaJasaText.replace(/[^0-9]/g, '')) || 0;
+
+                let grandTotal = totalObat + biayaJasa;
+
+                // Tampilkan grand total
+                document.getElementById('grand-total').textContent = 'Rp' + grandTotal.toLocaleString('id-ID');
+
+                // Update total semua lama (optional)
+                document.getElementById('total-semua').textContent = 'Rp' + totalObat.toLocaleString('id-ID');
+
+                return totalObat;
             }
+
 
             function formatDateToDMY(dateString) {
                 if (!dateString) return '-';

@@ -32,7 +32,8 @@
                 @csrf
 
                 <div class="form-group mb-3">
-                    <label for="tanggal_kunjungan" class="form-label"><b>Tanggal Kunjungan</b></label>
+                    <label for="tanggal_kunjungan" class="form-label"><b>Tanggal Kunjungan</b><span
+                            class="text-danger">*</span></label>
                     <input type="date" name="tanggal_kunjungan" id="tanggal_kunjungan"
                         value="{{ old('tanggal_kunjungan', now()->toDateString()) }}"
                         class="form-control @error('tanggal_kunjungan') is-invalid @enderror">
@@ -42,7 +43,8 @@
                 </div>
 
                 <div class="form-group mb-3">
-                    <label for="biaya_jasa" class="form-label"><b>Biaya Jasa</b></label>
+                    <label for="biaya_jasa" class="form-label"><b>Biaya Jasa</b><span
+                            class="text-danger">*</span></label>
                     <div class="input-group">
                         <span class="input-group-text">Rp</span>
                         <input type="text" name="biaya_jasa" id="biaya_jasa" value="{{ old('biaya_jasa') }}"
@@ -55,7 +57,8 @@
                 </div>
 
                 <div class="form-group mb-3">
-                    <label for="pasien_id" class="form-label"><b>Pilih Pasien</b></label>
+                    <label for="pasien_id" class="form-label"><b>Pilih Pasien</b><span
+                            class="text-danger">*</span></label>
                     <select name="pasien_id" id="pasien_id"
                         class="form-select select2 @error('pasien_id') is-invalid @enderror">
                         <option value="">-- Pilih Pasien --</option>
@@ -71,7 +74,7 @@
                 </div>
 
                 <div class="form-group mb-3">
-                    <label for="keluhan" class="form-label"><b>Keluhan</b></label>
+                    <label for="keluhan" class="form-label"><b>Keluhan</b><span class="text-danger">*</span></label>
                     <textarea name="keluhan" id="keluhan" class="form-control @error('keluhan') is-invalid @enderror" rows="3"
                         placeholder="Keluhan...">{{ old('keluhan') }}</textarea>
                     @error('keluhan')
