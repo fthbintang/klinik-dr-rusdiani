@@ -122,5 +122,18 @@ class TransaksiController extends Controller
             'from' => 'transaksi'
         ]);
     }
+
+    public function destroy(RekamMedis $rekam_medis)
+    {
+        try { 
+            $rekam_medis->delete();
+    
+            Alert::success('Berhasil', 'Data berhasil dihapus');
+            return redirect()->route('transaksi.index');
+        } catch (\Exception $e) {
+            Alert::error('Gagal', 'Terjadi kesalahan saat menghapus data');
+            return back();
+        }
+    }
     
 }

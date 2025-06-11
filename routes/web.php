@@ -86,5 +86,6 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/transaksi/pasien/{pasien}/rekam_medis/{rekam_medis}/resep_obat', [TransaksiController::class, 'transaksi_resep_obat'])->name('transaksi.resep_obat');
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
     Route::put('/transaksi/{id}/update_status', [TransaksiController::class, 'updateStatus'])->name('transaksi.update_status');
+    Route::delete('/transaksi/delete/{rekam_medis}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
 
 });
