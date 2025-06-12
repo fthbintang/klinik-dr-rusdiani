@@ -68,11 +68,22 @@
                 </li>
 
                 {{-- OBAT --}}
-                <li class="sidebar-item {{ request()->is('dashboard/obat*') ? 'active' : '' }}">
-                    <a href="{{ route('obat.index') }}" class="sidebar-link">
+                <li class="sidebar-item has-sub {{ request()->is('dashboard/obat*') ? 'active' : '' }}">
+                    <a href="#" class="sidebar-link">
                         <i class="bi bi-capsule"></i>
                         <span>Obat</span>
                     </a>
+                    <ul class="submenu">
+                        <x-sidebar-sublink href="{{ route('obat.index') }}" :active="request()->routeIs('obat.index')">
+                            Data Obat
+                        </x-sidebar-sublink>
+                        <x-sidebar-sublink href="{{ route('obat_masuk.index') }}" :active="request()->routeIs('obat_masuk.index')">
+                            Obat Masuk
+                        </x-sidebar-sublink>
+                        <x-sidebar-sublink href="#" :active="request()->routeIs('obat.kadaluarsa')">
+                            Obat Keluar
+                        </x-sidebar-sublink>
+                    </ul>
                 </li>
 
                 {{-- PASIEN --}}

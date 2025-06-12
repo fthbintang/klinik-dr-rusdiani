@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Obat extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+    
     protected $table = 'obat';
     protected $guarded = ['id'];
 
@@ -21,6 +24,11 @@ class Obat extends Model
     public function resep_obat(): HasMany
     {
         return $this->hasMany(ResepObat::class);
+    }
+
+    public function obat_masuk(): HasMany
+    {
+        return $this->hasMany(ObatMasuk::class)->withTrashed();
     }
     
 }

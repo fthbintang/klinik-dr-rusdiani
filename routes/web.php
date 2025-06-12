@@ -13,6 +13,7 @@ use App\Http\Controllers\ResepObatController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\JadwalDokterController;
+use App\Http\Controllers\ObatMasukController;
 
 // AUTENTIKASI
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
@@ -43,6 +44,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     // OBAT
     Route::get('/obat', [ObatController::class, 'index'])->name('obat.index');
     Route::get('/obat/create', [ObatController::class, 'create'])->name('obat.create');
+    Route::post('/obat/{id}/tambah_stok', [ObatController::class, 'tambahStok'])->name('obat.tambah_stok');
     Route::post('/obat/store', [ObatController::class, 'store'])->name('obat.store');
     Route::get('/obat/edit/{obat}', [ObatController::class, 'edit'])->name('obat.edit');
     Route::put('/obat/update/{obat}', [ObatController::class, 'update'])->name('obat.update');
@@ -87,5 +89,8 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
     Route::put('/transaksi/{id}/update_status', [TransaksiController::class, 'updateStatus'])->name('transaksi.update_status');
     Route::delete('/transaksi/delete/{rekam_medis}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
+
+    // OBAT MASUK
+    Route::get('/obat_masuk', [ObatMasukController::class, 'index'])->name('obat_masuk.index');
 
 });

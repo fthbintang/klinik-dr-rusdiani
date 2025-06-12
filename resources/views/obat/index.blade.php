@@ -74,6 +74,11 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
+                                            <a href="#" class="btn icon btn-info btn-tambah-stok"
+                                                data-obat-id="{{ $row->id }}"
+                                                data-nama-obat="{{ $row->nama_obat }}">
+                                                <i class="bi bi-plus"></i>
+                                            </a>
                                             <a href="{{ route('obat.edit', $row->id) }}" class="btn icon btn-warning">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
@@ -95,6 +100,66 @@
             </div>
         </div>
     </section>
+
+    {{-- MODAL TAMBAH STOK --}}
+    <div class="modal fade" id="modalTambahStok" tabindex="-1" aria-labelledby="modalTambahStokLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="formTambahStok" method="POST" action="">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Tambah Stok Obat</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="obat_id" id="modal-obat-id">
+
+                        <div class="mb-3">
+                            <label for="nama_obat" class="form-label"><b>Nama Obat</b></label>
+                            <input type="text" class="form-control" id="modal-nama-obat" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="stok_masuk" class="form-label"><b>Jumlah Stok Masuk</b></label>
+                            <input type="number" class="form-control" name="stok_masuk" id="stok_masuk" min="1"
+                                placeholder="Stok Masuk..." required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- MODAL --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalTambahStok = new bootstrap.Modal(document.getElementById('modalTambahStok'));
+
+            document.querySelectorAll('.btn-tambah-stok').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const obatId = this.dataset.obatId;
+                    const namaObat = this.dataset.namaObat;
+
+                    document.getElementById('modal-obat-id').value = obatId;
+                    document.getElementById('modal-nama-obat').value = namaObat;
+
+                    // Gunakan route helper Laravel dan ganti :id dengan obatId
+                    const actionUrl = `{{ route('obat.tambah_stok', ':id') }}`.replace(':id',
+                        obatId);
+                    document.getElementById('formTambahStok').action = actionUrl;
+
+                    modalTambahStok.show();
+                });
+            });
+        });
+    </script>
 
     {{-- DELETE --}}
     <script>

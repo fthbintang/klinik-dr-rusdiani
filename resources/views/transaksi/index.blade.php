@@ -29,9 +29,10 @@
                         <h5 class="card-title">Data {{ $title }}</h5>
                     </div>
                     <div class="col-sm-4 d-flex justify-content-end">
-                        <form action="#" method="GET" class="d-flex">
+                        <form action="{{ route('transaksi.index') }}" method="GET" class="d-flex">
                             <input type="date" name="tanggal_kunjungan" id="tanggal_kunjungan"
-                                class="form-control me-2">
+                                class="form-control me-2"
+                                value="{{ request('tanggal_kunjungan', $tanggal_kunjungan ?? now()->toDateString()) }}">
                             <button type="submit" class="btn btn-primary me-2">Cari</button>
                         </form>
                         <a href="{{ route('transaksi.create') }}" class="btn btn-success">Tambah Data</a>

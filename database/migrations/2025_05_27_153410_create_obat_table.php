@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('keterangan')->nullable();
             $table->boolean('obat_bebas')->nullable()->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
