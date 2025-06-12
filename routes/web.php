@@ -13,6 +13,7 @@ use App\Http\Controllers\ResepObatController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\JadwalDokterController;
+use App\Http\Controllers\ObatMasukController;
 
 // AUTENTIKASI
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
@@ -87,5 +88,8 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
     Route::put('/transaksi/{id}/update_status', [TransaksiController::class, 'updateStatus'])->name('transaksi.update_status');
     Route::delete('/transaksi/delete/{rekam_medis}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
+
+    // OBAT MASUK
+    Route::get('/obat_masuk', [ObatMasukController::class, 'index'])->name('obat_masuk.index');
 
 });

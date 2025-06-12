@@ -77,11 +77,11 @@
                         <x-sidebar-sublink href="{{ route('obat.index') }}" :active="request()->routeIs('obat.index')">
                             Data Obat
                         </x-sidebar-sublink>
-                        <x-sidebar-sublink href="#" :active="request()->routeIs('obat.stok-masuk')">
-                            Stok Masuk
+                        <x-sidebar-sublink href="{{ route('obat_masuk.index') }}" :active="request()->routeIs('obat_masuk.index')">
+                            Obat Masuk
                         </x-sidebar-sublink>
                         <x-sidebar-sublink href="#" :active="request()->routeIs('obat.kadaluarsa')">
-                            Stok Keluar
+                            Obat Keluar
                         </x-sidebar-sublink>
                     </ul>
                 </li>
