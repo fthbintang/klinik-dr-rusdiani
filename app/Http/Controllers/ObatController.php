@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Obat;
 use App\Models\Supplier;
+use App\Models\ObatMasuk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ObatController extends Controller
@@ -49,16 +53,58 @@ class ObatController extends Controller
         ]);
     
         try {
-            Obat::create($validatedData);
-
+            // Simpan data obat
+            $obat = Obat::create($validatedData);
+    
+            // Simpan data ke obat_masuk
+            ObatMasuk::create([
+                'obat_id'                => $obat->id,
+                'tanggal_obat_masuk'     => now(), // tanggal input sekarang
+                'stok_awal'              => 0,
+                'stok_masuk'             => $validatedData['stok'],
+                'stok_final'             => $validatedData['stok'],
+                'supplier_id'            => $validatedData['supplier_id'] ?? null,
+            ]);
+    
             Alert::success('Sukses!', 'Data Berhasil Ditambah');
             return redirect()->route('obat.index');
         } catch (\Exception $e) {
             Alert::error('Error', 'Terjadi kesalahan saat menyimpan data');
+            Log::error('Gagal menyimpan Obat baru', ['error' => $e->getMessage()]);
             return back()->withInput();
         }
     }
-    
+
+    public function tambahStok(Request $request, $id)
+    {
+        $request->validate([
+            'stok_masuk' => 'required|integer|min:1',
+        ]);
+
+        $obat = Obat::findOrFail($id);
+
+        $stokAwal = $obat->stok;
+        $stokMasuk = $request->stok_masuk;
+        $stokFinal = $stokAwal + $stokMasuk;
+
+        // Update stok obat
+        $obat->update([
+            'stok' => $stokFinal,
+        ]);
+
+        // Buat catatan obat masuk
+        ObatMasuk::create([
+            'tanggal_obat_masuk' => Carbon::now(),
+            'obat_id'            => $obat->id,
+            'stok_awal'          => $stokAwal,
+            'stok_masuk'         => $stokMasuk,
+            'stok_final'         => $stokFinal,
+            'supplier_id'        => $obat->supplier_id,
+        ]);
+
+        Alert::success('Sukses!', 'Stok Berhasil Ditambah');
+        return redirect()->route('obat.index');
+    }
 
     /**
      * Display the specified resource.

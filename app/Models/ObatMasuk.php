@@ -13,6 +13,6 @@ class ObatMasuk extends Model
     
     public function obat(): BelongsTo
     {
-        return $this->belongsTo(Obat::class);
+        return $this->belongsTo(Obat::class)->withTrashed();
     }
 }

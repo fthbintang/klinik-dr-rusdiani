@@ -46,14 +46,13 @@
                         <tbody>
                             @foreach ($obat_masuk as $row)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
                                     <td>
                                         {{ \Carbon\Carbon::parse($row->tanggal_obat_masuk)->format('d-m-Y') }}</td>
                                     <td>{{ $row->obat->nama_obat }}</td>
                                     <td>{{ $row->stok_awal }}</td>
-                                    <td>{{ $row->stok_masuk }}</td>
+                                    <td>+{{ $row->stok_masuk }}</td>
                                     <td>{{ $row->stok_final }}</td>
-                                    <td>{{ $row->supplier->nama_supplier }}</td>
+                                    <td>{{ $row->obat->supplier->nama_supplier }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

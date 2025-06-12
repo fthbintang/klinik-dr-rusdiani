@@ -44,6 +44,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     // OBAT
     Route::get('/obat', [ObatController::class, 'index'])->name('obat.index');
     Route::get('/obat/create', [ObatController::class, 'create'])->name('obat.create');
+    Route::post('/obat/{id}/tambah_stok', [ObatController::class, 'tambahStok'])->name('obat.tambah_stok');
     Route::post('/obat/store', [ObatController::class, 'store'])->name('obat.store');
     Route::get('/obat/edit/{obat}', [ObatController::class, 'edit'])->name('obat.edit');
     Route::put('/obat/update/{obat}', [ObatController::class, 'update'])->name('obat.update');

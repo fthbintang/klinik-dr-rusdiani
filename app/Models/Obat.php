@@ -28,7 +28,7 @@ class Obat extends Model
 
     public function obat_masuk(): HasMany
     {
-        return $this->hasMany(ObatMasuk::class);
+        return $this->hasMany(ObatMasuk::class)->withTrashed();
     }
     
 }
