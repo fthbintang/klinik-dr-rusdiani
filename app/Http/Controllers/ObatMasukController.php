@@ -11,7 +11,7 @@ class ObatMasukController extends Controller
     {
         return view('obat_masuk.index', [
             'title' => 'Obat Masuk',
-            'obat_masuk' => ObatMasuk::all()
+            'obat_masuk' => ObatMasuk::with('obat.supplier')->get()
         ]);
     }
 }
