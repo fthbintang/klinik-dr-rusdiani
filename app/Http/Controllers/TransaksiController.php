@@ -13,19 +13,23 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class TransaksiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $tanggal = $request->tanggal_kunjungan ?? now()->toDateString();
+    
         $rekam_medis = RekamMedis::with('pasien')
-            ->whereDate('tanggal_kunjungan', now())
+            ->whereDate('tanggal_kunjungan', $tanggal)
             ->orderByRaw("FIELD(status_kedatangan, 'Booking', 'Datang', 'Diperiksa', 'Pengambilan Obat', 'Selesai', 'Beli Obat', 'Tidak Datang')")
             ->orderBy('jam_datang', 'asc')
             ->get();
     
         return view('transaksi.index', [
             'title' => 'Transaksi',
-            'rekam_medis' => $rekam_medis
+            'rekam_medis' => $rekam_medis,
+            'tanggal_kunjungan' => $tanggal, // kirim tanggal ke view
         ]);
     }
+    
 
     public function create()
     {

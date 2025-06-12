@@ -23,7 +23,7 @@ class RekamMedisFactory extends Factory
 
         $status = $tanggal === now()->toDateString()
             ? $this->faker->randomElement([
-                'Booking', 'Datang', 'Tidak Datang', 'Menunggu Obat', 'Diperiksa', 'Selesai', 'Beli Obat'
+                'Booking', 'Datang', 'Tidak Datang', 'Diperiksa', 'Selesai', 'Pengambilan Obat'
             ])
             : $this->faker->randomElement(['Selesai', 'Beli Obat', 'Tidak Datang']);
 
@@ -59,7 +59,7 @@ class RekamMedisFactory extends Factory
         $disetujuiDokter = null;
         if ($status === 'Beli Obat') {
             $disetujuiDokter = null;
-        } elseif ($status === 'Menunggu Obat') {
+        } elseif ($status === 'Pengambilan Obat') {
             $disetujuiDokter = true;
         } else {
             $disetujuiDokter = $jamDiperiksa ? true : false;

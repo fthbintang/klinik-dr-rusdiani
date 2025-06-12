@@ -28,6 +28,13 @@
                     <div class="col-sm-8">
                         <h5 class="card-title">Data {{ $title }}</h5>
                     </div>
+                    <div class="col-sm-4 d-flex justify-content-end">
+                        <form action="{{ route('obat_masuk.index') }}" method="GET" class="d-flex">
+                            <input type="date" name="tanggal_obat_masuk" id="tanggal_obat_masuk"
+                                class="form-control me-2" value="{{ request('tanggal_obat_masuk') }}">
+                            <button type="submit" class="btn btn-primary me-2">Cari</button>
+                        </form>
+                    </div>
                 </div>
             </div>
             <div class="card-body">
