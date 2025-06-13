@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\RekamMedis;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ObatController;
 use App\Http\Controllers\UserController;
@@ -12,6 +11,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ObatMasukController;
 use App\Http\Controllers\ResepObatController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\ObatKeluarController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\JadwalDokterController;
 
@@ -92,5 +92,8 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     // OBAT MASUK
     Route::get('/obat_masuk', [ObatMasukController::class, 'index'])->name('obat_masuk.index');
+
+    // OBAT KELUAR
+    Route::get('/obat_keluar', [ObatKeluarController::class, 'index'])->name('obat_keluar.index');
 
 });
