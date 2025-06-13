@@ -86,6 +86,7 @@ class TransaksiController extends Controller
         try {
             $rekamMedis = RekamMedis::findOrFail($id);
             $rekamMedis->status_kedatangan = $request->status_kedatangan;
+            $rekamMedis->jam_diperiksa = now()->format('H:i:s');
             $rekamMedis->save();
     
             return response()->json(['message' => 'Status berhasil diperbarui']);

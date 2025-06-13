@@ -111,47 +111,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title">Kunjungan Pasien per 30 Hari</h5>
-        </div>
-        <div class="card-body">
-            {{-- <div id="chart-profile-visit"></div> --}}
-            <h3 class="text-center">Menampilkan Chart</h3>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">Kunjungan Pasien per 30 Hari</h5>
-        </div>
-        <div class="card-body">
-            {{-- <div id="chart-profile-visit"></div> --}}
-            <h3 class="text-center">Menampilkan Chart</h3>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">Kunjungan Pasien per Bulan dalam 1 Tahun</h5>
-        </div>
-        <div class="card-body">
-            {{-- <div id="chart-profile-visit"></div> --}}
-            <h3 class="text-center">Menampilkan Chart</h3>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
             <h5 class="card-title">Pendapatan per 30 Hari</h5>
-        </div>
-        <div class="card-body">
-            {{-- <div id="chart-profile-visit"></div> --}}
-            <h3 class="text-center">Menampilkan Chart</h3>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">Pendapatan per Bulan dalam 1 Tahun</h5>
         </div>
         <div class="card-body">
             {{-- <div id="chart-profile-visit"></div> --}}
