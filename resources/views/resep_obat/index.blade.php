@@ -93,11 +93,6 @@
                     @endif
                 </h3>
                 <h4 class="card-title">a.n {{ $pasien->nama_lengkap }} ({{ $pasien->no_rm }})</h4>
-                @if ($pasien->rekam_medis->disetujui_dokter == 1)
-                    <span class="badge bg-success">
-                        Resep Obat Telah Disetujui Dokter
-                    </span>
-                @endif
 
                 @if ($pasien->user->foto)
                     <div class="text-center mt-2">

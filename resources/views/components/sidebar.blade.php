@@ -80,7 +80,7 @@
                         <x-sidebar-sublink href="{{ route('obat_masuk.index') }}" :active="request()->routeIs('obat_masuk.index')">
                             Obat Masuk
                         </x-sidebar-sublink>
-                        <x-sidebar-sublink href="#" :active="request()->routeIs('obat.kadaluarsa')">
+                        <x-sidebar-sublink href="{{ route('obat_keluar.index') }}" :active="request()->routeIs('obat_keluar.index')">
                             Obat Keluar
                         </x-sidebar-sublink>
                     </ul>

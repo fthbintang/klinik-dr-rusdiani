@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('golongan_darah')->nullable();
             $table->string('agama')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

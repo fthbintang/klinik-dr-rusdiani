@@ -29,9 +29,9 @@
                         <h5 class="card-title">Data {{ $title }}</h5>
                     </div>
                     <div class="col-sm-4 d-flex justify-content-end">
-                        <form action="{{ route('obat_masuk.index') }}" method="GET" class="d-flex">
-                            <input type="date" name="tanggal_obat_masuk" id="tanggal_obat_masuk"
-                                class="form-control me-2" value="{{ request('tanggal_obat_masuk') }}">
+                        <form action="#" method="GET" class="d-flex">
+                            <input type="date" name="tanggal_obat_keluar" id="tanggal_obat_keluar"
+                                class="form-control me-2" value="{{ request('tanggal_obat_keluar') }}">
                             <button type="submit" class="btn btn-primary me-2">Cari</button>
                         </form>
                     </div>
@@ -44,22 +44,24 @@
                             <tr>
                                 <th>No</th>
                                 <th>Tanggal</th>
+                                <th>Pasien</th>
                                 <th>Obat</th>
                                 <th>Stok Awal</th>
-                                <th>Stok Masuk</th>
+                                <th>Stok Keluar</th>
                                 <th>Stok Final</th>
                                 <th>Supplier</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($obat_masuk as $row)
+                            @foreach ($obat_keluar as $row)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
-                                        {{ \Carbon\Carbon::parse($row->tanggal_obat_masuk)->format('d-m-Y') }}</td>
+                                        {{ \Carbon\Carbon::parse($row->tanggal_obat_keluar)->format('d-m-Y') }}</td>
+                                    <td>{{ $row->pasien->nama_lengkap }}</td>
                                     <td>{{ $row->obat->nama_obat }}</td>
                                     <td>{{ $row->stok_awal }}</td>
-                                    <td>+{{ $row->stok_masuk }}</td>
+                                    <td>-{{ $row->stok_keluar }}</td>
                                     <td>{{ $row->stok_final }}</td>
                                     <td>{{ $row->obat->supplier->nama_supplier }}</td>
                                 </tr>

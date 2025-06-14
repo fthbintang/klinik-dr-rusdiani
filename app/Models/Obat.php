@@ -30,5 +30,10 @@ class Obat extends Model
     {
         return $this->hasMany(ObatMasuk::class)->withTrashed();
     }
+
+    public function obat_keluar(): HasMany
+    {
+        return $this->hasMany(ObatKeluar::class)->withTrashed();
+    }
     
 }
