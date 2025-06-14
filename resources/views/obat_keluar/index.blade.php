@@ -42,6 +42,7 @@
                     <table class="table" id="table1">
                         <thead>
                             <tr>
+                                <th>No</th>
                                 <th>Tanggal</th>
                                 <th>Pasien</th>
                                 <th>Obat</th>
@@ -54,6 +55,7 @@
                         <tbody>
                             @foreach ($obat_keluar as $row)
                                 <tr>
+                                    <td>{{ $loop->iteration }}</td>
                                     <td>
                                         {{ \Carbon\Carbon::parse($row->tanggal_obat_keluar)->format('d-m-Y') }}</td>
                                     <td>{{ $row->pasien->nama_lengkap }}</td>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Obat;
 use App\Models\Pasien;
 use App\Models\ResepObat;
+use App\Models\ObatKeluar;
 use App\Models\RekamMedis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -137,28 +138,65 @@ class ResepObatController extends Controller
 
     public function proses_apotek(RekamMedis $rekam_medis)
     {
+        DB::beginTransaction();
+
         try {
             // Hitung total dari resep_obat
             $totalObat = ResepObat::where('rekam_medis_id', $rekam_medis->id)
                 ->sum(DB::raw('harga_per_obat * kuantitas'));
-    
+
             // Ambil biaya jasa dari rekam medis
             $biayaJasa = $rekam_medis->biaya_jasa ?? 0;
-    
+
             // Total keseluruhan = total obat + biaya jasa
             $biayaTotal = $totalObat + $biayaJasa;
-    
+
             // Update rekam_medis
             $rekam_medis->update([
                 'biaya_total' => $biayaTotal,
                 'status_kedatangan' => 'Selesai',
                 'jam_selesai' => now()
             ]);
-    
+
+            // Ambil semua resep_obat yang terkait
+            $resepObats = ResepObat::where('rekam_medis_id', $rekam_medis->id)->get();
+
+            foreach ($resepObats as $resep) {
+                $obat = Obat::find($resep->obat_id);
+
+                // Jika obat tidak ditemukan, skip
+                if (!$obat) {
+                    continue;
+                }
+
+                $stok_awal = $obat->stok;
+                $stok_keluar = $resep->kuantitas;
+                $stok_final = $stok_awal - $stok_keluar;
+
+                // Buat data obat_keluar
+                ObatKeluar::create([
+                    'tanggal_obat_keluar' => now()->toDateString(),
+                    'pasien_id' => $rekam_medis->pasien_id,
+                    'obat_id' => $obat->id,
+                    'stok_awal' => $stok_awal,
+                    'stok_keluar' => $stok_keluar,
+                    'stok_final' => $stok_final,
+                    'supplier_id' => $obat->supplier_id,
+                ]);
+
+                // Update stok obat di tabel obat
+                $obat->update(['stok' => $stok_final]);
+            }
+
+            DB::commit();
+
             return response()->json(['success' => true]);
+
         } catch (\Exception $e) {
+            DB::rollBack();
+
             Log::error('Gagal memproses apotek: ' . $e->getMessage());
-    
+
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat memproses data'
