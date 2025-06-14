@@ -75,7 +75,6 @@ class TransaksiController extends Controller
             return back()->withInput();
         }
     }
-    
 
     public function updateStatus(Request $request, $id)
     {
@@ -109,7 +108,7 @@ class TransaksiController extends Controller
             ->get();
 
         $pasien = Pasien::with('user')->findOrFail($pasien);
-        $obat_tidak_bebas = Obat::where('obat_bebas', 0)->get();
+        $obat_tidak_bebas = Obat::where('obat_bebas', 1)->get();
         $obat_bebas_dan_tidak_bebas = Obat::all();
 
         $obatTersimpan = ResepObat::where('rekam_medis_id', $rekam_medis->id)
