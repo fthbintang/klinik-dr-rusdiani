@@ -14,6 +14,7 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\ObatKeluarController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\JadwalDokterController;
+use App\Http\Controllers\PenjualanObatController;
 
 // AUTENTIKASI
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
@@ -95,5 +96,8 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     // OBAT KELUAR
     Route::get('/obat_keluar', [ObatKeluarController::class, 'index'])->name('obat_keluar.index');
+
+    // PENJUALAN OBAT
+    Route::get('/penjualan_obat', [PenjualanObatController::class, 'index'])->name('penjualan_obat.index');
 
 });

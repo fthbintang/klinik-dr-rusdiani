@@ -104,7 +104,7 @@
 
                 {{-- PENJUALAN OBAT  --}}
                 <li class="sidebar-item {{ request()->is('dashboard/penjualan_obat*') ? 'active' : '' }}">
-                    <a href="#" class="sidebar-link">
+                    <a href="{{ route('penjualan_obat.index') }}" class="sidebar-link">
                         <i class="bi bi-cart3"></i>
                         <span>Penjualan Obat</span>
                     </a>
