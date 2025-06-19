@@ -99,5 +99,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     // PENJUALAN OBAT
     Route::get('/penjualan_obat', [PenjualanObatController::class, 'index'])->name('penjualan_obat.index');
+    Route::get('/penjualan_obat/create', [PenjualanObatController::class, 'create'])->name('penjualan_obat.create');
+    Route::post('/penjualan_obat/store', [PenjualanObatController::class, 'store'])->name('penjualan_obat.store');
 
 });

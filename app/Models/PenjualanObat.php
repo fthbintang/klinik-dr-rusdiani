@@ -21,6 +21,6 @@ class PenjualanObat extends Model
 
     public function pasien(): BelongsTo
     {
-        return $this->belongsTo(Pasien::class);
+        return $this->belongsTo(Pasien::class)->withTrashed();
     }
 }

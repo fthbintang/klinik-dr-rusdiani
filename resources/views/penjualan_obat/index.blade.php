@@ -35,7 +35,7 @@
                                 value="{{ request('tanggal_transaksi', $tanggal_transaksi ?? now()->toDateString()) }}">
                             <button type="submit" class="btn btn-primary me-2">Cari</button>
                         </form>
-                        <a href="#" class="btn btn-success">Tambah Data</a>
+                        <a href="{{ route('penjualan_obat.create') }}" class="btn btn-success">Tambah Data</a>
                     </div>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                                     <td class="text-center">{{ $row->kode_transaksi }}</td>
                                     <td class="text-center" style="white-space: nowrap;">
                                         {{ \Carbon\Carbon::parse($row->tanggal_transaksi)->format('d-m-Y') }}</td>
-                                    <td class="text-center">{{ $row->pasien->nama_lengkap ?? 'Tanpa Nama' }}</td>
+                                    <td class="text-center">{{ $row->pasien->nama_lengkap ?? '-- Tanpa Nama --' }}</td>
                                     <td class="text-center">
                                         @if ($row->total_harga)
                                             <b>{{ 'Rp' . number_format($row->total_harga, 0, ',', '.') }}</b>

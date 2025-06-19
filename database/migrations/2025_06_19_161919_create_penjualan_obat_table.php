@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('kode_transaksi');
             $table->foreignId('pasien_id')->nullable()->constrained('pasien');
             $table->date('tanggal_transaksi');
-            $table->integer('total_harga');
+            $table->integer('total_harga')->nullable();
             $table->text('catatan')->nullable();
             $table->timestamps();
         });
