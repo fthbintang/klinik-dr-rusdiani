@@ -18,13 +18,14 @@ class PenjualanObatController extends Controller
     public function index(Request $request)
     {
         $tanggal = $request->input('tanggal_transaksi', today());
+        $penjualan_obat = PenjualanObat::with('pasien')
+                ->whereDate('tanggal_transaksi', $tanggal)
+                ->latest()
+                ->get();
     
         return view('penjualan_obat.index', [
             'title' => 'Penjualan Obat',
-            'penjualan_obat' => PenjualanObat::with('pasien')
-                ->whereDate('tanggal_transaksi', $tanggal)
-                ->latest()
-                ->get(),
+            'penjualan_obat' => $penjualan_obat,
             'tanggal_terpilih' => $tanggal,
         ]);
     }
@@ -157,6 +158,19 @@ class PenjualanObatController extends Controller
             DB::rollBack();
             Alert::error('Gagal', $e->getMessage());
             return back()->withInput();
+        }
+    }
+
+    public function destroy(PenjualanObat $penjualan_obat)
+    {
+        try { 
+            $penjualan_obat->delete();
+    
+            Alert::success('Berhasil', 'Data berhasil dihapus');
+            return redirect()->route('penjualan_obat.index');
+        } catch (\Exception $e) {
+            Alert::error('Gagal', 'Terjadi kesalahan saat menghapus data');
+            return back();
         }
     }
 }

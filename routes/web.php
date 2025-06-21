@@ -103,5 +103,6 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/penjualan_obat/detail/{penjualan_obat}', [PenjualanObatController::class, 'penjualan_obat_detail_index'])->name('penjualan_obat.detail');
     Route::post('/penjualan_obat/store', [PenjualanObatController::class, 'store'])->name('penjualan_obat.store');
     Route::post('/penjualan_obat/detail/store', [PenjualanObatController::class, 'store_penjualan_obat_detail'])->name('penjualan_obat_detail.store');
+    Route::delete('/penjualan_obat/delete/{penjualan_obat}', [PenjualanObatController::class, 'destroy'])->name('penjualan_obat.destroy');
 
 });

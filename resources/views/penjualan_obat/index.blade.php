@@ -75,13 +75,16 @@
                                                 class="btn icon btn-info">
                                                 <i class="bi bi-cart4"></i>
                                             </a>
-                                            <form action="#" method="POST" class="d-inline form-delete-user">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="btn icon btn-danger btn-delete-user">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
+                                            @if (!$row->total_harga)
+                                                <form action="{{ route('penjualan_obat.destroy', $row->id) }}"
+                                                    method="POST" class="d-inline form-delete-user">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn icon btn-danger btn-delete-user">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -92,5 +95,33 @@
             </div>
         </div>
     </section>
+
+    {{-- DELETE --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.btn-delete-user');
+
+            deleteButtons.forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    const form = this.closest('form');
+
+                    Swal.fire({
+                        title: 'Yakin ingin menghapus?',
+                        text: "Data ini akan dihapus secara permanen.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Ya, hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 
 </x-layout>
