@@ -14,6 +14,7 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\ObatKeluarController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\JadwalDokterController;
+use App\Http\Controllers\PenjualanObatController;
 
 // AUTENTIKASI
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
@@ -95,5 +96,13 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     // OBAT KELUAR
     Route::get('/obat_keluar', [ObatKeluarController::class, 'index'])->name('obat_keluar.index');
+
+    // PENJUALAN OBAT
+    Route::get('/penjualan_obat', [PenjualanObatController::class, 'index'])->name('penjualan_obat.index');
+    Route::get('/penjualan_obat/create', [PenjualanObatController::class, 'create'])->name('penjualan_obat.create');
+    Route::get('/penjualan_obat/detail/{penjualan_obat}', [PenjualanObatController::class, 'penjualan_obat_detail_index'])->name('penjualan_obat.detail');
+    Route::post('/penjualan_obat/store', [PenjualanObatController::class, 'store'])->name('penjualan_obat.store');
+    Route::post('/penjualan_obat/detail/store', [PenjualanObatController::class, 'store_penjualan_obat_detail'])->name('penjualan_obat_detail.store');
+    Route::delete('/penjualan_obat/delete/{penjualan_obat}', [PenjualanObatController::class, 'destroy'])->name('penjualan_obat.destroy');
 
 });

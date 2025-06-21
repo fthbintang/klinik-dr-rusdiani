@@ -29,7 +29,6 @@ class TransaksiController extends Controller
             'tanggal_kunjungan' => $tanggal, // kirim tanggal ke view
         ]);
     }
-    
 
     public function create()
     {

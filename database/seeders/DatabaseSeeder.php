@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Obat;
 use App\Models\Pasien;
+use App\Models\PenjualanObat;
 use App\Models\RekamMedis;
 use App\Models\ResepObat;
 use App\Models\Supplier;
@@ -22,8 +23,9 @@ class DatabaseSeeder extends Seeder
         Supplier::factory(5)->create();
         Obat::factory(10)->create();
         Pasien::factory(30)->create();
-        RekamMedis::factory(30)->create();
-        ResepObat::factory(30)->create();
+        // RekamMedis::factory(30)->create();
+        // ResepObat::factory(30)->create();
+        // PenjualanObat::factory(3)->create();
 
         User::create([
             'nama_lengkap' => 'Muhammad Bintang Fathehah',

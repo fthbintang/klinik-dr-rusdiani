@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('obat_keluar', function (Blueprint $table) {
+        Schema::create('penjualan_obat_detail', function (Blueprint $table) {
             $table->id();
-            $table->date('tanggal_obat_keluar');
-            $table->foreignId('pasien_id')->nullable()->constrained('pasien');
+            $table->foreignId('penjualan_obat_id')->constrained('penjualan_obat')->onDelete('cascade');
             $table->foreignId('obat_id')->constrained('obat');
-            $table->integer('stok_awal');
-            $table->integer('stok_keluar');
-            $table->integer('stok_final');
-            $table->foreignId('supplier_id')->constrained('supplier');
+            $table->integer('kuantitas');
+            $table->integer('harga_final');
             $table->timestamps();
         });
     }
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('obat_keluar');
+        Schema::dropIfExists('penjualan_obat_detail');
     }
 };

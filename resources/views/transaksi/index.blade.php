@@ -128,14 +128,16 @@
                                                     <i class="bi bi-clipboard2"></i>
                                                 </a>
                                             @endif
-                                            <form action="{{ route('transaksi.destroy', $row->id) }}" method="POST"
-                                                class="d-inline form-delete-user">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="btn icon btn-danger btn-delete-user">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
+                                            @if ($row->status_kedatangan != 'Selesai')
+                                                <form action="{{ route('transaksi.destroy', $row->id) }}"
+                                                    method="POST" class="d-inline form-delete-user">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn icon btn-danger btn-delete-user">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
