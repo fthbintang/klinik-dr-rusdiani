@@ -71,7 +71,8 @@
                                     <td>{{ $row->catatan ?? '-' }}</td>
                                     <td class="text-center">
                                         <div class="d-flex gap-1">
-                                            <a href="#" class="btn icon btn-info">
+                                            <a href="{{ route('penjualan_obat.detail', $row->id) }}"
+                                                class="btn icon btn-info">
                                                 <i class="bi bi-cart4"></i>
                                             </a>
                                             <form action="#" method="POST" class="d-inline form-delete-user">

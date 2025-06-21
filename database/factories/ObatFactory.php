@@ -55,6 +55,7 @@ class ObatFactory extends Factory
             'expired_date' => $this->faker->dateTimeBetween('+1 month', '+2 years')->format('Y-m-d'),
             'supplier_id' => Supplier::factory(),
             'keterangan' => $this->faker->randomElement($keteranganList),
+            'obat_bebas' => $this->faker->numberBetween(0, 1),
         ];
     }
     

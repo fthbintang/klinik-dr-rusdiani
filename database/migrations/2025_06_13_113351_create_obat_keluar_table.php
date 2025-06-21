@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('obat_keluar', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal_obat_keluar');
-            $table->foreignId('pasien_id')->constrained('pasien');
+            $table->foreignId('pasien_id')->nullable()->constrained('pasien');
             $table->foreignId('obat_id')->constrained('obat');
             $table->integer('stok_awal');
             $table->integer('stok_keluar');

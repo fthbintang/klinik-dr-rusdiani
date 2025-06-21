@@ -58,7 +58,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>
                                         {{ \Carbon\Carbon::parse($row->tanggal_obat_keluar)->format('d-m-Y') }}</td>
-                                    <td>{{ $row->pasien->nama_lengkap }}</td>
+                                    <td>{{ $row->pasien->nama_lengkap ?? '-- Tanpa Nama --' }} </td>
                                     <td>{{ $row->obat->nama_obat }}</td>
                                     <td>{{ $row->stok_awal }}</td>
                                     <td>-{{ $row->stok_keluar }}</td>

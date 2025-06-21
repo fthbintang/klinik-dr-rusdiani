@@ -538,10 +538,15 @@
                                     resep: dataObat
                                 })
                             })
-                            .then(response => {
-                                if (!response.ok) throw new Error(
-                                    "Network response was not ok");
-                                return response.json();
+                            .then(async response => {
+                                const data = await response.json();
+
+                                if (!response.ok) {
+                                    throw new Error(data.message ||
+                                        'Terjadi kesalahan jaringan.');
+                                }
+
+                                return data;
                             })
                             .then(data => {
                                 if (data.success) {
