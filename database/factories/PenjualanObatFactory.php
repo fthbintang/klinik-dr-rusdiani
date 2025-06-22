@@ -19,24 +19,25 @@ class PenjualanObatFactory extends Factory
      */
     public function definition(): array
     {
-        // Tanggal hari ini
-        $tanggalHariIni = Carbon::today()->toDateString();
-
-        // Hitung jumlah penjualan yang sudah ada di tanggal hari ini
-        $jumlahHariIni = PenjualanObat::whereDate('tanggal_transaksi', $tanggalHariIni)->count();
-
-        // Nomor urut berikutnya
-        $nomorUrut = $jumlahHariIni + 1;
-
+        // Ambil tanggal random dari 30 hari terakhir sampai hari ini
+        $tanggalTransaksi = $this->faker->dateTimeBetween('-30 days', 'now')->format('Y-m-d');
+    
+        // Hitung jumlah penjualan yang sudah ada di tanggal tersebut
+        $jumlahPadaTanggal = PenjualanObat::whereDate('tanggal_transaksi', $tanggalTransaksi)->count();
+    
+        // Nomor urut berikutnya di tanggal tersebut
+        $nomorUrut = $jumlahPadaTanggal + 1;
+    
         // Format kode transaksi, misal OBT-01, OBT-02
         $kodeTransaksi = 'OBT-' . str_pad($nomorUrut, 2, '0', STR_PAD_LEFT);
-
+    
         return [
             'kode_transaksi' => $kodeTransaksi,
             'pasien_id' => $this->faker->optional()->randomElement(Pasien::pluck('id')->toArray()),
-            'tanggal_transaksi' => $tanggalHariIni,
+            'tanggal_transaksi' => $tanggalTransaksi,
             'total_harga' => $this->faker->numberBetween(10000, 300000),
             'catatan' => $this->faker->optional()->sentence(),
         ];
     }
+    
 }
