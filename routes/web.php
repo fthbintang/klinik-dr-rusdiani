@@ -14,9 +14,13 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\ObatKeluarController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\JadwalDokterController;
+use App\Http\Controllers\PendaftaranAkunPasienController;
 use App\Http\Controllers\PenjualanObatController;
 
 // AUTENTIKASI
+Route::get('/pendaftaran_akun_pasien', [PendaftaranAkunPasienController::class, 'index'])->name('pendaftaran_akun_pasien');
+Route::post('/pendaftaran_akun_pasien/register', [PendaftaranAkunPasienController::class, 'store'])->name('pendaftaran_akun_pasien.register');
+
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
 Route::post('/sign-in', [LoginController::class, 'authenticate'])->name('authentication');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
