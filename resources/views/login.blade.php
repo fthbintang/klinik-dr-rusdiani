@@ -11,10 +11,10 @@
 
     <title>E-Clinic | Dokter Rusdiani</title>
     {{-- <style>
-            * {
-                border: 1px solid red;
-            }
-        </style> --}}
+        * {
+            border: 1px solid red;
+        }
+    </style> --}}
 </head>
 
 <body>
@@ -37,6 +37,10 @@
                 <input type="username" placeholder="Username" name="username" value="{{ old('username') }}">
                 <input type="password" placeholder="Password" name="password" value="{{ old('password') }}">
                 <button>Log in</button>
+                <a href="{{ route('pendaftaran_akun_pasien') }}"
+                    style="margin-top: 10px; font-size: 13px; color: blue; text-decoration: underline; display: block; text-align: right;">
+                    Daftar Akun Pasien
+                </a>
             </form>
         </div>
         <div class="toggle-container">
