@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BerandaPasienController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ObatController;
 use App\Http\Controllers\UserController;
@@ -14,13 +15,14 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\ObatKeluarController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\JadwalDokterController;
-use App\Http\Controllers\PendaftaranAkunPasienController;
 use App\Http\Controllers\PenjualanObatController;
+use App\Http\Controllers\PendaftaranAkunPasienController;
 
-// AUTENTIKASI
+// PENDAFTARAN AKUN PASIEN
 Route::get('/pendaftaran_akun_pasien', [PendaftaranAkunPasienController::class, 'index'])->name('pendaftaran_akun_pasien');
 Route::post('/pendaftaran_akun_pasien/register', [PendaftaranAkunPasienController::class, 'store'])->name('pendaftaran_akun_pasien.register');
 
+// AUTENTIKASI
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
 Route::post('/sign-in', [LoginController::class, 'authenticate'])->name('authentication');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -108,5 +110,9 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::post('/penjualan_obat/store', [PenjualanObatController::class, 'store'])->name('penjualan_obat.store');
     Route::post('/penjualan_obat/detail/store', [PenjualanObatController::class, 'store_penjualan_obat_detail'])->name('penjualan_obat_detail.store');
     Route::delete('/penjualan_obat/delete/{penjualan_obat}', [PenjualanObatController::class, 'destroy'])->name('penjualan_obat.destroy');
+});
 
+// ============================================= LOGIN PASIEN ==============================================
+Route::prefix('pasien')->middleware('auth')->group(function () {
+    Route::get('/beranda', [BerandaPasienController::class, 'index'])->name('beranda_pasien.index');
 });
