@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         Pasien::factory(30)->create();
         // RekamMedis::factory(30)->create();
         // ResepObat::factory(30)->create();
-        // PenjualanObat::factory(3)->create();
+        PenjualanObat::factory(50)->create();
 
         User::create([
             'nama_lengkap' => 'Muhammad Bintang Fathehah',

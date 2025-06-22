@@ -47,7 +47,7 @@
                         </div>
                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                             <h6 class="text-muted font-semibold">Pasien</h6>
-                            <h6 class="font-extrabold mb-0">50</h6>
+                            <h6 class="font-extrabold mb-0">{{ $jumlah_pasien }}</h6>
                         </div>
                     </div>
                 </div>
@@ -64,8 +64,26 @@
                             </div>
                         </div>
                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                            <h6 class="text-muted font-semibold">Kunjungan Hari ini</h6>
-                            <h6 class="font-extrabold mb-0">100</h6>
+                            <h6 class="text-muted font-semibold">Kunjungan Berobat Hari ini</h6>
+                            <h6 class="font-extrabold mb-0">{{ $kunjungan_berobat_hari_ini }}</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-lg-3 col-md-6">
+            <div class="card" style="min-height: 140px;">
+                <div class="card-body px-4 py-4-5 h-100">
+                    <div class="row h-100 align-items-center">
+                        <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
+                            <div class="stats-icon blue mb-2">
+                                <i class="iconly-boldProfile"></i>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                            <h6 class="text-muted font-semibold">Kunjungan Membeli Obat Hari ini</h6>
+                            <h6 class="font-extrabold mb-0">{{ $kunjungan_membeli_obat_hari_ini }}</h6>
                         </div>
                     </div>
                 </div>
@@ -83,7 +101,8 @@
                         </div>
                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                             <h6 class="text-muted font-semibold">Pendapatan Bulan ini</h6>
-                            <h6 class="font-extrabold mb-0">Rp80.000</h6>
+                            <h6 class="font-extrabold mb-0">Rp{{ number_format($pendapatan_bulan_ini, 0, ',', '.') }}
+                            </h6>
                         </div>
                     </div>
                 </div>
@@ -101,7 +120,8 @@
                         </div>
                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                             <h6 class="text-muted font-semibold">Pendapatan Hari ini</h6>
-                            <h6 class="font-extrabold mb-0">Rp50.000</h6>
+                            <h6 class="font-extrabold mb-0">Rp{{ number_format($pendapatan_hari_ini, 0, ',', '.') }}
+                            </h6>
                         </div>
                     </div>
                 </div>
@@ -111,11 +131,88 @@
 
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title">Pendapatan per 30 Hari</h5>
+            <div class="row justify-content-between align-items-center">
+                <div class="col-sm-8">
+                    <h5 class="card-title mb-0">Pendapatan per Bulan ini</h5>
+                </div>
+                <div class="col-sm-4">
+                    <form method="GET" action="{{ route('index') }}" class="d-flex align-items-center gap-2">
+                        <select name="month" class="form-control" style="max-width: 120px">
+                            @foreach (range(1, 12) as $m)
+                                <option value="{{ $m }}" {{ $selected_month == $m ? 'selected' : '' }}>
+                                    {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        <select name="year" class="form-control" style="max-width: 100px">
+                            @foreach (range(2024, date('Y')) as $y)
+                                <option value="{{ $y }}" {{ $selected_year == $y ? 'selected' : '' }}>
+                                    {{ $y }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        <button type="submit" class="btn btn-primary">Tampilkan</button>
+                    </form>
+                </div>
+            </div>
         </div>
         <div class="card-body">
-            {{-- <div id="chart-profile-visit"></div> --}}
-            <h3 class="text-center">Menampilkan Chart</h3>
+            <div id="chart-pendapatan-30-hari"></div>
         </div>
     </div>
+
 </x-layout>
+
+<script>
+    var optionsPendapatan30Hari = {
+        chart: {
+            type: 'bar',
+            height: 300
+        },
+        dataLabels: {
+            enabled: false
+        },
+        series: [{
+            name: 'Pendapatan',
+            data: @json($chart_totals)
+        }],
+        xaxis: {
+            categories: @json($chart_dates),
+            labels: {
+                rotate: -45
+            }
+        },
+        yaxis: {
+            labels: {
+                formatter: function(value) {
+                    return 'Rp' + new Intl.NumberFormat('id-ID').format(value);
+                }
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function(value) {
+                    return 'Rp' + new Intl.NumberFormat('id-ID').format(value);
+                }
+            }
+        },
+        colors: ['#6a11cb'], // warna pertama gradasi (ungu gelap)
+        gradient: {
+            shade: 'light',
+            type: 'vertical',
+            shadeIntensity: 0.5,
+            gradientToColors: ['#2575fc'], // warna ke-2 gradasi (biru terang)
+            inverseColors: true,
+            opacityFrom: 0.9,
+            opacityTo: 0.7,
+            stops: [0, 100]
+        }
+
+
+    };
+
+    var chartPendapatan = new ApexCharts(document.querySelector("#chart-pendapatan-30-hari"), optionsPendapatan30Hari);
+    chartPendapatan.render();
+</script>
