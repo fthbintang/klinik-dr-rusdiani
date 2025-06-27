@@ -115,4 +115,6 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 // ============================================= LOGIN PASIEN ==============================================
 Route::prefix('pasien')->middleware('auth')->group(function () {
     Route::get('/beranda', [BerandaPasienController::class, 'index'])->name('beranda_pasien.index');
+    Route::get('/beranda/antrean/terdepan', [BerandaPasienController::class, 'antreanTerdepanPasien']);
+
 });

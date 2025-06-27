@@ -20,9 +20,13 @@ class User extends Authenticatable
      */
     protected $guarded = ['id'];
 
-    public function pasien(): HasMany
+    // public function pasien(): HasMany
+    // {
+    //     return $this->hasMany(Pasien::class);
+    // }
+    public function pasien()
     {
-        return $this->hasMany(Pasien::class);
+        return $this->hasOne(Pasien::class); // ✅ benar
     }
 
     /**
