@@ -17,6 +17,7 @@ use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\PenjualanObatController;
 use App\Http\Controllers\PendaftaranAkunPasienController;
+use App\Http\Controllers\PendaftaranPasienController;
 
 // PENDAFTARAN AKUN PASIEN
 Route::get('/pendaftaran_akun_pasien', [PendaftaranAkunPasienController::class, 'index'])->name('pendaftaran_akun_pasien');
@@ -116,5 +117,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 Route::prefix('pasien')->middleware('auth')->group(function () {
     Route::get('/beranda', [BerandaPasienController::class, 'index'])->name('beranda_pasien.index');
     Route::get('/beranda/antrean/terdepan', [BerandaPasienController::class, 'antreanTerdepanPasien']);
-
+    Route::get('/beranda/pendaftaran', [PendaftaranPasienController::class, 'index'])->name('pendaftaran_pasien.index');
+    Route::get('/beranda/pendaftaran/create', [PendaftaranPasienController::class, 'create'])->name('pendaftaran_pasien.create');
+    Route::post('/beranda/pendaftaran/store', [PendaftaranPasienController::class, 'store'])->name('pendaftaran_pasien.store');
 });

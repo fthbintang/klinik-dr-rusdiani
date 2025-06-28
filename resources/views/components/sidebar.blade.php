@@ -119,8 +119,8 @@
                 </li>
 
                 {{-- PENDAFTARAN PASIEN  --}}
-                <li class="sidebar-item {{ request()->is('dashboard/penjualan_obat*') ? 'active' : '' }}">
-                    <a href="#" class="sidebar-link">
+                <li class="sidebar-item {{ request()->is('pasien/beranda/pendaftaran*') ? 'active' : '' }}">
+                    <a href="{{ route('pendaftaran_pasien.index') }}" class="sidebar-link">
                         <i class="bi bi-calendar2-heart-fill"></i>
                         <span>Pendaftaran</span>
                     </a>
