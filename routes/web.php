@@ -28,14 +28,16 @@ Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('g
 Route::post('/sign-in', [LoginController::class, 'authenticate'])->name('authentication');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::prefix('dashboard')->middleware('auth')->group(function () {
+Route::prefix('dashboard')->middleware(['auth', 'role:Admin|Dokter|Apotek|Pasien'])->group(function () {
     // DASHBOARD
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     // PROFILE
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/profile/update/{user}', [ProfileController::class, 'update'])->name('profile.update');
+});
 
+Route::prefix('dashboard')->middleware(['auth', 'role:Admin'])->group(function () {
     // PENGGUNA
     Route::get('/pengguna', [UserController::class, 'index'])->name('user.index');
     Route::get('/pengguna/show/{user}', [UserController::class, 'show'])->name('user.show');
@@ -48,7 +50,9 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     // JADWAL DOKTER
     Route::get('/jadwal_dokter', [JadwalDokterController::class, 'index'])->name('jadwal_dokter.index');
     Route::post('/jadwal_dokter/store', [JadwalDokterController::class, 'store'])->name('jadwal_dokter.store');
+});
 
+Route::prefix('dashboard')->middleware(['auth', 'role:Admin|Apotek'])->group(function () {
     // OBAT
     Route::get('/obat', [ObatController::class, 'index'])->name('obat.index');
     Route::get('/obat/create', [ObatController::class, 'create'])->name('obat.create');
@@ -65,7 +69,9 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/obat/supplier/edit/{supplier}', [SupplierController::class, 'edit'])->name('obat.supplier.edit');
     Route::put('/obat/supplier/update/{supplier}', [SupplierController::class, 'update'])->name('obat.supplier.update');
     Route::delete('/obat/supplier/delete/{supplier}', [SupplierController::class, 'destroy'])->name('obat.supplier.destroy');
+});
 
+Route::prefix('dashboard')->middleware(['auth', 'role:Admin|Dokter|Apotek'])->group(function () {
     // PASIEN
     Route::get('/pasien', [PasienController::class, 'index'])->name('pasien.index');
     Route::get('/pasien/create', [PasienController::class, 'create'])->name('pasien.create');
@@ -114,7 +120,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 });
 
 // ============================================= LOGIN PASIEN ==============================================
-Route::prefix('pasien')->middleware('auth')->group(function () {
+Route::prefix('pasien')->middleware(['auth', 'role:Pasien'])->group(function () {
     Route::get('/beranda', [BerandaPasienController::class, 'index'])->name('beranda_pasien.index');
     Route::get('/beranda/antrean/terdepan', [BerandaPasienController::class, 'antreanTerdepanPasien']);
     Route::get('/beranda/pendaftaran', [PendaftaranPasienController::class, 'index'])->name('pendaftaran_pasien.index');

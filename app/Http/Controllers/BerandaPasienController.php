@@ -12,19 +12,20 @@ class BerandaPasienController extends Controller
     {
         $user = Auth::user();
     
-        // Ambil pasien berdasarkan user_id
+        // Cek apakah user memiliki relasi pasien
+        if (!$user->pasien) {
+            abort(403, 'Halaman ini hanya untuk pasien.');
+        }
+    
         $pasien = $user->pasien;
     
-        // Hitung total pendaftaran (rekam medis)
         $totalPendaftaran = RekamMedis::where('pasien_id', $pasien->id)->count();
     
-        // Ambil antrean aktif (contoh: status_kedatangan = 'Belum Datang')
         $antreanAktif = RekamMedis::where('pasien_id', $pasien->id)
                             ->where('status_kedatangan', 'Booking')
                             ->latest('tanggal_kunjungan')
                             ->first()?->no_antrean;
     
-        // Ambil kunjungan terakhir
         $terakhirKunjungan = RekamMedis::where('pasien_id', $pasien->id)
                             ->whereNotNull('tanggal_kunjungan')
                             ->whereNotNull('biaya_total')
@@ -38,6 +39,7 @@ class BerandaPasienController extends Controller
             'terakhirKunjungan' => $terakhirKunjungan,
         ]);
     }
+    
     
     public function antreanTerdepanPasien()
     {

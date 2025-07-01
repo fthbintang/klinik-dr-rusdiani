@@ -31,10 +31,20 @@ class DatabaseSeeder extends Seeder
             'nama_lengkap' => 'Muhammad Bintang Fathehah',
             'nama_panggilan' => 'Bintang',
             'jenis_kelamin' => 'Laki-laki',
-            'role' => 'Pasien',
+            'role' => 'Admin',
             'alamat' => 'Banjarmasin',
             'username' => 'bintang',
             'password' => bcrypt('bintang')
+        ]);
+
+        User::create([
+            'nama_lengkap' => 'Pasien',
+            'nama_panggilan' => 'pasien',
+            'jenis_kelamin' => 'Laki-laki',
+            'role' => 'Pasien',
+            'alamat' => 'Banjarmasin',
+            'username' => 'pasien',
+            'password' => bcrypt('pasien')
         ]);
     }
 }
