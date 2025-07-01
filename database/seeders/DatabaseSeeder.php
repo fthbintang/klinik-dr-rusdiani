@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             'nama_lengkap' => 'Muhammad Bintang Fathehah',
             'nama_panggilan' => 'Bintang',
             'jenis_kelamin' => 'Laki-laki',
-            'role' => 'Admin',
+            'role' => 'Pasien',
             'alamat' => 'Banjarmasin',
             'username' => 'bintang',
             'password' => bcrypt('bintang')

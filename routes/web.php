@@ -14,13 +14,16 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\ObatKeluarController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\JadwalDokterController;
-use App\Http\Controllers\PendaftaranAkunPasienController;
+use App\Http\Controllers\BerandaPasienController;
 use App\Http\Controllers\PenjualanObatController;
+use App\Http\Controllers\PendaftaranPasienController;
+use App\Http\Controllers\PendaftaranAkunPasienController;
 
-// AUTENTIKASI
+// PENDAFTARAN AKUN PASIEN
 Route::get('/pendaftaran_akun_pasien', [PendaftaranAkunPasienController::class, 'index'])->name('pendaftaran_akun_pasien');
 Route::post('/pendaftaran_akun_pasien/register', [PendaftaranAkunPasienController::class, 'store'])->name('pendaftaran_akun_pasien.register');
 
+// AUTENTIKASI
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest', 'prevent-back-history');
 Route::post('/sign-in', [LoginController::class, 'authenticate'])->name('authentication');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -108,5 +111,14 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::post('/penjualan_obat/store', [PenjualanObatController::class, 'store'])->name('penjualan_obat.store');
     Route::post('/penjualan_obat/detail/store', [PenjualanObatController::class, 'store_penjualan_obat_detail'])->name('penjualan_obat_detail.store');
     Route::delete('/penjualan_obat/delete/{penjualan_obat}', [PenjualanObatController::class, 'destroy'])->name('penjualan_obat.destroy');
+});
 
+// ============================================= LOGIN PASIEN ==============================================
+Route::prefix('pasien')->middleware('auth')->group(function () {
+    Route::get('/beranda', [BerandaPasienController::class, 'index'])->name('beranda_pasien.index');
+    Route::get('/beranda/antrean/terdepan', [BerandaPasienController::class, 'antreanTerdepanPasien']);
+    Route::get('/beranda/pendaftaran', [PendaftaranPasienController::class, 'index'])->name('pendaftaran_pasien.index');
+    Route::get('/beranda/pendaftaran/create', [PendaftaranPasienController::class, 'create'])->name('pendaftaran_pasien.create');
+    Route::post('/beranda/pendaftaran/store', [PendaftaranPasienController::class, 'store'])->name('pendaftaran_pasien.store');
+    Route::get('/beranda/pendaftaran/pasien/rekam_medis/{pasien}/resep_obat/{rekam_medis}', [PendaftaranPasienController::class, 'detail_resep_obat'])->name('pendaftaran_pasien.resep_obat.index');
 });

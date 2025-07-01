@@ -110,6 +110,22 @@
                     </a>
                 </li>
 
+                {{-- BERANDA PASIEN --}}
+                <li class="sidebar-item {{ request()->is('pasien/beranda') ? 'active' : '' }}">
+                    <a href="{{ route('beranda_pasien.index') }}" class="sidebar-link">
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Beranda</span>
+                    </a>
+                </li>
+
+                {{-- PENDAFTARAN PASIEN  --}}
+                <li class="sidebar-item {{ request()->is('pasien/beranda/pendaftaran*') ? 'active' : '' }}">
+                    <a href="{{ route('pendaftaran_pasien.index') }}" class="sidebar-link">
+                        <i class="bi bi-calendar2-heart-fill"></i>
+                        <span>Pendaftaran</span>
+                    </a>
+                </li>
+
             </ul>
         </div>
     </div>
