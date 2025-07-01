@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Obat;
+use App\Models\Pasien;
+use App\Models\ResepObat;
 use App\Models\RekamMedis;
 use App\Models\JadwalDokter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -83,6 +87,32 @@ class PendaftaranPasienController extends Controller
             Alert::error('Error', 'Terjadi kesalahan saat menyimpan data');
             return back()->withInput();
         }
+    }
+
+    public function detail_resep_obat($pasien, RekamMedis $rekam_medis)
+    {
+        $resep_obat = ResepObat::with('rekam_medis.pasien')
+            ->where('rekam_medis_id', $rekam_medis->id)
+            ->get();
+
+        $pasien = Pasien::with('user')->findOrFail($pasien);
+        $obat_tidak_bebas = Obat::where('obat_bebas', 1)->get();
+        $obat_bebas_dan_tidak_bebas = Obat::all();
+
+        $obatTersimpan = ResepObat::where('rekam_medis_id', $rekam_medis->id)
+            ->pluck('obat_id')
+            ->toArray();
+
+        return view('resep_obat.index', [
+            'title' => 'Detail Pemeriksaan dan Resep Obat',
+            'daftar_obat_tidak_bebas' => $obat_tidak_bebas,
+            'obat_bebas_dan_tidak_bebas' => $obat_bebas_dan_tidak_bebas,
+            'pasien' => $pasien,
+            'resep_obat' => $resep_obat,
+            'rekam_medis' => $rekam_medis,
+            'obatTersimpan' => $obatTersimpan,
+            'from' => 'pendaftaran_pasien'
+        ]);
     }
     
 }

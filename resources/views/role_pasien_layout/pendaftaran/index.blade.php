@@ -143,13 +143,12 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="{{ route('resep_obat.index', ['pasien' => $row->pasien->id, 'rekam_medis' => $row->id]) }}"
+                                            <a href="{{ route('pendaftaran_pasien.resep_obat.index', ['pasien' => $row->pasien->id, 'rekam_medis' => $row->id]) }}"
                                                 class="btn icon btn-info">
-                                                <i class="bi bi-capsule"></i>
+                                                <i class="bi bi-clipboard2"></i>
                                             </a>
                                         </div>
                                     </td>
-
                                 </tr>
                             @endforeach
                         </tbody>

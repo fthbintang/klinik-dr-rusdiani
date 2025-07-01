@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\BerandaPasienController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ObatController;
 use App\Http\Controllers\UserController;
@@ -15,9 +14,10 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\ObatKeluarController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\JadwalDokterController;
+use App\Http\Controllers\BerandaPasienController;
 use App\Http\Controllers\PenjualanObatController;
-use App\Http\Controllers\PendaftaranAkunPasienController;
 use App\Http\Controllers\PendaftaranPasienController;
+use App\Http\Controllers\PendaftaranAkunPasienController;
 
 // PENDAFTARAN AKUN PASIEN
 Route::get('/pendaftaran_akun_pasien', [PendaftaranAkunPasienController::class, 'index'])->name('pendaftaran_akun_pasien');
@@ -120,4 +120,5 @@ Route::prefix('pasien')->middleware('auth')->group(function () {
     Route::get('/beranda/pendaftaran', [PendaftaranPasienController::class, 'index'])->name('pendaftaran_pasien.index');
     Route::get('/beranda/pendaftaran/create', [PendaftaranPasienController::class, 'create'])->name('pendaftaran_pasien.create');
     Route::post('/beranda/pendaftaran/store', [PendaftaranPasienController::class, 'store'])->name('pendaftaran_pasien.store');
+    Route::get('/beranda/pendaftaran/pasien/rekam_medis/{pasien}/resep_obat/{rekam_medis}', [PendaftaranPasienController::class, 'detail_resep_obat'])->name('pendaftaran_pasien.resep_obat.index');
 });

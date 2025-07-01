@@ -84,6 +84,37 @@
         </div>
     @endif
 
+    @if ($from === 'pendaftaran_pasien')
+        <div class="page-heading">
+            <div class="page-title">
+                <div class="row">
+                    <div class="col-12 col-md-6 order-md-1 order-last">
+                        <h3>Halaman {{ $title }}</h3>
+                    </div>
+                    <div class="col-12 col-md-6 order-md-2 order-first">
+                        <nav aria-label="breadcrumb" class="breadcrumb-header d-flex justify-content-end">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('beranda_pasien.index') }}">Home</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('pendaftaran_pasien.index') }}">Pendaftaran Pasien</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {{ $title }}
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-end mb-3">
+            <a href="{{ route('pendaftaran_pasien.index') }}" class="btn btn-info">Kembali</a>
+        </div>
+    @endif
+
     <section class="section">
         <div class="card">
             <div class="card-header text-center">

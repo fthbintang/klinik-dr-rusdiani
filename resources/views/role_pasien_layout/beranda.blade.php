@@ -36,7 +36,7 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <h6 class="card-title mb-0">Total Pendaftaran</h6>
+                                <h6 class="card-title mb-0">Total Berobat</h6>
                                 <h2 class="fw-bold">{{ $totalPendaftaran ?? 0 }}</h2>
                             </div>
                             <div>
@@ -53,7 +53,7 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <h6 class="card-title mb-0">Antrean Anda</h6>
+                                <h6 class="card-title mb-0">Antrean Anda saat ini</h6>
                                 <h2 class="fw-bold">
                                     {{ $antreanAktif ?? '-' }}
                                 </h2>
