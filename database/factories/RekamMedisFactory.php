@@ -23,9 +23,9 @@ class RekamMedisFactory extends Factory
 
         $status = $tanggal === now()->toDateString()
             ? $this->faker->randomElement([
-                'Booking', 'Datang', 'Tidak Datang', 'Diperiksa', 'Selesai', 'Pengambilan Obat'
+                'Booking', 'Datang', 'Diperiksa', 'Selesai', 'Pengambilan Obat'
             ])
-            : $this->faker->randomElement(['Selesai', 'Beli Obat', 'Tidak Datang']);
+            : $this->faker->randomElement(['Selesai', 'Beli Obat']);
 
         // Inisialisasi jam
         $jamDatang = null;

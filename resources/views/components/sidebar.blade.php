@@ -43,88 +43,106 @@
         <div class="sidebar-menu">
             <ul class="menu">
                 <li class="sidebar-title">Menu</li>
-                {{-- DASHBOARD --}}
-                <li class="sidebar-item {{ request()->is('dashboard') ? 'active' : '' }}">
-                    <a href="{{ route('index') }}" class="sidebar-link">
-                        <i class="bi bi-grid-fill"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
+                {{-- DASHBOARD (Admin, Dokter, Apotek) --}}
+                @if (Gate::any(['admin', 'dokter', 'apotek']))
+                    <li class="sidebar-item {{ request()->is('dashboard') ? 'active' : '' }}">
+                        <a href="{{ route('index') }}" class="sidebar-link">
+                            <i class="bi bi-grid-fill"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                @endif
 
-                {{-- PENGGUNA --}}
-                <li class="sidebar-item {{ request()->is('dashboard/pengguna*') ? 'active' : '' }}">
-                    <a href="{{ route('user.index') }}" class="sidebar-link">
-                        <i class="bi bi-person-circle"></i>
-                        <span>Pengguna</span>
-                    </a>
-                </li>
+                {{-- PENGGUNA (Admin) --}}
+                @can('admin')
+                    <li class="sidebar-item {{ request()->is('dashboard/pengguna*') ? 'active' : '' }}">
+                        <a href="{{ route('user.index') }}" class="sidebar-link">
+                            <i class="bi bi-person-circle"></i>
+                            <span>Pengguna</span>
+                        </a>
+                    </li>
+                @endcan
 
-                {{-- JADWAL DOKTER --}}
-                <li class="sidebar-item {{ request()->is('dashboard/jadwal_dokter*') ? 'active' : '' }}">
-                    <a href="{{ route('jadwal_dokter.index') }}" class="sidebar-link">
-                        <i class="bi bi-calendar-check-fill"></i>
-                        <span>Jadwal Dokter</span>
-                    </a>
-                </li>
+                {{-- JADWAL DOKTER (Admin) --}}
+                @can('admin')
+                    <li class="sidebar-item {{ request()->is('dashboard/jadwal_dokter*') ? 'active' : '' }}">
+                        <a href="{{ route('jadwal_dokter.index') }}" class="sidebar-link">
+                            <i class="bi bi-calendar-check-fill"></i>
+                            <span>Jadwal Dokter</span>
+                        </a>
+                    </li>
+                @endcan
 
-                {{-- OBAT --}}
-                <li class="sidebar-item has-sub {{ request()->is('dashboard/obat*') ? 'active' : '' }}">
-                    <a href="#" class="sidebar-link">
-                        <i class="bi bi-capsule"></i>
-                        <span>Obat</span>
-                    </a>
-                    <ul class="submenu">
-                        <x-sidebar-sublink href="{{ route('obat.index') }}" :active="request()->routeIs('obat.index')">
-                            Data Obat
-                        </x-sidebar-sublink>
-                        <x-sidebar-sublink href="{{ route('obat_masuk.index') }}" :active="request()->routeIs('obat_masuk.index')">
-                            Obat Masuk
-                        </x-sidebar-sublink>
-                        <x-sidebar-sublink href="{{ route('obat_keluar.index') }}" :active="request()->routeIs('obat_keluar.index')">
-                            Obat Keluar
-                        </x-sidebar-sublink>
-                    </ul>
-                </li>
+                {{-- OBAT (Admin, Apotek) --}}
+                @if (Gate::any(['admin', 'apotek']))
+                    <li class="sidebar-item has-sub {{ request()->is('dashboard/obat*') ? 'active' : '' }}">
+                        <a href="#" class="sidebar-link">
+                            <i class="bi bi-capsule"></i>
+                            <span>Obat</span>
+                        </a>
+                        <ul class="submenu">
+                            <x-sidebar-sublink href="{{ route('obat.index') }}" :active="request()->routeIs('obat.index')">
+                                Data Obat
+                            </x-sidebar-sublink>
+                            <x-sidebar-sublink href="{{ route('obat_masuk.index') }}" :active="request()->routeIs('obat_masuk.index')">
+                                Obat Masuk
+                            </x-sidebar-sublink>
+                            <x-sidebar-sublink href="{{ route('obat_keluar.index') }}" :active="request()->routeIs('obat_keluar.index')">
+                                Obat Keluar
+                            </x-sidebar-sublink>
+                        </ul>
+                    </li>
+                @endif
 
-                {{-- PASIEN --}}
-                <li class="sidebar-item {{ request()->is('dashboard/pasien*') ? 'active' : '' }}">
-                    <a href="{{ route('pasien.index') }}" class="sidebar-link">
-                        <i class="bi bi-person-square"></i>
-                        <span>Pasien</span>
-                    </a>
-                </li>
+                {{-- PENJUALAN OBAT (Admin, Apotek) --}}
+                @if (Gate::any(['admin', 'apotek']))
+                    <li class="sidebar-item {{ request()->is('dashboard/penjualan_obat*') ? 'active' : '' }}">
+                        <a href="{{ route('penjualan_obat.index') }}" class="sidebar-link">
+                            <i class="bi bi-cart3"></i>
+                            <span>Penjualan Obat</span>
+                        </a>
+                    </li>
+                @endif
 
-                {{-- TRANSAKSI  --}}
-                <li class="sidebar-item {{ request()->is('dashboard/transaksi*') ? 'active' : '' }}">
-                    <a href="{{ route('transaksi.index') }}" class="sidebar-link">
-                        <i class="bi bi-cash-stack"></i>
-                        <span>Transaksi</span>
-                    </a>
-                </li>
+                {{-- PASIEN (Admin, Dokter, Apotek) --}}
+                @if (Gate::any(['admin', 'dokter', 'apotek']))
+                    <li class="sidebar-item {{ request()->is('dashboard/pasien*') ? 'active' : '' }}">
+                        <a href="{{ route('pasien.index') }}" class="sidebar-link">
+                            <i class="bi bi-person-square"></i>
+                            <span>Pasien</span>
+                        </a>
+                    </li>
+                @endif
 
-                {{-- PENJUALAN OBAT  --}}
-                <li class="sidebar-item {{ request()->is('dashboard/penjualan_obat*') ? 'active' : '' }}">
-                    <a href="{{ route('penjualan_obat.index') }}" class="sidebar-link">
-                        <i class="bi bi-cart3"></i>
-                        <span>Penjualan Obat</span>
-                    </a>
-                </li>
+                {{-- TRANSAKSI (Admin, Dokter, Apotek) --}}
+                @if (Gate::any(['admin', 'dokter', 'apotek']))
+                    <li class="sidebar-item {{ request()->is('dashboard/transaksi*') ? 'active' : '' }}">
+                        <a href="{{ route('transaksi.index') }}" class="sidebar-link">
+                            <i class="bi bi-cash-stack"></i>
+                            <span>Transaksi</span>
+                        </a>
+                    </li>
+                @endif
 
-                {{-- BERANDA PASIEN --}}
-                <li class="sidebar-item {{ request()->is('pasien/beranda') ? 'active' : '' }}">
-                    <a href="{{ route('beranda_pasien.index') }}" class="sidebar-link">
-                        <i class="bi bi-grid-fill"></i>
-                        <span>Beranda</span>
-                    </a>
-                </li>
+                {{-- BERANDA (Pasien) --}}
+                @can('pasien')
+                    <li class="sidebar-item {{ request()->is('pasien/beranda') ? 'active' : '' }}">
+                        <a href="{{ route('beranda_pasien.index') }}" class="sidebar-link">
+                            <i class="bi bi-grid-fill"></i>
+                            <span>Beranda</span>
+                        </a>
+                    </li>
+                @endcan
 
-                {{-- PENDAFTARAN PASIEN  --}}
-                <li class="sidebar-item {{ request()->is('pasien/beranda/pendaftaran*') ? 'active' : '' }}">
-                    <a href="{{ route('pendaftaran_pasien.index') }}" class="sidebar-link">
-                        <i class="bi bi-calendar2-heart-fill"></i>
-                        <span>Pendaftaran</span>
-                    </a>
-                </li>
+                {{-- PENDAFTARAN (Pasien) --}}
+                @can('pasien')
+                    <li class="sidebar-item {{ request()->is('pasien/beranda/pendaftaran*') ? 'active' : '' }}">
+                        <a href="{{ route('pendaftaran_pasien.index') }}" class="sidebar-link">
+                            <i class="bi bi-calendar2-heart-fill"></i>
+                            <span>Pendaftaran</span>
+                        </a>
+                    </li>
+                @endcan
 
             </ul>
         </div>
