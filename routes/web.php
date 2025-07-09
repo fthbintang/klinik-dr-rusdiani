@@ -29,6 +29,7 @@ Route::post('/sign-in', [LoginController::class, 'authenticate'])->name('authent
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Dokter,Apotek'])->group(function () {
+// Route::prefix('dashboard')->middleware('auth')->group(function () {
     // DASHBOARD
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 

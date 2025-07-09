@@ -161,7 +161,8 @@
                     <div class="form-group">
                         <label for="keluhan" class="form-label"><b>Keluhan</b><span
                                 class="text-danger">*</span></label>
-                        <textarea class="form-control @error('keluhan') is-invalid @enderror" name="keluhan" id="keluhan">{{ $rekam_medis->keluhan }}</textarea>
+                        <textarea class="form-control @error('keluhan') is-invalid @enderror" name="keluhan" id="keluhan"
+                            @cannot('dokter') readonly @endcannot>{{ $rekam_medis->keluhan }}</textarea>
                         @error('keluhan')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -172,7 +173,8 @@
                     <div class="form-group">
                         <label for="diagnosis" class="form-label"><b>Diagnosis</b><span
                                 class="text-danger">*</span></label>
-                        <textarea class="form-control @error('diagnosis') is-invalid @enderror" name="diagnosis" id="diagnosis">{{ $rekam_medis->diagnosis }}</textarea>
+                        <textarea class="form-control @error('diagnosis') is-invalid @enderror" name="diagnosis" id="diagnosis"
+                            @cannot('dokter') readonly @endcannot>{{ $rekam_medis->diagnosis }}</textarea>
                         @error('diagnosis')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -183,7 +185,8 @@
                     <div class="form-group">
                         <label for="tindakan" class="form-label"><b>Tindakan</b><span
                                 class="text-danger">*</span></label>
-                        <textarea class="form-control @error('tindakan') is-invalid @enderror" name="tindakan" id="tindakan">{{ $rekam_medis->tindakan }}</textarea>
+                        <textarea class="form-control @error('tindakan') is-invalid @enderror" name="tindakan" id="tindakan"
+                            @cannot('dokter') readonly @endcannot>{{ $rekam_medis->tindakan }}</textarea>
                         @error('tindakan')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -191,10 +194,12 @@
                         @enderror
                     </div>
 
-                    {{-- Tombol Submit --}}
-                    <div class="text-end mt-3">
-                        <button type="submit" class="btn btn-success">Simpan</button>
-                    </div>
+                    @can('dokter')
+                        {{-- Tombol Submit --}}
+                        <div class="text-end mt-3">
+                            <button type="submit" class="btn btn-success">Simpan</button>
+                        </div>
+                    @endcan
 
                 </form>
             </div>
@@ -213,58 +218,60 @@
 
                 <div class="card-body">
                     @if (!$rekam_medis->biaya_total)
-                        <div class="row align-items-end g-2">
-                            <div class="col-md-4">
-                                <label for="nama_obat" class="form-label"><b>Obat</b><span
-                                        class="text-danger">*</span></label>
-                                <select id="nama_obat" class="form-select">
-                                    <option value="">-- Pilih Obat --</option>
-                                    @if ($rekam_medis->disetujui_dokter == 0)
-                                        @foreach ($obat_bebas_dan_tidak_bebas as $obat)
-                                            <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
-                                                data-kategori="{{ $obat->kategori }}"
-                                                data-satuan="{{ $obat->satuan }}"
-                                                data-expired="{{ $obat->expired_date }}"
-                                                data-harga="{{ $obat->harga }}">
-                                                {{ $obat->nama_obat }} - {{ $obat->kategori }} - {{ $obat->satuan }}
-                                                -
-                                                stok:
-                                                {{ $obat->stok }}
-                                            </option>
-                                        @endforeach
-                                    @else
-                                        @foreach ($daftar_obat_tidak_bebas as $obat)
-                                            <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
-                                                data-kategori="{{ $obat->kategori }}"
-                                                data-satuan="{{ $obat->satuan }}"
-                                                data-expired="{{ $obat->expired_date }}"
-                                                data-harga="{{ $obat->harga }}">
-                                                {{ $obat->nama_obat }} - {{ $obat->kategori }} - {{ $obat->satuan }}
-                                                -
-                                                stok:
-                                                {{ $obat->stok }}
-                                            </option>
-                                        @endforeach
-                                    @endif
-                                </select>
+                        @canany(['dokter', 'apotek'])
+                            <div class="row align-items-end g-2">
+                                <div class="col-md-4">
+                                    <label for="nama_obat" class="form-label"><b>Obat</b><span
+                                            class="text-danger">*</span></label>
+                                    <select id="nama_obat" class="form-select">
+                                        <option value="">-- Pilih Obat --</option>
+                                        @if ($rekam_medis->disetujui_dokter == 0)
+                                            @foreach ($obat_bebas_dan_tidak_bebas as $obat)
+                                                <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
+                                                    data-kategori="{{ $obat->kategori }}"
+                                                    data-satuan="{{ $obat->satuan }}"
+                                                    data-expired="{{ $obat->expired_date }}"
+                                                    data-harga="{{ $obat->harga }}">
+                                                    {{ $obat->nama_obat }} - {{ $obat->kategori }} - {{ $obat->satuan }}
+                                                    -
+                                                    stok:
+                                                    {{ $obat->stok }}
+                                                </option>
+                                            @endforeach
+                                        @else
+                                            @foreach ($daftar_obat_tidak_bebas as $obat)
+                                                <option value="{{ $obat->id }}" data-nama="{{ $obat->nama_obat }}"
+                                                    data-kategori="{{ $obat->kategori }}"
+                                                    data-satuan="{{ $obat->satuan }}"
+                                                    data-expired="{{ $obat->expired_date }}"
+                                                    data-harga="{{ $obat->harga }}">
+                                                    {{ $obat->nama_obat }} - {{ $obat->kategori }} - {{ $obat->satuan }}
+                                                    -
+                                                    stok:
+                                                    {{ $obat->stok }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for="kuantitas" class="form-label"><b>Qty</b><span
+                                            class="text-danger">*</span></label>
+                                    <input type="number" id="kuantitas" class="form-control" min="1"
+                                        value="1">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="catatan" class="form-label"><b>Catatan / Petunjuk Konsumsi</b></label>
+                                    <input type="text" id="catatan" class="form-control"
+                                        placeholder="cth: 3x sehari setelah makan">
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" id="btn-tambah-obat" class="btn btn-primary w-100">
+                                        Tambah
+                                    </button>
+                                </div>
                             </div>
-                            <div class="col-md-1">
-                                <label for="kuantitas" class="form-label"><b>Qty</b><span
-                                        class="text-danger">*</span></label>
-                                <input type="number" id="kuantitas" class="form-control" min="1"
-                                    value="1">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="catatan" class="form-label"><b>Catatan / Petunjuk Konsumsi</b></label>
-                                <input type="text" id="catatan" class="form-control"
-                                    placeholder="cth: 3x sehari setelah makan">
-                            </div>
-                            <div class="col-md-2">
-                                <button type="button" id="btn-tambah-obat" class="btn btn-primary w-100">
-                                    Tambah
-                                </button>
-                            </div>
-                        </div>
+                        @endcanany
                     @endif
 
                     <hr>
@@ -346,10 +353,14 @@
 
                     <div class="mt-4 float-end">
                         <button id="btn-simpan-dokter"
-                            class="btn btn-success @if ($rekam_medis->biaya_total) disabled @endif">✅
-                            Simpan</button>
-                        <button id="btn-simpan-apotek" class="btn btn-primary"
-                            @if (!$rekam_medis->disetujui_dokter || $rekam_medis->biaya_total) disabled @endif>
+                            class="btn btn-success @if ($rekam_medis->biaya_total || Gate::denies('dokter')) disabled @endif"
+                            @cannot('dokter') disabled @endcannot>
+                            ✅ Simpan
+                        </button>
+                        <button id="btn-simpan-apotek"
+                            class="btn btn-primary
+    @if (!$rekam_medis->disetujui_dokter || $rekam_medis->biaya_total || Gate::denies('apotek')) disabled @endif"
+                            @if (!$rekam_medis->disetujui_dokter || $rekam_medis->biaya_total) disabled @endif @cannot('apotek') disabled @endcannot>
                             💊 Diproses Apotek
                         </button>
                     </div>
