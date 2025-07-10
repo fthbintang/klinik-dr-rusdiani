@@ -120,7 +120,8 @@
                                                         <i class="bi bi-forward-fill"></i>
                                                     </a>
                                                 @elseif ($row->status_kedatangan == 'Booking')
-                                                    <a href="#" class="btn icon btn-info btn-call-pasien">
+                                                    <a href="#" class="btn icon btn-info btn-konfirmasi-kedatangan"
+                                                        data-id="{{ $row->id }}">
                                                         <i class="bi bi-forward-fill"></i>
                                                     </a>
                                                 @endif
@@ -164,6 +165,52 @@
             </div>
         </div>
     </section>
+
+    {{-- UPDATE STATUS KEDATANGAN MENJADI DATANG --}}
+    <script>
+        $(document).ready(function() {
+            $('.btn-konfirmasi-kedatangan').click(function(e) {
+                e.preventDefault();
+                const rekamMedisId = $(this).data('id');
+
+                // Ambil route dan ganti :id dengan rekamMedisId
+                let urlTemplate = "{{ route('transaksi.update_status_booking', ['id' => ':id']) }}";
+                let url = urlTemplate.replace(':id', rekamMedisId);
+
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: 'Apakah pasien sudah datang?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, sudah datang',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            type: 'PUT',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            data: {
+                                status_kedatangan: 'Datang',
+                            },
+                            success: function(response) {
+                                Swal.fire('Sukses', 'Status pasien sudah diperbarui',
+                                        'success')
+                                    .then(() => {
+                                        location.reload();
+                                    });
+                            },
+                            error: function(xhr) {
+                                Swal.fire('Error', 'Gagal memperbarui status', 'error');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 
     {{-- UPDATE STATUS KEDATANGAN MENJADI DIPERIKSA --}}
     <script>
