@@ -138,9 +138,9 @@
                                 <option value="Admin" {{ old('role', $user->role) == 'Admin' ? 'selected' : '' }}>
                                     Admin
                                 </option>
-                                <option value="Pasien" {{ old('role', $user->role) == 'Pasien' ? 'selected' : '' }}>
+                                {{-- <option value="Pasien" {{ old('role', $user->role) == 'Pasien' ? 'selected' : '' }}>
                                     Pasien
-                                </option>
+                                </option> --}}
                                 <option value="Dokter" {{ old('role', $user->role) == 'Dokter' ? 'selected' : '' }}>
                                     Dokter
                                 </option>

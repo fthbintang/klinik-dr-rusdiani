@@ -22,19 +22,49 @@ class DatabaseSeeder extends Seeder
         User::factory(5)->create();
         Supplier::factory(5)->create();
         Obat::factory(10)->create();
-        Pasien::factory(20)->create();
+        // Pasien::factory(20)->create();
         // RekamMedis::factory(30)->create();
         // ResepObat::factory(30)->create();
-        PenjualanObat::factory(50)->create();
+        // PenjualanObat::factory(50)->create();
 
         User::create([
             'nama_lengkap' => 'Muhammad Bintang Fathehah',
             'nama_panggilan' => 'Bintang',
             'jenis_kelamin' => 'Laki-laki',
-            'role' => 'Pasien',
+            'role' => 'Admin',
             'alamat' => 'Banjarmasin',
-            'username' => 'bintang',
-            'password' => bcrypt('bintang')
+            'username' => 'admin',
+            'password' => bcrypt('admin')
+        ]);
+
+        // User::create([
+        //     'nama_lengkap' => 'Pasien',
+        //     'nama_panggilan' => 'pasien',
+        //     'jenis_kelamin' => 'Laki-laki',
+        //     'role' => 'Pasien',
+        //     'alamat' => 'Banjarmasin',
+        //     'username' => 'pasien',
+        //     'password' => bcrypt('pasien')
+        // ]);
+
+        User::create([
+            'nama_lengkap' => 'dokter',
+            'nama_panggilan' => 'dokter',
+            'jenis_kelamin' => 'Laki-laki',
+            'role' => 'Dokter',
+            'alamat' => 'Banjarmasin',
+            'username' => 'dokter',
+            'password' => bcrypt('dokter')
+        ]);
+
+        User::create([
+            'nama_lengkap' => 'Apotek',
+            'nama_panggilan' => 'Apotek',
+            'jenis_kelamin' => 'Laki-laki',
+            'role' => 'Apotek',
+            'alamat' => 'Banjarmasin',
+            'username' => 'apotek',
+            'password' => bcrypt('apotek')
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Obat;
 use App\Models\Pasien;
 use App\Models\ResepObat;
@@ -72,6 +73,30 @@ class TransaksiController extends Controller
             Log::error('Gagal menyimpan rekam medis: ' . $e->getMessage());
             Alert::error('Error', 'Terjadi kesalahan saat menyimpan data');
             return back()->withInput();
+        }
+    }
+
+    public function updateStatusBooking(Request $request, $id)
+    {
+        $request->validate([
+            'status_kedatangan' => 'required|string|in:Datang',
+        ]);
+    
+        try {
+            $rekamMedis = RekamMedis::findOrFail($id);
+            $rekamMedis->status_kedatangan = 'Datang';
+            $rekamMedis->jam_datang = now()->format('H:i:s');
+            $rekamMedis->save();
+    
+            return response()->json(['message' => 'Status berhasil diperbarui']);
+        } catch (\Exception $e) {
+            Log::error('Gagal update status_kedatangan rekam medis', [
+                'rekam_medis_id' => $id,
+                'error_message' => $e->getMessage(),
+                'stack_trace' => $e->getTraceAsString(),
+            ]);
+    
+            return response()->json(['message' => 'Gagal memperbarui status'], 500);
         }
     }
 

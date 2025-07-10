@@ -19,6 +19,12 @@ class PendaftaranPasienController extends Controller
     public function index()
     {
         $user = Auth::user();
+
+        // Cek apakah user memiliki relasi pasien
+        if (!$user->pasien) {
+            abort(403, 'Halaman ini hanya untuk pasien.');
+        }
+        
         $pasien = $user->pasien;
         $rekam_medis = RekamMedis::with('pasien')->where('pasien_id', $pasien->id)->latest()->get();
         

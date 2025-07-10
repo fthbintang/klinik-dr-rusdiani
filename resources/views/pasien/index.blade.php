@@ -28,9 +28,11 @@
                     <div class="col-sm-8">
                         <h5 class="card-title">Data {{ $title }}</h5>
                     </div>
-                    <div class="col-sm-4 d-flex justify-content-end">
-                        <a href="{{ route('pasien.create') }}" class="btn btn-success">Tambah Data</a>
-                    </div>
+                    @can('admin')
+                        <div class="col-sm-4 d-flex justify-content-end">
+                            <a href="{{ route('pasien.create') }}" class="btn btn-success">Tambah Data</a>
+                        </div>
+                    @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -89,18 +91,21 @@
                                             <a href="{{ route('pasien.show', $row->id) }}" class="btn icon btn-info">
                                                 <i class="bi bi-eye-fill"></i>
                                             </a>
-                                            <a href="{{ route('pasien.edit', $row->id) }}"
-                                                class="btn icon btn-warning">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <form action="{{ route('pasien.destroy', $row->id) }}" method="POST"
-                                                class="d-inline form-delete-user">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="btn icon btn-danger btn-delete-user">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
+                                            @can('admin')
+                                                <a href="{{ route('pasien.edit', $row->id) }}"
+                                                    class="btn icon btn-warning">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <form action="{{ route('pasien.destroy', $row->id) }}" method="POST"
+                                                    class="d-inline form-delete-user">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn icon btn-danger btn-delete-user">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endcan
+
                                         </div>
                                     </td>
 

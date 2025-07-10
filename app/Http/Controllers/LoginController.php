@@ -23,29 +23,34 @@ class LoginController extends Controller
     {
         // Validasi input
         $credentials = $request->validate([
-            'username' => ['required'], // Username wajib diisi
-            'password' => ['required'], // Password wajib diisi
+            'username' => ['required'],
+            'password' => ['required'],
         ], [
             'username.required' => 'Username wajib diisi!',
             'password.required' => 'Password wajib diisi!',
         ]);
-
-        // Coba otentikasi pengguna dengan kredensial yang diberikan
+    
+        // Coba otentikasi pengguna
         if (Auth::attempt($credentials)) {
-            // Regenerasi session untuk keamanan
             $request->session()->regenerate();
-
-            // Redirect ke halaman dashboard jika login berhasil
+    
+            // Ambil role user yang login
+            $role = Auth::user()->role;
+    
+            // Redirect berdasarkan role
+            if ($role === 'Pasien') {
+                return redirect('pasien/beranda');
+            }
+    
             return redirect()->intended('dashboard');
         }
-
-        Alert::success('Sukses!', 'Login Berhasil');
-
-        // Jika otentikasi gagal, kembali ke halaman login dengan pesan error
+    
+        // Jika gagal login
         return redirect('/')->withErrors([
             'username' => 'Username atau password salah.',
         ]);
     }
+    
 
     public function logout(Request $request): RedirectResponse
     {

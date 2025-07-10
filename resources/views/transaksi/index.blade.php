@@ -35,7 +35,9 @@
                                 value="{{ request('tanggal_kunjungan', $tanggal_kunjungan ?? now()->toDateString()) }}">
                             <button type="submit" class="btn btn-primary me-2">Cari</button>
                         </form>
-                        <a href="{{ route('transaksi.create') }}" class="btn btn-success">Tambah Data</a>
+                        @can('admin')
+                            <a href="{{ route('transaksi.create') }}" class="btn btn-success">Tambah Data</a>
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -111,33 +113,43 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1 justify-content-center">
-                                            @if ($row->status_kedatangan == 'Datang')
-                                                <a href="#" class="btn icon btn-info btn-call-pasien"
-                                                    data-id="{{ $row->id }}">
-                                                    <i class="bi bi-forward-fill"></i>
-                                                </a>
-                                            @endif
-                                            @if (
-                                                $row->status_kedatangan == 'Booking' ||
+                                            @can('admin')
+                                                @if ($row->status_kedatangan == 'Datang')
+                                                    <a href="#" class="btn icon btn-info btn-call-pasien"
+                                                        data-id="{{ $row->id }}">
+                                                        <i class="bi bi-forward-fill"></i>
+                                                    </a>
+                                                @elseif ($row->status_kedatangan == 'Booking')
+                                                    <a href="#" class="btn icon btn-info btn-konfirmasi-kedatangan"
+                                                        data-id="{{ $row->id }}">
+                                                        <i class="bi bi-forward-fill"></i>
+                                                    </a>
+                                                @endif
+                                            @endcan
+                                            @canany(['admin', 'dokter', 'apotek'])
+                                                @if (
                                                     $row->status_kedatangan == 'Diperiksa' ||
-                                                    $row->status_kedatangan == 'Beli Obat' ||
-                                                    $row->status_kedatangan == 'Pengambilan Obat' ||
-                                                    $row->status_kedatangan == 'Selesai')
-                                                <a href="{{ route('transaksi.resep_obat', ['pasien' => $row->pasien->id, 'rekam_medis' => $row->id]) }}"
-                                                    class="btn icon btn-info">
-                                                    <i class="bi bi-clipboard2"></i>
-                                                </a>
-                                            @endif
-                                            @if ($row->status_kedatangan != 'Selesai')
-                                                <form action="{{ route('transaksi.destroy', $row->id) }}"
-                                                    method="POST" class="d-inline form-delete-user">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn icon btn-danger btn-delete-user">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </form>
-                                            @endif
+                                                        $row->status_kedatangan == 'Beli Obat' ||
+                                                        $row->status_kedatangan == 'Pengambilan Obat' ||
+                                                        $row->status_kedatangan == 'Selesai')
+                                                    <a href="{{ route('transaksi.resep_obat', ['pasien' => $row->pasien->id, 'rekam_medis' => $row->id]) }}"
+                                                        class="btn icon btn-info">
+                                                        <i class="bi bi-clipboard2"></i>
+                                                    </a>
+                                                @endif
+                                            @endcanany
+                                            @can('admin')
+                                                @if ($row->status_kedatangan != 'Selesai')
+                                                    <form action="{{ route('transaksi.destroy', $row->id) }}"
+                                                        method="POST" class="d-inline form-delete-user">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn icon btn-danger btn-delete-user">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            @endcan
                                         </div>
                                     </td>
                                 </tr>
@@ -147,13 +159,58 @@
                                 @endphp
                             @endforeach
 
-
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </section>
+
+    {{-- UPDATE STATUS KEDATANGAN MENJADI DATANG --}}
+    <script>
+        $(document).ready(function() {
+            $('.btn-konfirmasi-kedatangan').click(function(e) {
+                e.preventDefault();
+                const rekamMedisId = $(this).data('id');
+
+                // Ambil route dan ganti :id dengan rekamMedisId
+                let urlTemplate = "{{ route('transaksi.update_status_booking', ['id' => ':id']) }}";
+                let url = urlTemplate.replace(':id', rekamMedisId);
+
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: 'Apakah pasien sudah datang?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, sudah datang',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            type: 'PUT',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            data: {
+                                status_kedatangan: 'Datang',
+                            },
+                            success: function(response) {
+                                Swal.fire('Sukses', 'Status pasien sudah diperbarui',
+                                        'success')
+                                    .then(() => {
+                                        location.reload();
+                                    });
+                            },
+                            error: function(xhr) {
+                                Swal.fire('Error', 'Gagal memperbarui status', 'error');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 
     {{-- UPDATE STATUS KEDATANGAN MENJADI DIPERIKSA --}}
     <script>
