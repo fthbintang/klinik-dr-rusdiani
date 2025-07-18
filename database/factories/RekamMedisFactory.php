@@ -76,7 +76,6 @@ class RekamMedisFactory extends Factory
             'keluhan'           => $this->faker->sentence(6),
             'diagnosis'         => $this->faker->sentence(8),
             'tindakan'          => $this->faker->sentence(5),
-            'catatan'           => $this->faker->paragraph(),
             'disetujui_dokter'  => $disetujuiDokter,
             'biaya_total'       => $jamSelesai ? $this->faker->numberBetween(10000, 500000) : null,
             'created_at'        => now(),

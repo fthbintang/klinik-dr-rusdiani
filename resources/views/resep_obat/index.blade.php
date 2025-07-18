@@ -353,17 +353,29 @@
 
                     <div class="mt-4 float-end">
                         <button id="btn-simpan-dokter"
-                            class="btn btn-success @if ($rekam_medis->biaya_total || Gate::denies('dokter')) disabled @endif"
+                            class="btn btn-success
+                            @if ($rekam_medis->biaya_total || Gate::denies('dokter')) disabled @endif"
                             @cannot('dokter') disabled @endcannot>
                             ✅ Simpan
                         </button>
+
                         <button id="btn-simpan-apotek"
                             class="btn btn-primary
-    @if (!$rekam_medis->disetujui_dokter || $rekam_medis->biaya_total || Gate::denies('apotek')) disabled @endif"
+                            @if (!$rekam_medis->disetujui_dokter || $rekam_medis->biaya_total || Gate::denies('apotek')) disabled @endif"
                             @if (!$rekam_medis->disetujui_dokter || $rekam_medis->biaya_total) disabled @endif @cannot('apotek') disabled @endcannot>
                             💊 Diproses Apotek
                         </button>
+
+                        @can('apotek')
+                            @if ($rekam_medis->biaya_total)
+                                <a href="{{ route('resep_obat.cetak', [$rekam_medis->pasien_id, $rekam_medis->id]) }}"
+                                    target="_blank" class="btn btn-outline-secondary">
+                                    🖨️ Cetak Resep
+                                </a>
+                            @endif
+                        @endcan
                     </div>
+
                 </div>
             </div>
         @endif

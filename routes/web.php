@@ -65,6 +65,7 @@ Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Dokter,Apotek'])->gr
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
     Route::get('/transaksi/create', [TransaksiController::class, 'create'])->name('transaksi.create');
     Route::get('/transaksi/pasien/{pasien}/rekam_medis/{rekam_medis}/resep_obat', [TransaksiController::class, 'transaksi_resep_obat'])->name('transaksi.resep_obat');
+    Route::get('/transaksi/pasien/{pasien}/rekam_medis/{rekam_medis}/resep_obat/cetak', [TransaksiController::class, 'cetakResepObat'])->name('resep_obat.cetak');
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
     Route::put('/transaksi/{id}/update_status/datang', [TransaksiController::class, 'updateStatusBooking'])->name('transaksi.update_status_booking');
     Route::put('/transaksi/{id}/update_status', [TransaksiController::class, 'updateStatus'])->name('transaksi.update_status');
@@ -120,7 +121,8 @@ Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Apotek'])->group(fun
 });
 
 // ============================================= LOGIN PASIEN ==============================================
-Route::prefix('pasien')->middleware(['auth', 'role:Pasien'])->group(function () {
+// Route::prefix('pasien')->middleware(['auth', 'role:Pasien'])->group(function () {
+Route::prefix('pasien')->middleware(['auth'])->group(function () {
     Route::get('/beranda', [BerandaPasienController::class, 'index'])->name('beranda_pasien.index');
     Route::get('/beranda/antrean/terdepan', [BerandaPasienController::class, 'antreanTerdepanPasien']);
     Route::get('/beranda/pendaftaran', [PendaftaranPasienController::class, 'index'])->name('pendaftaran_pasien.index');

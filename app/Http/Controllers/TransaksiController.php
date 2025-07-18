@@ -8,6 +8,7 @@ use App\Models\Pasien;
 use App\Models\ResepObat;
 use App\Models\RekamMedis;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -29,6 +30,19 @@ class TransaksiController extends Controller
             'rekam_medis' => $rekam_medis,
             'tanggal_kunjungan' => $tanggal, // kirim tanggal ke view
         ]);
+    }
+
+    public function cetakResepObat(Pasien $pasien, RekamMedis $rekam_medis)
+    {
+        $rekam_medis->load('resep_obat'); // Pastikan relasi sudah didefinisikan
+
+        $pdf = Pdf::loadView('pdf.resep_obat', [
+            'pasien' => $pasien,
+            'rekam_medis' => $rekam_medis,
+            'resep_obat' => $rekam_medis->resep_obat,
+        ]);
+
+        return $pdf->stream('resep_obat_'.$pasien->nama.'.pdf');
     }
 
     public function create()
