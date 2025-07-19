@@ -173,19 +173,51 @@
                 e.preventDefault();
                 const rekamMedisId = $(this).data('id');
 
-                // Ambil route dan ganti :id dengan rekamMedisId
                 let urlTemplate = "{{ route('transaksi.update_status_booking', ['id' => ':id']) }}";
                 let url = urlTemplate.replace(':id', rekamMedisId);
 
                 Swal.fire({
-                    title: 'Konfirmasi',
-                    text: 'Apakah pasien sudah datang?',
+                    title: 'Konfirmasi Kedatangan',
+                    html: `
+                    <p>Apakah pasien sudah datang?</p>
+                    <div style="display: flex; align-items: center; justify-content: center;">
+                        <span style="margin-right: 5px;">Rp</span>
+                        <input type="text" id="biayaJasaInput" class="swal2-input" placeholder="Masukkan biaya jasa" style="width: 200px; text-align: right;">
+                    </div>
+                `,
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonText: 'Ya, sudah datang',
+                    confirmButtonText: 'Ya, Simpan',
                     cancelButtonText: 'Batal',
+                    didOpen: () => {
+                        const input = document.getElementById('biayaJasaInput');
+
+                        // Format angka dengan titik saat diketik
+                        input.addEventListener('input', function() {
+                            // Hapus semua karakter non-angka
+                            let rawValue = this.value.replace(/\D/g, '');
+
+                            // Format ulang dengan titik ribuan
+                            let formatted = new Intl.NumberFormat('id-ID').format(
+                                rawValue);
+                            this.value = formatted;
+                        });
+                    },
+                    preConfirm: () => {
+                        // Ambil nilai dan hilangkan titik sebelum dikirim
+                        const formattedValue = document.getElementById('biayaJasaInput').value;
+                        const rawValue = formattedValue.replace(/\./g, '');
+
+                        if (!rawValue || isNaN(rawValue) || parseInt(rawValue) <= 0) {
+                            Swal.showValidationMessage(
+                                'Biaya jasa harus diisi dan lebih dari 0');
+                        }
+                        return parseInt(rawValue);
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        const biayaJasa = result.value;
+
                         $.ajax({
                             url: url,
                             type: 'PUT',
@@ -194,6 +226,7 @@
                             },
                             data: {
                                 status_kedatangan: 'Datang',
+                                biaya_jasa: biayaJasa
                             },
                             success: function(response) {
                                 Swal.fire('Sukses', 'Status pasien sudah diperbarui',

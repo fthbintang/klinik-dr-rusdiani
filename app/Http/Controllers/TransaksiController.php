@@ -94,12 +94,14 @@ class TransaksiController extends Controller
     {
         $request->validate([
             'status_kedatangan' => 'required|string|in:Datang',
+            'biaya_jasa' => 'required|numeric|min:0',
         ]);
     
         try {
             $rekamMedis = RekamMedis::findOrFail($id);
             $rekamMedis->status_kedatangan = 'Datang';
             $rekamMedis->jam_datang = now()->format('H:i:s');
+            $rekamMedis->biaya_jasa = $request->biaya_jasa;
             $rekamMedis->save();
     
             return response()->json(['message' => 'Status berhasil diperbarui']);
