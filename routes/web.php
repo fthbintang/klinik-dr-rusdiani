@@ -121,8 +121,7 @@ Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Apotek'])->group(fun
 });
 
 // ============================================= LOGIN PASIEN ==============================================
-// Route::prefix('pasien')->middleware(['auth', 'role:Pasien'])->group(function () {
-Route::prefix('pasien')->middleware(['auth'])->group(function () {
+Route::prefix('pasien')->middleware(['auth', 'role:Pasien'])->group(function () {
     Route::get('/beranda', [BerandaPasienController::class, 'index'])->name('beranda_pasien.index');
     Route::get('/beranda/antrean/terdepan', [BerandaPasienController::class, 'antreanTerdepanPasien']);
     Route::get('/beranda/pendaftaran', [PendaftaranPasienController::class, 'index'])->name('pendaftaran_pasien.index');
