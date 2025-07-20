@@ -15,6 +15,7 @@ use App\Http\Controllers\ObatKeluarController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\BerandaPasienController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PenjualanObatController;
 use App\Http\Controllers\PendaftaranPasienController;
 use App\Http\Controllers\PendaftaranAkunPasienController;
@@ -28,8 +29,12 @@ Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('g
 Route::post('/sign-in', [LoginController::class, 'authenticate'])->name('authentication');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+// LAPORAN
+Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+Route::get('/laporan/cetak-obat', [LaporanController::class, 'exportObat'])->name('laporan.export-obat');
+
 Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Dokter,Apotek'])->group(function () {
-// Route::prefix('dashboard')->middleware('auth')->group(function () {
+    // Route::prefix('dashboard')->middleware('auth')->group(function () {
     // DASHBOARD
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
