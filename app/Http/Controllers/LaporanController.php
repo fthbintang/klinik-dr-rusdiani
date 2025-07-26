@@ -6,12 +6,17 @@ use App\Models\Obat;
 use App\Models\Pasien;
 use App\Models\Supplier;
 use App\Models\ObatMasuk;
+use App\Models\ResepObat;
 use App\Models\ObatKeluar;
+use App\Models\RekamMedis;
 use App\Exports\ObatExport;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PenjualanObat;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\ObatMasukExport;
+use App\Exports\ResepObatExport;
+use App\Exports\TransaksiExport;
 use App\Exports\ObatKeluarExport;
 use App\Models\PenjualanObatDetail;
 use Illuminate\Support\Facades\Log;
@@ -32,11 +37,13 @@ class LaporanController extends Controller
             'titleLaporanListTransaksiObat'     => 'Laporan Transaksi Obat',
             'titleLaporanDetailTransaksiObat'   => 'Laporan Detail Transaksi Obat',
             'titleLaporanTransaksi'             => 'Laporan Transaksi',
+            'titleLaporanResepObatPasien'       => 'Laporan Resep Obat Pasien',
 
             'supplier'                          => Supplier::latest()->get(),
             'obat'                              => Obat::latest()->get(),
             'pasien'                            => Pasien::latest()->get(),
             'penjualan_obat'                    => PenjualanObat::latest()->get(),
+            'rekam_medis'                       => RekamMedis::with('pasien')->latest()->get(),
         ]);
     }
 
@@ -220,17 +227,13 @@ class LaporanController extends Controller
 
             $dataDetailPenjualanObat = $query->get();
 
-            // Siapkan variabel default
             $kodeTransaksi = null;
             $namaPasien = null;
 
-            // Cek jika koleksi tidak kosong untuk menghindari error
             if (!$dataDetailPenjualanObat->isEmpty()) {
-                // Ambil item pertama, lalu akses relasi 'penjualan_obat' dan propertinya
                 $transaksi = $dataDetailPenjualanObat->first()->penjualan_obat;
 
                 $kodeTransaksi = $transaksi->kode_transaksi;
-                $namaPasien = $transaksi->pasien->nama_lengkap; // Asumsi nama kolomnya 'nama_pasien'
             }
 
             if ($validatedEkstensi['ekstensiDetailTransaksiObat'] == 'pdf') {
@@ -250,5 +253,122 @@ class LaporanController extends Controller
             Log::error('Gagal Export Data', ['error' => $e->getMessage()]);
             return back()->withInput();
         }
+    }
+
+    public function exportTransaksi(Request $request)
+    {
+        $validatedEkstensi = $request->validate([
+            'ekstensiTransaksi' => 'required'
+        ]);
+
+        // dd($request->awalKunjungan);
+
+        try {
+            $query = RekamMedis::with('pasien');
+
+            $query->when($request->filled('awalKunjungan') && $request->filled('akhirKunjungan'), function ($q) use ($request) {
+                return $q->whereBetween('tanggal_kunjungan', [$request->awalKunjungan, $request->akhirKunjungan]);
+            });
+
+
+            $query->when($request->filled('status_kedatangan'), function ($q) use ($request) {
+                return $q->where('status_kedatangan', $request->status_kedatangan);
+            });
+
+            $query->when($request->filled('disetujui_dokter'), function ($q) use ($request) {
+                return $q->where('disetujui_dokter', $request->disetujui_dokter);
+            });
+
+            $query->when($request->filled('pasien_id'), function ($q) use ($request) {
+                return $q->where('pasien_id', $request->pasien_id);
+            });
+
+
+            $dataTransaksi = $query->latest('tanggal_kunjungan')->get();
+
+            if ($validatedEkstensi['ekstensiTransaksi'] == 'pdf') {
+                $pdf = PDF::loadView('laporan.pdf.transaksi', [
+                    'dataTransaksi' => $dataTransaksi,
+                    'awal' => $request->awalKunjungan,
+                    'akhir' => $request->akhirKunjungan,
+                ])->setPaper('a4', 'landscape');;
+                return $pdf->stream('laporan-transaksi.pdf');
+            } else if ($validatedEkstensi['ekstensiTransaksi'] == 'excel') {
+                return Excel::download(new TransaksiExport($dataTransaksi), 'laporan-transaksi-' . now()->format('Y-m-d') . '.xlsx');
+            }
+        } catch (\Exception $e) {
+            Alert::error('Error', "Terjadi kesalahan saat mengekspor data");
+            Log::error('Gagal Export Data', ['error' => $e->getMessage()]);
+            return back()->withInput();
+        }
+    }
+
+    public function exportResepObat(Request $request)
+    {
+        // 1. Validasi input dari form
+        $validatedData = $request->validate(
+            [
+                'rekam_medis_id'      => 'required',
+                'ekstensiResepObat' => 'required',
+            ],
+            [
+                'rekam_medis_id.required' => 'Kolom Kunjungan Pasien Harus Diisi !'
+            ]
+        );
+
+        try {
+            // 2. Query data ResepObat berdasarkan rekam_medis_id
+            $query = ResepObat::with(['obat', 'rekam_medis.pasien'])
+                ->where('rekam_medis_id', $validatedData['rekam_medis_id']);
+
+            $dataResepObat = $query->get();
+
+            // 3. Ambil data rekam medis dan pasien untuk judul laporan
+            $rekamMedis = RekamMedis::with('pasien')->find($validatedData['rekam_medis_id']);
+            $pasien = $rekamMedis->pasien;
+
+            // 4. Logika Ekspor
+            if ($validatedData['ekstensiResepObat'] == 'pdf') {
+                $pdf = PDF::loadView('laporan.pdf.resep-obat', [
+                    'dataResepObat' => $dataResepObat,
+                    'pasien' => $pasien,
+                    'rekamMedis' => $rekamMedis, // Kirim juga data rekam medis
+                ])->setPaper('a4', 'portrait'); // Atur ukuran kertas
+
+                return $pdf->stream('laporan-resep-' . Str::slug($pasien->nama_lengkap) . '.pdf');
+            } else if ($validatedData['ekstensiResepObat'] == 'excel') {
+                return Excel::download(new ResepObatExport($dataResepObat), 'laporan-resep-' . Str::slug($pasien->nama_lengkap) . '.xlsx');
+            }
+        } catch (\Exception $e) {
+            Alert::error('Error', "Terjadi kesalahan saat mengekspor data");
+            Log::error('Gagal Export Data Resep Obat', ['error' => $e->getMessage()]);
+            return back()->withInput();
+        }
+    }
+
+    // Di dalam class LaporanController
+    public function getPenjualanObatByDate(Request $request)
+    {
+        $request->validate(['tanggal' => 'required|date']);
+
+        $penjualanObat = PenjualanObat::with('pasien') // Eager load pasien
+            ->whereDate('tanggal_transaksi', $request->tanggal)
+            ->orderBy('kode_transaksi', 'asc')
+            ->get();
+
+        return response()->json($penjualanObat);
+    }
+
+    // ... (method getRekamMedisByDate yang baru ditambahkan) ...
+    public function getRekamMedisByDate(Request $request)
+    {
+        $request->validate(['tanggal' => 'required|date']);
+
+        $rekamMedis = RekamMedis::with('pasien')
+            ->whereDate('tanggal_kunjungan', $request->tanggal)
+            ->orderBy('no_antrean', 'asc')
+            ->get();
+
+        return response()->json($rekamMedis);
     }
 }

@@ -286,7 +286,6 @@
                             </div>
 
                             <div class="row">
-
                                 <div class="col-6">
                                     {{-- Based on Obat --}}
                                     <div class="form-group">
@@ -405,7 +404,7 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-12">
                                             {{-- Export to --}}
                                             <div class="form-group">
                                                 <label for="ekstensiPenjualanObat" class="form-label"><b>Pilih
@@ -422,8 +421,10 @@
                                                 @enderror
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-12">
                                             <label for="" class="form-label">&nbsp;</label>
                                             <button type="submit" class="btn btn-primary form-control"><i
                                                     class="fa-solid fa-print"></i> Generate</button>
@@ -448,22 +449,31 @@
                                     </div>
                                 </div>
                             </div>
+                            {{-- Laporan Data Detail Transaksi Obat --}}
                             <div class="card-body">
                                 <form action="{{ route('laporan.export-detail-transaksi-obat') }}" method="get"
                                     target="_blank">
                                     <div class="row">
+                                        {{-- Filter Tanggal BARU --}}
                                         <div class="col-12">
-                                            {{-- Based Transaksi Kode Transaksi --}}
+                                            <div class="form-group">
+                                                <label for="filter_tanggal_transaksi" class="form-label"><b>Pilih
+                                                        Tanggal Transaksi</b></label>
+                                                <input type="text" id="filter_tanggal_transaksi" class="form-control"
+                                                    placeholder="Pilih tanggal...">
+                                            </div>
+                                        </div>
+
+                                        {{-- Filter Pilih Transaksi (Dropdown dinamis) --}}
+                                        <div class="col-12">
                                             <div class="form-group">
                                                 <label for="penjualan_obat_id" class="form-label"><b>Pilih
                                                         Transaksi</b></label>
                                                 <span class="text-danger">*</span>
+                                                {{-- Hapus class="choices form-select" agar tidak ada konflik --}}
                                                 <select name="penjualan_obat_id" id="penjualan_obat_id"
-                                                    class="choices form-select">
-                                                    <option value="" selected>-- Pilih Kode Transaksi --</option>
-                                                    @foreach ($penjualan_obat as $row)
-                                                    <option value="{{ $row->id }}">{{ $row->kode_transaksi }}</option>
-                                                    @endforeach
+                                                    class="form-select" disabled>
+                                                    <option value="">-- Pilih Tanggal Dahulu --</option>
                                                 </select>
                                                 @error('penjualan_obat_id')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -472,9 +482,9 @@
                                         </div>
                                     </div>
 
+                                    {{-- Baris untuk tombol Generate & Ekstensi (tetap sama) --}}
                                     <div class="row">
                                         <div class="col-6">
-                                            {{-- Export to --}}
                                             <div class="form-group">
                                                 <label for="ekstensiDetailTransaksiObat" class="form-label"><b>Pilih
                                                         Ekstensi</b></label>
@@ -485,14 +495,10 @@
                                                     <option value="pdf">Pdf</option>
                                                     <option value="excel">Excel</option>
                                                 </select>
-                                                @error('ekstensiDetailTransaksiObat')
-                                                <div class="text-danger">{{ $message }}</div>
-                                                @enderror
                                             </div>
                                         </div>
-
                                         <div class="col-6">
-                                            <label for="" class="form-label">&nbsp;</label>
+                                            <label class="form-label">&nbsp;</label>
                                             <button type="submit" class="btn btn-primary form-control"><i
                                                     class="fa-solid fa-print"></i> Generate</button>
                                         </div>
@@ -505,8 +511,181 @@
             </div>
         </div>
 
+        {{-- Laporan Data Transaksi (Rekam Medis) --}}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h5 class="card-title">Data {{ $titleLaporanTransaksi }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('laporan.export-transaksi') }}" method="get" target="_blank">
+                            <div class="row">
+                                <div class="col-12">
+                                    {{-- Based Tanggal Kunjungan --}}
+                                    <div class="form-group">
+                                        <label for="tanggal_kunjungan" class="form-label"><b>Range Tanggal
+                                                Kunjungan</b></label>
 
+                                        <div class="input-group">
+                                            <input id="tanggal_kunjungan" name="tanggal_kunjungan" class="form-control"
+                                                type="text" placeholder="Pilih Periode...">
+                                            <button class="btn btn-danger" type="button" id="resetTanggalKunjungan">
+                                                <i class="fa-solid fa-sync"></i> Reset
+                                            </button>
 
+                                            <input type="hidden" name="awalKunjungan" id="awalKunjungan">
+                                            <input type="hidden" name="akhirKunjungan" id="akhirKunjungan">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    {{-- Based on Status Kedatangan --}}
+                                    <div class="form-group">
+                                        <label for="status_kedatangan" class="form-label"><b>Status Pasien</b>
+                                        </label>
+                                        <select name="status_kedatangan" id="status_kedatangan"
+                                            class="choices form-select">
+                                            <option value="" selected>Semua</option>
+                                            <option value="Datang">Datang</option>
+                                            <option value="Booking">Booking</option>
+                                            <option value="Diperiksa">Diperiksa</option>
+                                            <option value="Pengambilan Obat">Pengambilan Obat</option>
+                                            <option value="Selesai">Selesai</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    {{-- Based on Disetujui Dokter --}}
+                                    <div class="form-group">
+                                        <label for="disetujui_dokter" class="form-label"><b>Disetujui /
+                                                Belum</b></label>
+                                        <select name="disetujui_dokter" id="disetujui_dokter"
+                                            class="choices form-select">
+                                            <option value="" selected>Semua</option>
+                                            <option value="0">Belum Disetujui</option>
+                                            <option value="1">Disetujui</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    {{-- Based on Pasien --}}
+                                    <div class="form-group">
+                                        <label for="pasien_id" class="form-label"><b>Pasien</b>
+                                        </label>
+                                        <select name="pasien_id" id="pasien_id" class="choices form-select">
+                                            <option value="" selected>Semua</option>
+                                            @foreach ($pasien as $row)
+                                            <option value="{{ $row->id }}">{{ $row->nama_lengkap }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    {{-- Export to --}}
+                                    <div class="form-group">
+                                        <label for="ekstensiTransaksi" class="form-label"><b>Pilih
+                                                Ekstensi</b></label>
+                                        <span class="text-danger">*</span>
+                                        <select name="ekstensiTransaksi" id="ekstensiTransaksi"
+                                            class="choices form-select">
+                                            <option value="" selected>-- Pilih Ekstensi --</option>
+                                            <option value="pdf">Pdf</option>
+                                            <option value="excel">Excel</option>
+                                        </select>
+                                        @error('ekstensiTransaksi')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="" class="form-label">&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary form-control"><i
+                                            class="fa-solid fa-print"></i> Generate</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Laporan Data Resep Obat --}}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    {{-- Laporan Data Resep Obat --}}
+                    <div class="card-body">
+                        <form action="{{ route('laporan.export-resep-obat') }}" method="get" target="_blank">
+                            <div class="row">
+                                {{-- Filter Tanggal BARU --}}
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="filter_tanggal_resep" class="form-label"><b>Pilih Tanggal
+                                                Kunjungan</b></label>
+                                        <input type="text" id="filter_tanggal_resep" class="form-control"
+                                            placeholder="Pilih tanggal...">
+                                    </div>
+                                </div>
+
+                                {{-- Filter Kunjungan Pasien (Dropdown dinamis) --}}
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="rekam_medis_id" class="form-label"><b>Pilih Kunjungan (Pasien &
+                                                Antrean)</b></label>
+                                        <span class="text-danger">*</span>
+                                        {{-- SESUDAH --}}
+                                        <select name="rekam_medis_id" id="rekam_medis_id" class="form-select" disabled>
+                                            <option value="">-- Pilih Tanggal Dahulu --</option>
+                                            {{-- Opsi akan diisi oleh JavaScript --}}
+                                        </select>
+                                        @error('rekam_medis_id')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Baris untuk tombol Generate & Ekstensi (tetap sama) --}}
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="ekstensiResepObat" class="form-label"><b>Pilih Ekstensi</b></label>
+                                        <span class="text-danger">*</span>
+                                        <select name="ekstensiResepObat" id="ekstensiResepObat"
+                                            class="choices form-select">
+                                            <option value="" selected>-- Pilih Ekstensi --</option>
+                                            <option value="pdf">Pdf</option>
+                                            <option value="excel">Excel</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary form-control"><i
+                                            class="fa-solid fa-print"></i> Generate</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     @push('scripts')
@@ -568,6 +747,20 @@
             }
         });
 
+        const tanggalKunjungan = flatpickr("#tanggal_kunjungan", {
+            mode: 'range',
+
+            onChange: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length === 2) {
+                    const awalKunjungan = selectedDates[0];
+                    const akhirKunjungan = selectedDates[1];
+
+                    document.getElementById('awalKunjungan').value = flatpickr.formatDate(awalKunjungan, "Y-m-d");
+                    document.getElementById('akhirKunjungan').value = flatpickr.formatDate(akhirKunjungan, "Y-m-d");
+                }
+            }
+        });
+
         // Reset Button
         document.getElementById('resetExpired').addEventListener('click', function () {
             expiredDatePicker.clear();
@@ -591,6 +784,107 @@
             tanggalTransaksiObat.clear();
             document.getElementById('awalTransaksiObat').value = '';
             document.getElementById('akhirTransaksiObat').value = '';
+        });
+
+        document.getElementById('resetTanggalKunjungan').addEventListener('click', function () {
+            tanggalKunjungan.clear();
+            document.getElementById('awalKunjungan').value = '';
+            document.getElementById('akhirKunjungan').value = '';
+        });
+
+        // Inisialisasi Choices.js untuk dropdown penjualan obat
+        const penjualanObatSelectEl = document.getElementById('penjualan_obat_id');
+        const penjualanObatChoices = new Choices(penjualanObatSelectEl, {
+            shouldSort: false,
+        });
+
+        // Inisialisasi Flatpickr untuk filter tanggal transaksi obat
+        flatpickr("#filter_tanggal_transaksi", {
+            dateFormat: "Y-m-d",
+            onChange: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length > 0) {
+                    const tanggal = dateStr;
+                    const url = `{{ route('laporan.get-penjualan-obat-by-date') }}?tanggal=${tanggal}`;
+
+                    // Kosongkan dan nonaktifkan dropdown
+                    penjualanObatChoices.clearStore();
+                    penjualanObatChoices.disable();
+                    penjualanObatChoices.setChoices([{ value: '', label: 'Memuat data...' }], 'value', 'label', true);
+
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            penjualanObatChoices.enable();
+                            
+                            if (data.length > 0) {
+                                const pilihan = data.map(item => {
+                                    // Menangani jika pasien null (pasien umum)
+                                    const namaPasien = item.pasien ? item.pasien.nama_lengkap : 'Pasien Umum';
+                                    return {
+                                        value: item.id,
+                                        label: `${item.kode_transaksi} | ${namaPasien}`
+                                    };
+                                });
+                                
+                                pilihan.unshift({ value: '', label: '-- Pilih Transaksi --' });
+                                penjualanObatChoices.setChoices(pilihan, 'value', 'label', true);
+                            } else {
+                                penjualanObatChoices.setChoices([{ value: '', label: 'Tidak ada transaksi di tanggal ini' }], 'value', 'label', true);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching data:', error);
+                            penjualanObatChoices.setChoices([{ value: '', label: 'Gagal memuat data' }], 'value', 'label', true);
+                        });
+                }
+            }
+        });
+
+        // Inisialisasi Choices.js untuk dropdown rekam medis
+        const rekamMedisSelectEl = document.getElementById('rekam_medis_id');
+        const rekamMedisChoices = new Choices(rekamMedisSelectEl, {
+            shouldSort: false, 
+        });
+
+        // Inisialisasi Flatpickr untuk filter tanggal baru
+        flatpickr("#filter_tanggal_resep", {
+            dateFormat: "Y-m-d",
+            onChange: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length > 0) {
+                    const tanggal = dateStr;
+                    const url = `{{ route('laporan.get-rekam-medis-by-date') }}?tanggal=${tanggal}`;
+
+                    // Kosongkan dan nonaktifkan dropdown selagi mengambil data
+                    rekamMedisChoices.clearStore();
+                    rekamMedisChoices.disable();
+                    rekamMedisChoices.setChoices([{ value: '', label: 'Memuat data...' }], 'value', 'label', true);
+
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            rekamMedisChoices.enable();
+                            
+                            if (data.length > 0) {
+                                // Buat array pilihan untuk Choices.js
+                                const pilihan = data.map(item => ({
+                                    value: item.id,
+                                    label: `${item.pasien.nama_lengkap} | ${item.no_antrean}`
+                                }));
+                                
+                                // Tambahkan opsi "Pilih Kunjungan" di awal
+                                pilihan.unshift({ value: '', label: '-- Pilih Kunjungan --' });
+                                
+                                rekamMedisChoices.setChoices(pilihan, 'value', 'label', true);
+                            } else {
+                                rekamMedisChoices.setChoices([{ value: '', label: 'Tidak ada data di tanggal ini' }], 'value', 'label', true);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching data:', error);
+                            rekamMedisChoices.setChoices([{ value: '', label: 'Gagal memuat data' }], 'value', 'label', true);
+                        });
+                }
+            }
         });
     </script>
     @endpush

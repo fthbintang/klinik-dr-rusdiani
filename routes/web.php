@@ -35,7 +35,14 @@ Route::get('/laporan/cetak-obat', [LaporanController::class, 'exportObat'])->nam
 Route::get('/laporan/cetak-obat-masuk', [LaporanController::class, 'exportObatMasuk'])->name('laporan.export-obat-masuk');
 Route::get('/laporan/cetak-obat-keluar', [LaporanController::class, 'exportObatKeluar'])->name('laporan.export-obat-keluar');
 Route::get('/laporan/cetak-transaksi-obat', [LaporanController::class, 'exportTransaksiObat'])->name('laporan.export-transaksi-obat');
+
 Route::get('/laporan/cetak-detail-transaksi-obat', [LaporanController::class, 'exportDetailTransaksiObat'])->name('laporan.export-detail-transaksi-obat');
+Route::get('/laporan/get-penjualan-obat-by-date', [LaporanController::class, 'getPenjualanObatByDate'])->name('laporan.get-penjualan-obat-by-date');
+
+Route::get('/laporan/cetak-transaksi', [LaporanController::class, 'exportTransaksi'])->name('laporan.export-transaksi');
+
+Route::get('/laporan/cetak-resep-obat', [LaporanController::class, 'exportResepObat'])->name('laporan.export-resep-obat');
+Route::get('/laporan/get-rekam-medis-by-date', [LaporanController::class, 'getRekamMedisByDate'])->name('laporan.get-rekam-medis-by-date');
 
 Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Dokter,Apotek'])->group(function () {
     // Route::prefix('dashboard')->middleware('auth')->group(function () {
