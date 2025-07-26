@@ -54,17 +54,17 @@
                         </thead>
                         <tbody>
                             @foreach ($obat_keluar as $row)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($row->tanggal_obat_keluar)->format('d-m-Y') }}</td>
-                                    <td>{{ $row->pasien->nama_lengkap ?? '-- Tanpa Nama --' }} </td>
-                                    <td>{{ $row->obat->nama_obat }}</td>
-                                    <td>{{ $row->stok_awal }}</td>
-                                    <td>-{{ $row->stok_keluar }}</td>
-                                    <td>{{ $row->stok_final }}</td>
-                                    <td>{{ $row->obat->supplier->nama_supplier }}</td>
-                                </tr>
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>
+                                    {{ \Carbon\Carbon::parse($row->tanggal_obat_keluar)->format('d-m-Y') }}</td>
+                                <td>{{ $row->pasien->nama_lengkap ?? '-- Tanpa Nama --' }} </td>
+                                <td>{{ $row->obat->nama_obat }}</td>
+                                <td>{{ $row->stok_awal }}</td>
+                                <td>-{{ $row->stok_keluar }}</td>
+                                <td>{{ $row->stok_final }}</td>
+                                <td>{{ $row->obat->supplier->nama_supplier }}</td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>

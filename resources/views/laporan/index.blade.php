@@ -22,6 +22,7 @@
     </div>
 
     <section class="section">
+        {{-- Laporan Data Obat --}}
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -38,7 +39,8 @@
                                 <div class="col-12">
                                     {{-- Based Tanggal Expired Akhir --}}
                                     <div class="form-group">
-                                        <label for="expired_date" class="form-label">Range Tanggal Expired</label>
+                                        <label for="expired_date" class="form-label"><b>Range Tanggal
+                                                Expired</b></label>
 
                                         <div class="input-group">
                                             <input id="expired_date" name="expired_date" class="form-control"
@@ -106,9 +108,6 @@
                                             </option>
                                             @endforeach
                                         </select>
-                                        @error('supplier_id')
-                                        <div class="text-danger">{{ $message }}</div>
-                                        @enderror
                                     </div>
                                 </div>
 
@@ -130,13 +129,226 @@
                                 <div class="col-6">
                                     {{-- Export to --}}
                                     <div class="form-group">
-                                        <label for="ekstensi" class="form-label"><b>Pilih Ekstensi</b></label>
+                                        <label for="ekstensiObat" class="form-label"><b>Pilih Ekstensi</b></label>
                                         <span class="text-danger">*</span>
-                                        <select name="ekstensi" id="ekstensi" class="choices form-select">
+                                        <select name="ekstensiObat" id="ekstensiObat" class="choices form-select">
                                             <option value="" selected>-- Pilih Ekstensi --</option>
                                             <option value="pdf">Pdf</option>
                                             <option value="excel">Excel</option>
                                         </select>
+                                        @error('ekstensiObat')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="" class="form-label">&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary form-control"><i
+                                            class="fa-solid fa-print"></i> Generate</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Laporan Data Obat Masuk --}}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h5 class="card-title">Data {{ $titleLaporanObatMasuk }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('laporan.export-obat-masuk') }}" method="get" target="_blank">
+                            <div class="row">
+                                <div class="col-12">
+                                    {{-- Based Tanggal Obat Masuk --}}
+                                    <div class="form-group">
+                                        <label for="tanggal_obat_masuk" class="form-label"><b>Range Tanggal Obat
+                                                Masuk</b></label>
+
+                                        <div class="input-group">
+                                            <input id="tanggal_obat_masuk" name="tanggal_obat_masuk"
+                                                class="form-control" type="text" placeholder="Pilih Periode...">
+                                            <button class="btn btn-danger" type="button" id="resetTanggalObatMasuk">
+                                                <i class="fa-solid fa-sync"></i> Reset
+                                            </button>
+
+                                            <input type="hidden" name="awalObatMasuk" id="awalObatMasuk">
+                                            <input type="hidden" name="akhirObatMasuk" id="akhirObatMasuk">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-6">
+                                    {{-- Based on Obat --}}
+                                    <div class="form-group">
+                                        <label for="nama_obat" class="form-label"><b>Nama Obat</b>
+                                        </label>
+                                        <select name="nama_obat" id="nama_obat" class="choices form-select">
+                                            <option value="" selected>Semua</option>
+                                            @foreach ($obat as $row)
+                                            <option value="{{ $row->id }}">{{ $row->nama_obat }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    {{-- Based on Supplier --}}
+                                    <div class="form-group">
+                                        <label for="supplier_id" class="form-label"><b>Supplier</b></label>
+                                        <select name="supplier_id" id="supplier_id" class="choices form-select">
+                                            <option value="" selected>Semua</option>
+                                            @foreach ($supplier as $row)
+                                            <option value="{{ $row->id }}">
+                                                {{ $row->nama_supplier }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    {{-- Export to --}}
+                                    <div class="form-group">
+                                        <label for="ekstensiObatMasuk" class="form-label"><b>Pilih Ekstensi</b></label>
+                                        <span class="text-danger">*</span>
+                                        <select name="ekstensiObatMasuk" id="ekstensiObatMasuk"
+                                            class="choices form-select">
+                                            <option value="" selected>-- Pilih Ekstensi --</option>
+                                            <option value="pdf">Pdf</option>
+                                            <option value="excel">Excel</option>
+                                        </select>
+                                        @error('ekstensiObatMasuk')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="" class="form-label">&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary form-control"><i
+                                            class="fa-solid fa-print"></i> Generate</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Laporan Data Obat Keluar --}}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h5 class="card-title">Data {{ $titleLaporanObatKeluar }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('laporan.export-obat-keluar') }}" method="get" target="_blank">
+                            <div class="row">
+                                <div class="col-12">
+                                    {{-- Based Tanggal Obat Keluar --}}
+                                    <div class="form-group">
+                                        <label for="tanggal_obat_keluar" class="form-label"><b>Range Tanggal Obat
+                                                Keluar</b></label>
+
+                                        <div class="input-group">
+                                            <input id="tanggal_obat_keluar" name="tanggal_obat_keluar"
+                                                class="form-control" type="text" placeholder="Pilih Periode...">
+                                            <button class="btn btn-danger" type="button" id="resetTanggalObatKeluar">
+                                                <i class="fa-solid fa-sync"></i> Reset
+                                            </button>
+
+                                            <input type="hidden" name="awalObatKeluar" id="awalObatKeluar">
+                                            <input type="hidden" name="akhirObatKeluar" id="akhirObatKeluar">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-6">
+                                    {{-- Based on Obat --}}
+                                    <div class="form-group">
+                                        <label for="nama_obat" class="form-label"><b>Nama Obat</b>
+                                        </label>
+                                        <select name="nama_obat" id="nama_obat" class="choices form-select">
+                                            <option value="" selected>Semua</option>
+                                            @foreach ($obat as $row)
+                                            <option value="{{ $row->id }}">{{ $row->nama_obat }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    {{-- Based on Supplier --}}
+                                    <div class="form-group">
+                                        <label for="supplier_id" class="form-label"><b>Supplier</b></label>
+                                        <select name="supplier_id" id="supplier_id" class="choices form-select">
+                                            <option value="" selected>Semua</option>
+                                            @foreach ($supplier as $row)
+                                            <option value="{{ $row->id }}">
+                                                {{ $row->nama_supplier }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    {{-- Based on Pasien --}}
+                                    <div class="form-group">
+                                        <label for="pasien_id" class="form-label"><b>Pasien</b></label>
+                                        <select name="pasien_id" id="pasien_id" class="choices form-select">
+                                            <option value="" selected>Semua</option>
+                                            @foreach ($pasien as $row)
+                                            <option value="{{ $row->id }}">
+                                                {{ $row->nama_lengkap }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    {{-- Export to --}}
+                                    <div class="form-group">
+                                        <label for="ekstensiObatKeluar" class="form-label"><b>Pilih Ekstensi</b></label>
+                                        <span class="text-danger">*</span>
+                                        <select name="ekstensiObatKeluar" id="ekstensiObatKeluar"
+                                            class="choices form-select">
+                                            <option value="" selected>-- Pilih Ekstensi --</option>
+                                            <option value="pdf">Pdf</option>
+                                            <option value="excel">Excel</option>
+                                        </select>
+                                        @error('ekstensiObatKeluar')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
 
@@ -170,10 +382,51 @@
             }
         });
 
+        const tanggalObatMasuk = flatpickr("#tanggal_obat_masuk", {
+            mode: 'range',
+
+            onChange: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length === 2) {
+                    const awalObatMasuk = selectedDates[0];
+                    const akhirObatMasuk = selectedDates[1];
+
+                    document.getElementById('awalObatMasuk').value = flatpickr.formatDate(awalObatMasuk, "Y-m-d");
+                    document.getElementById('akhirObatMasuk').value = flatpickr.formatDate(akhirObatMasuk, "Y-m-d");
+                }
+            }
+        });
+
+        const tanggalObatKeluar = flatpickr("#tanggal_obat_keluar", {
+            mode: 'range',
+
+            onChange: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length === 2) {
+                    const awalObatKeluar = selectedDates[0];
+                    const akhirObatKeluar = selectedDates[1];
+
+                    document.getElementById('awalObatKeluar').value = flatpickr.formatDate(awalObatKeluar, "Y-m-d");
+                    document.getElementById('akhirObatKeluar').value = flatpickr.formatDate(akhirObatKeluar, "Y-m-d");
+                }
+            }
+        });
+
+        // Reset Button
         document.getElementById('resetExpired').addEventListener('click', function () {
             expiredDatePicker.clear();
             document.getElementById('awal').value = '';
             document.getElementById('akhir').value = '';
+        });
+
+        document.getElementById('resetTanggalObatMasuk').addEventListener('click', function () {
+            tanggalObatMasuk.clear();
+            document.getElementById('awalObatMasuk').value = '';
+            document.getElementById('akhirObatMasuk').value = '';
+        });
+
+        document.getElementById('resetTanggalObatKeluar').addEventListener('click', function () {
+            tanggalObatKeluar.clear();
+            document.getElementById('awalObatKeluar').value = '';
+            document.getElementById('akhirObatKeluar').value = '';
         });
     </script>
     @endpush

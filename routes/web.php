@@ -32,6 +32,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 // LAPORAN
 Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
 Route::get('/laporan/cetak-obat', [LaporanController::class, 'exportObat'])->name('laporan.export-obat');
+Route::get('/laporan/cetak-obat-masuk', [LaporanController::class, 'exportObatMasuk'])->name('laporan.export-obat-masuk');
+Route::get('/laporan/cetak-obat-keluar', [LaporanController::class, 'exportObatKeluar'])->name('laporan.export-obat-keluar');
 
 Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Dokter,Apotek'])->group(function () {
     // Route::prefix('dashboard')->middleware('auth')->group(function () {
