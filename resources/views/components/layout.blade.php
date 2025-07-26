@@ -151,6 +151,9 @@
     <script src="/assets/extensions/choices.js/public/assets/scripts/choices.js"></script>
     <script src="/assets/static/js/pages/form-element-select.js"></script>
 
+    {{-- SELECT2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     {{-- Flatpicker --}}
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>

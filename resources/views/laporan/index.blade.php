@@ -363,6 +363,150 @@
                 </div>
             </div>
         </div>
+
+        {{-- Laporan Data Transaksi Obat (Semua - No Detail) --}}
+        <div class="row">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <h5 class="card-title">Data {{ $titleLaporanListTransaksiObat }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <form action="{{ route('laporan.export-transaksi-obat') }}" method="get"
+                                    target="_blank">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            {{-- Based Tanggal Transaksi --}}
+                                            <div class="form-group">
+                                                <label for="tanggal_transaksi_obat" class="form-label"><b>Range Tanggal
+                                                        Transaksi</b></label>
+
+                                                <div class="input-group">
+                                                    <input id="tanggal_transaksi_obat" name="tanggal_transaksi_obat"
+                                                        class="form-control" type="text" placeholder="Pilih Periode...">
+                                                    <button class="btn btn-danger" type="button"
+                                                        id="resetTanggalTransaksiObat">
+                                                        <i class="fa-solid fa-sync"></i> Reset
+                                                    </button>
+
+                                                    <input type="hidden" name="awalTransaksiObat"
+                                                        id="awalTransaksiObat">
+                                                    <input type="hidden" name="akhirTransaksiObat"
+                                                        id="akhirTransaksiObat">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-6">
+                                            {{-- Export to --}}
+                                            <div class="form-group">
+                                                <label for="ekstensiPenjualanObat" class="form-label"><b>Pilih
+                                                        Ekstensi</b></label>
+                                                <span class="text-danger">*</span>
+                                                <select name="ekstensiPenjualanObat" id="ekstensiPenjualanObat"
+                                                    class="choices form-select">
+                                                    <option value="" selected>-- Pilih Ekstensi --</option>
+                                                    <option value="pdf">Pdf</option>
+                                                    <option value="excel">Excel</option>
+                                                </select>
+                                                @error('ekstensiPenjualanObat')
+                                                <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <label for="" class="form-label">&nbsp;</label>
+                                            <button type="submit" class="btn btn-primary form-control"><i
+                                                    class="fa-solid fa-print"></i> Generate</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                {{-- Laporan Data Detail Transaksi Obat --}}
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <h5 class="card-title">Data {{ $titleLaporanDetailTransaksiObat }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <form action="{{ route('laporan.export-detail-transaksi-obat') }}" method="get"
+                                    target="_blank">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            {{-- Based Transaksi Kode Transaksi --}}
+                                            <div class="form-group">
+                                                <label for="penjualan_obat_id" class="form-label"><b>Pilih
+                                                        Transaksi</b></label>
+                                                <span class="text-danger">*</span>
+                                                <select name="penjualan_obat_id" id="penjualan_obat_id"
+                                                    class="choices form-select">
+                                                    <option value="" selected>-- Pilih Kode Transaksi --</option>
+                                                    @foreach ($penjualan_obat as $row)
+                                                    <option value="{{ $row->id }}">{{ $row->kode_transaksi }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('penjualan_obat_id')
+                                                <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-6">
+                                            {{-- Export to --}}
+                                            <div class="form-group">
+                                                <label for="ekstensiDetailTransaksiObat" class="form-label"><b>Pilih
+                                                        Ekstensi</b></label>
+                                                <span class="text-danger">*</span>
+                                                <select name="ekstensiDetailTransaksiObat"
+                                                    id="ekstensiDetailTransaksiObat" class="choices form-select">
+                                                    <option value="" selected>-- Pilih Ekstensi --</option>
+                                                    <option value="pdf">Pdf</option>
+                                                    <option value="excel">Excel</option>
+                                                </select>
+                                                @error('ekstensiDetailTransaksiObat')
+                                                <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <label for="" class="form-label">&nbsp;</label>
+                                            <button type="submit" class="btn btn-primary form-control"><i
+                                                    class="fa-solid fa-print"></i> Generate</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
     </section>
 
     @push('scripts')
@@ -410,6 +554,20 @@
             }
         });
 
+        const tanggalTransaksiObat = flatpickr("#tanggal_transaksi_obat", {
+            mode: 'range',
+
+            onChange: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length === 2) {
+                    const awalTransaksiObat = selectedDates[0];
+                    const akhirTransaksiObat = selectedDates[1];
+
+                    document.getElementById('awalTransaksiObat').value = flatpickr.formatDate(awalTransaksiObat, "Y-m-d");
+                    document.getElementById('akhirTransaksiObat').value = flatpickr.formatDate(akhirTransaksiObat, "Y-m-d");
+                }
+            }
+        });
+
         // Reset Button
         document.getElementById('resetExpired').addEventListener('click', function () {
             expiredDatePicker.clear();
@@ -427,6 +585,12 @@
             tanggalObatKeluar.clear();
             document.getElementById('awalObatKeluar').value = '';
             document.getElementById('akhirObatKeluar').value = '';
+        });
+
+        document.getElementById('resetTanggalTransaksiObat').addEventListener('click', function () {
+            tanggalTransaksiObat.clear();
+            document.getElementById('awalTransaksiObat').value = '';
+            document.getElementById('akhirTransaksiObat').value = '';
         });
     </script>
     @endpush
