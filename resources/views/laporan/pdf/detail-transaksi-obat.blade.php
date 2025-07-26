@@ -73,24 +73,33 @@
                 <th class="text-center">No</th>
                 <th>Nama Obat</th>
                 <th>Kuantitas</th>
-                <th>Total Harga</th>
                 <th>Tanggal Transaksi</th>
+                <th>Total Harga</th>
             </tr>
         </thead>
         <tbody>
+            <?php $grandTotal = 0 ?>
             @forelse ($dataDetailPenjualanObat as $detailPenjualanObat)
             <tr>
                 <td class="text-center">{{ $loop->iteration }}</td>
                 <td>{{ $detailPenjualanObat->obat->nama_obat }}</td>
                 <td>{{ $detailPenjualanObat->kuantitas }}</td>
-                <td>Rp {{ number_format($detailPenjualanObat->harga_final, 0, ',', '.') }}</td>
                 <td>{{ $detailPenjualanObat->penjualan_obat->tanggal_transaksi }}</td>
+                <td>Rp {{ number_format($detailPenjualanObat->harga_final, 0, ',', '.') }}</td>
+                <?php $grandTotal += $detailPenjualanObat->harga_final ?>
             </tr>
             @empty
             <tr>
                 <td colspan="7" class="text-center">Data Tidak Ada.</td>
             </tr>
             @endforelse
+            <tr>
+                <td colspan="4" class="text-center"><b>Total Harga :</b></td>
+                <td>
+                    Rp.
+                    <?= number_format($grandTotal, 0, ',', '.'); ?>
+                </td>
+            </tr>
         </tbody>
     </table>
 
