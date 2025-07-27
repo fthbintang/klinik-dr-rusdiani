@@ -24,6 +24,7 @@ use App\Exports\PenjualanObatExport;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Exports\DetailPenjualanObatExport;
+use App\Exports\PasienExport;
 
 class LaporanController extends Controller
 {
@@ -38,6 +39,7 @@ class LaporanController extends Controller
             'titleLaporanDetailTransaksiObat'   => 'Laporan Detail Transaksi Obat',
             'titleLaporanTransaksi'             => 'Laporan Transaksi',
             'titleLaporanResepObatPasien'       => 'Laporan Resep Obat Pasien',
+            'titleLaporanPasien'                => 'Laporan Pasien',
 
             'supplier'                          => Supplier::latest()->get(),
             'obat'                              => Obat::latest()->get(),
@@ -261,7 +263,7 @@ class LaporanController extends Controller
             'ekstensiTransaksi' => 'required'
         ]);
 
-        // dd($request->awalKunjungan);
+
 
         try {
             $query = RekamMedis::with('pasien');
@@ -305,7 +307,7 @@ class LaporanController extends Controller
 
     public function exportResepObat(Request $request)
     {
-        // 1. Validasi input dari form
+
         $validatedData = $request->validate(
             [
                 'rekam_medis_id'      => 'required',
@@ -317,23 +319,23 @@ class LaporanController extends Controller
         );
 
         try {
-            // 2. Query data ResepObat berdasarkan rekam_medis_id
+
             $query = ResepObat::with(['obat', 'rekam_medis.pasien'])
                 ->where('rekam_medis_id', $validatedData['rekam_medis_id']);
 
             $dataResepObat = $query->get();
 
-            // 3. Ambil data rekam medis dan pasien untuk judul laporan
+
             $rekamMedis = RekamMedis::with('pasien')->find($validatedData['rekam_medis_id']);
             $pasien = $rekamMedis->pasien;
 
-            // 4. Logika Ekspor
+
             if ($validatedData['ekstensiResepObat'] == 'pdf') {
                 $pdf = PDF::loadView('laporan.pdf.resep-obat', [
                     'dataResepObat' => $dataResepObat,
                     'pasien' => $pasien,
-                    'rekamMedis' => $rekamMedis, // Kirim juga data rekam medis
-                ])->setPaper('a4', 'portrait'); // Atur ukuran kertas
+                    'rekamMedis' => $rekamMedis,
+                ])->setPaper('a4', 'portrait');
 
                 return $pdf->stream('laporan-resep-' . Str::slug($pasien->nama_lengkap) . '.pdf');
             } else if ($validatedData['ekstensiResepObat'] == 'excel') {
@@ -341,17 +343,40 @@ class LaporanController extends Controller
             }
         } catch (\Exception $e) {
             Alert::error('Error', "Terjadi kesalahan saat mengekspor data");
-            Log::error('Gagal Export Data Resep Obat', ['error' => $e->getMessage()]);
+            Log::error('Gagal Export Data', ['error' => $e->getMessage()]);
             return back()->withInput();
         }
     }
 
-    // Di dalam class LaporanController
+    public function exportPasien(Request $request)
+    {
+        $validatedData = $request->validate(['ekstensiPasien' => 'required']);
+
+        try {
+            $dataPasien = Pasien::get();
+
+            if ($validatedData['ekstensiPasien'] == 'pdf') {
+                $pdf = PDF::loadView('laporan.pdf.pasien', [
+                    'dataPasien' => $dataPasien,
+                ]);
+
+                return $pdf->stream('laporan-pasien.pdf');
+            } else if ($validatedData['ekstensiPasien'] == 'excel') {
+                return Excel::download(new PasienExport($dataPasien), 'laporan-pasien.xlsx');
+            }
+        } catch (\Exception $e) {
+            Alert::error('Error', "Terjadi kesalahan saat mengekspor data");
+            Log::error('Gagal Export Data', ['error' => $e->getMessage()]);
+            return back()->withInput();
+        }
+    }
+
+
     public function getPenjualanObatByDate(Request $request)
     {
         $request->validate(['tanggal' => 'required|date']);
 
-        $penjualanObat = PenjualanObat::with('pasien') // Eager load pasien
+        $penjualanObat = PenjualanObat::with('pasien')
             ->whereDate('tanggal_transaksi', $request->tanggal)
             ->orderBy('kode_transaksi', 'asc')
             ->get();
@@ -359,7 +384,7 @@ class LaporanController extends Controller
         return response()->json($penjualanObat);
     }
 
-    // ... (method getRekamMedisByDate yang baru ditambahkan) ...
+
     public function getRekamMedisByDate(Request $request)
     {
         $request->validate(['tanggal' => 'required|date']);

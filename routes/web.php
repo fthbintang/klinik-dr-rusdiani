@@ -44,6 +44,8 @@ Route::get('/laporan/cetak-transaksi', [LaporanController::class, 'exportTransak
 Route::get('/laporan/cetak-resep-obat', [LaporanController::class, 'exportResepObat'])->name('laporan.export-resep-obat');
 Route::get('/laporan/get-rekam-medis-by-date', [LaporanController::class, 'getRekamMedisByDate'])->name('laporan.get-rekam-medis-by-date');
 
+Route::get('/laporan/cetak-pasien-terdaftar', [LaporanController::class, 'exportPasien'])->name('laporan.export-pasien-terdaftar');
+
 Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Dokter,Apotek'])->group(function () {
     // Route::prefix('dashboard')->middleware('auth')->group(function () {
     // DASHBOARD
