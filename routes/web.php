@@ -15,6 +15,7 @@ use App\Http\Controllers\ObatKeluarController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\BerandaPasienController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PenjualanObatController;
 use App\Http\Controllers\PendaftaranPasienController;
 use App\Http\Controllers\PendaftaranAkunPasienController;
@@ -29,7 +30,7 @@ Route::post('/sign-in', [LoginController::class, 'authenticate'])->name('authent
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Dokter,Apotek'])->group(function () {
-// Route::prefix('dashboard')->middleware('auth')->group(function () {
+    // Route::prefix('dashboard')->middleware('auth')->group(function () {
     // DASHBOARD
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
@@ -65,6 +66,7 @@ Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Dokter,Apotek'])->gr
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
     Route::get('/transaksi/create', [TransaksiController::class, 'create'])->name('transaksi.create');
     Route::get('/transaksi/pasien/{pasien}/rekam_medis/{rekam_medis}/resep_obat', [TransaksiController::class, 'transaksi_resep_obat'])->name('transaksi.resep_obat');
+    Route::get('/transaksi/pasien/{pasien}/rekam_medis/{rekam_medis}/resep_obat/cetak', [TransaksiController::class, 'cetakResepObat'])->name('resep_obat.cetak');
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('transaksi.store');
     Route::put('/transaksi/{id}/update_status/datang', [TransaksiController::class, 'updateStatusBooking'])->name('transaksi.update_status_booking');
     Route::put('/transaksi/{id}/update_status', [TransaksiController::class, 'updateStatus'])->name('transaksi.update_status');
@@ -98,6 +100,23 @@ Route::prefix('dashboard')->middleware(['auth', 'role:Admin'])->group(function (
     // JADWAL DOKTER
     Route::get('/jadwal_dokter', [JadwalDokterController::class, 'index'])->name('jadwal_dokter.index');
     Route::post('/jadwal_dokter/store', [JadwalDokterController::class, 'store'])->name('jadwal_dokter.store');
+
+     // LAPORAN
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/cetak-obat', [LaporanController::class, 'exportObat'])->name('laporan.export-obat');
+    Route::get('/laporan/cetak-obat-masuk', [LaporanController::class, 'exportObatMasuk'])->name('laporan.export-obat-masuk');
+    Route::get('/laporan/cetak-obat-keluar', [LaporanController::class, 'exportObatKeluar'])->name('laporan.export-obat-keluar');
+    Route::get('/laporan/cetak-transaksi-obat', [LaporanController::class, 'exportTransaksiObat'])->name('laporan.export-transaksi-obat');
+
+    Route::get('/laporan/cetak-detail-transaksi-obat', [LaporanController::class, 'exportDetailTransaksiObat'])->name('laporan.export-detail-transaksi-obat');
+    Route::get('/laporan/get-penjualan-obat-by-date', [LaporanController::class, 'getPenjualanObatByDate'])->name('laporan.get-penjualan-obat-by-date');
+
+    Route::get('/laporan/cetak-transaksi', [LaporanController::class, 'exportTransaksi'])->name('laporan.export-transaksi');
+
+    Route::get('/laporan/cetak-resep-obat', [LaporanController::class, 'exportResepObat'])->name('laporan.export-resep-obat');
+    Route::get('/laporan/get-rekam-medis-by-date', [LaporanController::class, 'getRekamMedisByDate'])->name('laporan.get-rekam-medis-by-date');
+
+    Route::get('/laporan/cetak-pasien-terdaftar', [LaporanController::class, 'exportPasien'])->name('laporan.export-pasien-terdaftar');
 });
 
 Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Apotek'])->group(function () {

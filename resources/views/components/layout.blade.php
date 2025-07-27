@@ -30,6 +30,11 @@
     <link rel="stylesheet" href="/assets/compiled/css/app.css" />
     <link rel="stylesheet" href="/assets/compiled/css/app-dark.css" />
     <link rel="stylesheet" href="/assets/compiled/css/iconly.css" />
+
+    {{-- Flatpicker --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
+
     {{-- <style>
         * {
             border: 1px solid red;
@@ -126,11 +131,14 @@
     <script src="/assets/extensions/datatables.net-bs5/js/dataTables.bootstrap5.min.js"></script>
     <script src="/assets/static/js/pages/datatables.js"></script>
 
-    {{--  DISPLAY FORM UPLOAD IMAGE --}}
-    <script src="/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js"></script>
-    <script src="/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js"></script>
+    {{-- DISPLAY FORM UPLOAD IMAGE --}}
+    <script src="/assets/extensions/filepond-plugin-file-validate-size/filepond-plugin-file-validate-size.min.js">
+    </script>
+    <script src="/assets/extensions/filepond-plugin-file-validate-type/filepond-plugin-file-validate-type.min.js">
+    </script>
     <script src="/assets/extensions/filepond-plugin-image-crop/filepond-plugin-image-crop.min.js"></script>
-    <script src="/assets/extensions/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js">
+    <script
+        src="/assets/extensions/filepond-plugin-image-exif-orientation/filepond-plugin-image-exif-orientation.min.js">
     </script>
     <script src="/assets/extensions/filepond-plugin-image-filter/filepond-plugin-image-filter.min.js"></script>
     <script src="/assets/extensions/filepond-plugin-image-preview/filepond-plugin-image-preview.min.js"></script>
@@ -146,6 +154,12 @@
     {{-- SELECT2 --}}
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+    {{-- Flatpicker --}}
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+
+    {{-- TAMBAHKAN INI DI PALING AKHIR --}}
+    @stack('scripts')
 </body>
 
 </html>

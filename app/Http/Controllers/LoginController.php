@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -29,28 +30,31 @@ class LoginController extends Controller
             'username.required' => 'Username wajib diisi!',
             'password.required' => 'Password wajib diisi!',
         ]);
-    
+
         // Coba otentikasi pengguna
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-    
+
             // Ambil role user yang login
             $role = Auth::user()->role;
-    
+
+            // dd($request->session());
             // Redirect berdasarkan role
             if ($role === 'Pasien') {
                 return redirect('pasien/beranda');
+            } else {
+                Redirect::setIntendedUrl('/dashboard');
             }
-    
+
             return redirect()->intended('dashboard');
         }
-    
+
         // Jika gagal login
         return redirect('/')->withErrors([
             'username' => 'Username atau password salah.',
         ]);
     }
-    
+
 
     public function logout(Request $request): RedirectResponse
     {

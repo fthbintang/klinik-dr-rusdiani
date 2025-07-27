@@ -51,11 +51,11 @@ class ObatController extends Controller
             'keterangan'    => 'nullable|string',
             'obat_bebas'    => 'required|boolean',
         ]);
-    
+
         try {
             // Simpan data obat
             $obat = Obat::create($validatedData);
-    
+
             // Simpan data ke obat_masuk
             ObatMasuk::create([
                 'obat_id'                => $obat->id,
@@ -65,7 +65,7 @@ class ObatController extends Controller
                 'stok_final'             => $validatedData['stok'],
                 'supplier_id'            => $validatedData['supplier_id'] ?? null,
             ]);
-    
+
             Alert::success('Sukses!', 'Data Berhasil Ditambah');
             return redirect()->route('obat.index');
         } catch (\Exception $e) {
@@ -141,10 +141,10 @@ class ObatController extends Controller
             'supplier_id' => 'nullable|exists:supplier,id',
             'keterangan' => 'nullable|string',
         ]);
-    
+
         try {
             $obat->update($validatedData);
-    
+
             Alert::success('Sukses!', 'Data Berhasil Diupdate');
             return redirect()->route('obat.index');
         } catch (\Exception $e) {
@@ -158,9 +158,9 @@ class ObatController extends Controller
      */
     public function destroy(Obat $obat)
     {
-        try { 
+        try {
             $obat->delete();
-    
+
             Alert::success('Berhasil', 'Data berhasil dihapus');
             return redirect()->route('obat.index');
         } catch (\Exception $e) {

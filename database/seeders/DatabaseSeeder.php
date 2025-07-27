@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         User::factory(5)->create();
         Supplier::factory(5)->create();
         Obat::factory(10)->create();
-        // Pasien::factory(20)->create();
+        Pasien::factory(10)->create();
         // RekamMedis::factory(30)->create();
         // ResepObat::factory(30)->create();
         // PenjualanObat::factory(50)->create();
@@ -46,6 +46,41 @@ class DatabaseSeeder extends Seeder
         //     'username' => 'pasien',
         //     'password' => bcrypt('pasien')
         // ]);
+
+        // Buat user terlebih dahulu
+        $user = User::create([
+            'nama_lengkap'   => 'Pasien',
+            'nama_panggilan' => 'pasien',
+            'jenis_kelamin'  => 'Laki-laki',
+            'role'           => 'Pasien',
+            'alamat'         => 'Banjarmasin',
+            'username'       => 'pasien',
+            'password'       => bcrypt('pasien')
+        ]);
+
+        // Buat NIK random 16 digit
+        $nik = '';
+        for ($i = 0; $i < 4; $i++) {
+            $nik .= str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+        }
+
+        // Setelah user dibuat, langsung buat data pasien
+        Pasien::create([
+            'user_id'         => $user->id,
+            'no_rm'           => 'RM' . str_pad($user->id, 5, '0', STR_PAD_LEFT),
+            'nama_lengkap'    => $user->nama_lengkap,
+            'nama_panggilan'  => $user->nama_panggilan,
+            'nik'             => $nik,
+            'jenis_kelamin'   => $user->jenis_kelamin,
+            'no_hp'           => fake()->phoneNumber(),
+            'tempat_lahir'    => 'Banjarmasin',
+            'tanggal_lahir'   => fake()->date('Y-m-d', '-25 years'),
+            'alamat'          => $user->alamat,
+            'pekerjaan'       => 'Karyawan',
+            'status_perkawinan' => 'Belum Kawin',
+            'golongan_darah'  => 'O',
+            'agama'           => 'Islam',
+        ]);
 
         User::create([
             'nama_lengkap' => 'dokter',

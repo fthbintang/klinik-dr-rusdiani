@@ -39,7 +39,8 @@
                 <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
             </div>
         </div>
-        {{-- </div> --}}
+        {{--
+        </div> --}}
         <div class="sidebar-menu">
             <ul class="menu">
                 <li class="sidebar-title">Menu</li>
@@ -140,6 +141,15 @@
                         <a href="{{ route('pendaftaran_pasien.index') }}" class="sidebar-link">
                             <i class="bi bi-calendar2-heart-fill"></i>
                             <span>Pendaftaran</span>
+                        </a>
+                    </li>
+                @endcan
+
+                @can('admin')
+                    <li class="sidebar-item {{ request()->is('dashboard/laporan*') ? 'active' : '' }}">
+                        <a href="{{ route('laporan.index') }}" class="sidebar-link">
+                            <i class="bi bi-journal-text"></i>
+                            <span>Laporan</span>
                         </a>
                     </li>
                 @endcan
