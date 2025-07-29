@@ -19,10 +19,22 @@
     <script src="assets/static/js/initTheme.js"></script>
     <nav class="navbar navbar-light">
         <div class="container d-block">
-            <a href="{{ route('index') }}"><i class="bi bi-chevron-left"></i></a>
-            <a class="navbar-brand ms-4" href="{{ route('index') }}">
-                <img src="/assets/gambar/logo.png" />
-            </a>
+            @canany(['admin', 'apotek', 'dokter'])
+                <a href="{{ route('index') }}"><i class="bi bi-chevron-left"></i></a>
+            @endcanany
+            @can('pasien')
+                <a href="{{ route('beranda_pasien.index') }}"><i class="bi bi-chevron-left"></i></a>
+            @endcan
+            @canany(['admin', 'apotek', 'dokter'])
+                <a class="navbar-brand ms-4" href="{{ route('index') }}">
+                    <img src="/assets/gambar/logo.png" />
+                </a>
+            @endcanany
+            @can('pasien')
+                <a class="navbar-brand ms-4" href="{{ route('beranda_pasien.index') }}">
+                    <img src="/assets/gambar/logo.png" />
+                </a>
+            @endcan
         </div>
     </nav>
 

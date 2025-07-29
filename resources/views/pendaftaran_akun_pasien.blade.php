@@ -72,6 +72,15 @@
             enctype="multipart/form-data">
             @csrf
 
+            <div class="mb-3">
+                <label class="form-label">NIK<span class="text-danger">*</span></label>
+                <input type="number" name="nik" class="form-control @error('nik') is-invalid @enderror"
+                    placeholder="Masukkan NIK..." value="{{ old('nik') }}" required>
+                @error('nik')
+                    <div class="text-error">{{ $message }}</div>
+                @enderror
+            </div>
+
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label">Nama Lengkap<span class="text-danger">*</span></label>
@@ -109,10 +118,10 @@
                     @enderror
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Tanggal Lahir</label>
+                    <label class="form-label">Tanggal Lahir<span class="text-danger">*</span></label>
                     <input type="date" name="tanggal_lahir"
                         class="form-control @error('tanggal_lahir') is-invalid @enderror"
-                        placeholder="Pilih tanggal lahir" value="{{ old('tanggal_lahir') }}">
+                        placeholder="Pilih tanggal lahir" value="{{ old('tanggal_lahir') }}" required>
                     @error('tanggal_lahir')
                         <div class="text-error">{{ $message }}</div>
                     @enderror
@@ -159,8 +168,9 @@
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Password<span class="text-danger">*</span></label>
-                    <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
-                        required placeholder="Buat password">
+                    <input type="password" name="password"
+                        class="form-control @error('password') is-invalid @enderror" required
+                        placeholder="Buat password">
                     @error('password')
                         <div class="text-error">{{ $message }}</div>
                     @enderror

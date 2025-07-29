@@ -29,14 +29,16 @@ Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('g
 Route::post('/sign-in', [LoginController::class, 'authenticate'])->name('authentication');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Dokter,Apotek,Pasien'])->group(function () {
+    // PROFILE
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile/update/{user}', [ProfileController::class, 'update'])->name('profile.update');
+});
+
 Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Dokter,Apotek'])->group(function () {
     // Route::prefix('dashboard')->middleware('auth')->group(function () {
     // DASHBOARD
     Route::get('/', [DashboardController::class, 'index'])->name('index');
-
-    // PROFILE
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
-    Route::put('/profile/update/{user}', [ProfileController::class, 'update'])->name('profile.update');
 
     // PASIEN
     Route::get('/pasien', [PasienController::class, 'index'])->name('pasien.index');
