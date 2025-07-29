@@ -192,6 +192,13 @@
                                 {{ 'Rp' . number_format($penjualan_obat->total_harga, 0, ',', '.') }}
                             </b>
                         </p>
+
+                        @if ($penjualan_obat->total_harga)
+                            <a href="{{ route('penjualan-obat.cetak', $penjualan_obat->id) }}" target="_blank"
+                                class="btn btn-outline-secondary">
+                                🖨️ Cetak
+                            </a>
+                        @endif
                     </div>
                 </div>
             @endif

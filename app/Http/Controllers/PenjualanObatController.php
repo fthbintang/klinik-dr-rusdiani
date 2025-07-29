@@ -8,6 +8,7 @@ use App\Models\Pasien;
 use App\Models\ObatKeluar;
 use Illuminate\Http\Request;
 use App\Models\PenjualanObat;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Models\PenjualanObatDetail;
 use App\Http\Controllers\Controller;
@@ -29,6 +30,15 @@ class PenjualanObatController extends Controller
             'tanggal_terpilih' => $tanggal,
         ]);
     }
+
+    public function cetak($id)
+    {
+        $penjualan_obat = PenjualanObat::with(['pasien', 'penjualan_obat_detail.obat'])->findOrFail($id);
+
+        $pdf = Pdf::loadView('pdf.penjualan_obat', compact('penjualan_obat'));
+        return $pdf->stream('struk-obat.pdf');
+    }
+
 
     public function create()
     {
@@ -153,7 +163,7 @@ class PenjualanObatController extends Controller
             DB::commit();
 
             Alert::success('Berhasil', 'Data penjualan obat berhasil disimpan');
-            return redirect()->route('penjualan_obat.index');
+            return redirect()->back();
         } catch (\Exception $e) {
             DB::rollBack();
             Alert::error('Gagal', $e->getMessage());
