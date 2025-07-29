@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\Pasien;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,16 +11,16 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class PasienFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected static int $increment = 1;
+
     public function definition(): array
     {
+        $noRm = 'RM-' . str_pad(self::$increment, 2, '0', STR_PAD_LEFT);
+        self::$increment++;
+
         return [
             'user_id' => User::factory(),
-            'no_rm' => 'RM' . $this->faker->unique()->numerify('######'),
+            'no_rm' => $noRm,
             'nama_lengkap' => $this->faker->name(),
             'nama_panggilan' => $this->faker->firstName(),
             'nik' => $this->faker->unique()->numerify('################'),
