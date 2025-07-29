@@ -49,7 +49,7 @@
                     <img src="./assets/gambar/logo.png" width="100" height="100" alt="Logo"
                         style="position: absolute; margin-bottom: 200px; border-radius: 10px">
                     <h2>E-Clinic | Dokter Rusdiani</h2>
-                    <p>Sistem Informasi Klinik - Dokter L</p>
+                    <p>Sistem Informasi Klinik - Dokter Rusdiani</p>
                 </div>
             </div>
         </div>

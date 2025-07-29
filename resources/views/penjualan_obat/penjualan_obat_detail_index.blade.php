@@ -128,7 +128,8 @@
                                             <option value="">-- Pilih Obat --</option>
                                             @foreach ($obat as $item)
                                                 <option value="{{ $item->id }}" data-harga="{{ $item->harga }}">
-                                                    {{ $item->nama_obat }} - Stok: {{ $item->stok }}
+                                                    {{ $item->nama_obat }} - {{ $item->satuan }} - Stok:
+                                                    {{ $item->stok }}
                                                 </option>
                                             @endforeach
                                         </select>
