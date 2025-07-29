@@ -124,6 +124,7 @@
                     @endif
                 </h3>
                 <h4 class="card-title">a.n {{ $pasien->nama_lengkap }} ({{ $pasien->no_rm }})</h4>
+                <b>Usia: {{ \Carbon\Carbon::parse($pasien->tanggal_lahir)->age }} tahun</b>
 
                 @if ($pasien->user->foto)
                     <div class="text-center mt-2">

@@ -108,7 +108,8 @@
 
                         {{-- Tempat Lahir --}}
                         <div class="form-group mb-3">
-                            <label for="tempat_lahir" class="form-label"><b>Tempat Lahir</b></label>
+                            <label for="tempat_lahir" class="form-label"><b>Tempat Lahir</b><span
+                                    class="text-danger">*</span></label>
                             <input type="text" name="tempat_lahir" id="tempat_lahir"
                                 class="form-control @error('tempat_lahir') is-invalid @enderror"
                                 value="{{ old('tempat_lahir') }}" placeholder="Tempat Lahir...">
@@ -119,7 +120,8 @@
 
                         {{-- Tanggal Lahir --}}
                         <div class="form-group mb-3">
-                            <label for="tanggal_lahir" class="form-label"><b>Tanggal Lahir</b></label>
+                            <label for="tanggal_lahir" class="form-label"><b>Tanggal Lahir</b><span
+                                    class="text-danger">*</span></label>
                             <input type="date" name="tanggal_lahir" id="tanggal_lahir"
                                 class="form-control @error('tanggal_lahir') is-invalid @enderror"
                                 value="{{ old('tanggal_lahir') }}">

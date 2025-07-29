@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('jenis_kelamin');
             $table->string('no_hp');
             $table->string('tempat_lahir')->nullable();
-            $table->date('tanggal_lahir')->nullable();
+            $table->date('tanggal_lahir');
             $table->text('alamat')->nullable();
             $table->string('pekerjaan')->nullable();
             $table->string('status_perkawinan')->nullable();
