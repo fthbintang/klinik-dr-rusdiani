@@ -59,28 +59,30 @@ class TransaksiController extends Controller
             'tanggal_kunjungan'  => 'required|date|after_or_equal:today',
             'pasien_id'          => 'required|exists:pasien,id',
             'keluhan'            => 'required|string|max:255',
-            'biaya_jasa'         => 'required|string', 
+            'biaya_jasa'         => 'required|string',
+            'berat_badan'        => 'nullable|numeric|min:0|max:300', // tambahkan validasi berat badan
+            'tensi'              => 'nullable|string|max:20',         // tambahkan validasi tensi
         ]);
-    
+
         try {
             // Konversi biaya_jasa dari format 10.000 menjadi 10000 (integer)
             $validatedData['biaya_jasa'] = (int) str_replace('.', '', $validatedData['biaya_jasa']);
-    
+
             $tanggalKunjungan = $validatedData['tanggal_kunjungan'];
             $isToday = $tanggalKunjungan === now()->toDateString();
-    
+
             // Hitung jumlah antrean berdasarkan tanggal kunjungan
             $jumlahAntrean = RekamMedis::whereDate('tanggal_kunjungan', $tanggalKunjungan)->count();
             $nomorAntrean = str_pad($jumlahAntrean + 1, 2, '0', STR_PAD_LEFT);
             $noAntrean = 'UM-' . $nomorAntrean;
-    
+
             // Tambahan field otomatis
             $validatedData['no_antrean'] = $noAntrean;
             $validatedData['status_kedatangan'] = $isToday ? 'Datang' : 'Booking';
             $validatedData['jam_datang'] = $isToday ? now()->format('H:i:s') : null;
-    
+
             RekamMedis::create($validatedData);
-    
+
             Alert::success('Sukses!', 'Data Berhasil Ditambah');
             return redirect()->route('transaksi.index');
         } catch (\Exception $e) {

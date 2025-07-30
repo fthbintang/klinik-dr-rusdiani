@@ -78,7 +78,8 @@
 
                         {{-- Tanggal Lahir --}}
                         <div class="form-group mb-3">
-                            <label for="tanggal_lahir" class="form-label"><b>Tanggal Lahir</b></label>
+                            <label for="tanggal_lahir" class="form-label"><b>Tanggal Lahir</b><span
+                                    class="text-danger">*</span></label>
                             <input type="date" name="tanggal_lahir" id="tanggal_lahir"
                                 class="form-control @error('tanggal_lahir') is-invalid @enderror"
                                 value="{{ old('tanggal_lahir') }}">

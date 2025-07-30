@@ -29,14 +29,16 @@ Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('g
 Route::post('/sign-in', [LoginController::class, 'authenticate'])->name('authentication');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Dokter,Apotek,Pasien'])->group(function () {
+    // PROFILE
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile/update/{user}', [ProfileController::class, 'update'])->name('profile.update');
+});
+
 Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Dokter,Apotek'])->group(function () {
     // Route::prefix('dashboard')->middleware('auth')->group(function () {
     // DASHBOARD
     Route::get('/', [DashboardController::class, 'index'])->name('index');
-
-    // PROFILE
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
-    Route::put('/profile/update/{user}', [ProfileController::class, 'update'])->name('profile.update');
 
     // PASIEN
     Route::get('/pasien', [PasienController::class, 'index'])->name('pasien.index');
@@ -82,6 +84,7 @@ Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Dokter,Apotek'])->gr
     Route::get('/penjualan_obat', [PenjualanObatController::class, 'index'])->name('penjualan_obat.index');
     Route::get('/penjualan_obat/create', [PenjualanObatController::class, 'create'])->name('penjualan_obat.create');
     Route::get('/penjualan_obat/detail/{penjualan_obat}', [PenjualanObatController::class, 'penjualan_obat_detail_index'])->name('penjualan_obat.detail');
+    Route::get('/penjualan-obat/{id}/cetak', [PenjualanObatController::class, 'cetak'])->name('penjualan-obat.cetak');
     Route::post('/penjualan_obat/store', [PenjualanObatController::class, 'store'])->name('penjualan_obat.store');
     Route::post('/penjualan_obat/detail/store', [PenjualanObatController::class, 'store_penjualan_obat_detail'])->name('penjualan_obat_detail.store');
     Route::delete('/penjualan_obat/delete/{penjualan_obat}', [PenjualanObatController::class, 'destroy'])->name('penjualan_obat.destroy');

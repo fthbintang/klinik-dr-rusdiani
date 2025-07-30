@@ -63,7 +63,8 @@
                         class="form-select select2 @error('pasien_id') is-invalid @enderror">
                         <option value="">-- Pilih Pasien --</option>
                         @foreach ($pasien as $item)
-                            <option value="{{ $item->id }}" {{ old('pasien_id') == $item->id ? 'selected' : '' }}>
+                            <option value="{{ $item->id }}" data-tanggal-lahir="{{ $item->tanggal_lahir }}"
+                                {{ old('pasien_id') == $item->id ? 'selected' : '' }}>
                                 {{ $item->no_rm }} - {{ $item->nama_lengkap }}
                             </option>
                         @endforeach
@@ -71,6 +72,18 @@
                     @error('pasien_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                </div>
+
+                <div class="form-group mb-3" id="form-berat-badan" style="display: none;">
+                    <label for="berat_badan" class="form-label"><b>Berat Badan (kg)</b></label>
+                    <input type="number" step="0.1" name="berat_badan" id="berat_badan" class="form-control"
+                        placeholder="Contoh: 35.5">
+                </div>
+
+                <div class="form-group mb-3" id="form-tensi" style="display: none;">
+                    <label for="tensi" class="form-label"><b>Tensi</b></label>
+                    <input type="text" name="tensi" id="tensi" class="form-control"
+                        placeholder="Contoh: 110/70">
                 </div>
 
                 <div class="form-group mb-3">
@@ -108,6 +121,33 @@
             $('form').on('submit', function() {
                 let raw = $('#biaya_jasa').val().replace(/\./g, '');
                 $('#biaya_jasa').val(raw);
+            });
+
+            $('#pasien_id').on('change', function() {
+                let selectedOption = $(this).find('option:selected');
+                let tanggalLahir = selectedOption.data('tanggal-lahir');
+
+                if (!tanggalLahir) {
+                    $('#form-berat-badan').hide();
+                    $('#form-tensi').hide();
+                    return;
+                }
+
+                let today = new Date();
+                let birthDate = new Date(tanggalLahir);
+                let umur = today.getFullYear() - birthDate.getFullYear();
+                let m = today.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                    umur--;
+                }
+
+                if (umur > 17) {
+                    $('#form-tensi').show();
+                    $('#form-berat-badan').hide();
+                } else {
+                    $('#form-berat-badan').show();
+                    $('#form-tensi').hide();
+                }
             });
         });
     </script>

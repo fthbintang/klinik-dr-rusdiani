@@ -58,6 +58,12 @@ class DatabaseSeeder extends Seeder
             'password'       => bcrypt('pasien')
         ]);
 
+        // Hitung jumlah pasien yang sudah ada untuk menentukan nomor urut selanjutnya
+        $jumlahPasien = Pasien::count() + 1;
+
+        // Format nomor rekam medis menjadi RM-01, RM-02, dst.
+        $no_rm = 'RM-' . str_pad($jumlahPasien, 2, '0', STR_PAD_LEFT);
+
         // Buat NIK random 16 digit
         $nik = '';
         for ($i = 0; $i < 4; $i++) {
@@ -66,20 +72,20 @@ class DatabaseSeeder extends Seeder
 
         // Setelah user dibuat, langsung buat data pasien
         Pasien::create([
-            'user_id'         => $user->id,
-            'no_rm'           => 'RM' . str_pad($user->id, 5, '0', STR_PAD_LEFT),
-            'nama_lengkap'    => $user->nama_lengkap,
-            'nama_panggilan'  => $user->nama_panggilan,
-            'nik'             => $nik,
-            'jenis_kelamin'   => $user->jenis_kelamin,
-            'no_hp'           => fake()->phoneNumber(),
-            'tempat_lahir'    => 'Banjarmasin',
-            'tanggal_lahir'   => fake()->date('Y-m-d', '-25 years'),
-            'alamat'          => $user->alamat,
-            'pekerjaan'       => 'Karyawan',
+            'user_id'           => $user->id,
+            'no_rm'             => $no_rm,
+            'nama_lengkap'      => $user->nama_lengkap,
+            'nama_panggilan'    => $user->nama_panggilan,
+            'nik'               => $nik,
+            'jenis_kelamin'     => $user->jenis_kelamin,
+            'no_hp'             => fake()->phoneNumber(),
+            'tempat_lahir'      => 'Banjarmasin',
+            'tanggal_lahir'     => fake()->date('Y-m-d', '-25 years'),
+            'alamat'            => $user->alamat,
+            'pekerjaan'         => 'Karyawan',
             'status_perkawinan' => 'Belum Kawin',
-            'golongan_darah'  => 'O',
-            'agama'           => 'Islam',
+            'golongan_darah'    => 'O',
+            'agama'             => 'Islam',
         ]);
 
         User::create([

@@ -128,7 +128,8 @@
                                             <option value="">-- Pilih Obat --</option>
                                             @foreach ($obat as $item)
                                                 <option value="{{ $item->id }}" data-harga="{{ $item->harga }}">
-                                                    {{ $item->nama_obat }} - Stok: {{ $item->stok }}
+                                                    {{ $item->nama_obat }} - {{ $item->satuan }} - Stok:
+                                                    {{ $item->stok }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -191,6 +192,13 @@
                                 {{ 'Rp' . number_format($penjualan_obat->total_harga, 0, ',', '.') }}
                             </b>
                         </p>
+
+                        @if ($penjualan_obat->total_harga)
+                            <a href="{{ route('penjualan-obat.cetak', $penjualan_obat->id) }}" target="_blank"
+                                class="btn btn-outline-secondary">
+                                🖨️ Cetak
+                            </a>
+                        @endif
                     </div>
                 </div>
             @endif

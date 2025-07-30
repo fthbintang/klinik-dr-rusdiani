@@ -43,6 +43,7 @@
                                 <th>No.RM</th>
                                 <th>Nama</th>
                                 <th>Jenis Kelamin</th>
+                                <th>Umur</th>
                                 <th>No HP</th>
                                 <th>Golongan Darah</th>
                                 <th>Foto</th>
@@ -56,6 +57,9 @@
                                     <td>{{ $row->no_rm }}</td>
                                     <td>{{ $row->nama_lengkap }}</td>
                                     <td>{{ $row->jenis_kelamin }}</td>
+                                    <td>
+                                        {{ \Carbon\Carbon::parse($row->tanggal_lahir)->age }} tahun
+                                    </td>
                                     <td>{{ $row->no_hp }}</td>
                                     <td class="text-center align-middle">{{ $row->golongan_darah ?? '-' }}</td>
                                     <td>
