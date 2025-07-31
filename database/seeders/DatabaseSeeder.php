@@ -22,15 +22,15 @@ class DatabaseSeeder extends Seeder
         User::factory(5)->create();
         Supplier::factory(5)->create();
         Obat::factory(10)->create();
-        Pasien::factory(10)->create();
-        // RekamMedis::factory(30)->create();
-        // ResepObat::factory(30)->create();
-        // PenjualanObat::factory(50)->create();
+        Pasien::factory(50)->create();
+        RekamMedis::factory(30)->create();
+        ResepObat::factory(30)->create();
+        PenjualanObat::factory(50)->create();
 
         User::create([
-            'nama_lengkap' => 'Muhammad Bintang Fathehah',
-            'nama_panggilan' => 'Bintang',
-            'jenis_kelamin' => 'Laki-laki',
+            'nama_lengkap' => 'Yuri',
+            'nama_panggilan' => 'Yuri',
+            'jenis_kelamin' => 'Perempuan',
             'role' => 'Admin',
             'alamat' => 'Banjarmasin',
             'username' => 'admin',

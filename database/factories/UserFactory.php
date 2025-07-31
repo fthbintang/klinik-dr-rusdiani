@@ -23,11 +23,12 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $faker = \Faker\Factory::create('id_ID');
         $gender = $this->faker->randomElement(['Laki-laki', 'Perempuan']);
         
         return [
-            'nama_lengkap' => $this->faker->name(),
-            'nama_panggilan' => $this->faker->firstName(),
+            'nama_lengkap' => $faker->name(),
+            'nama_panggilan' => $faker->firstName(),
             'jenis_kelamin' => $gender,
             'tanggal_lahir' => $this->faker->date('Y-m-d', '2005-12-31'),
             'no_hp' => $this->faker->phoneNumber(),
