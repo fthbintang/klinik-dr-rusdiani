@@ -44,6 +44,7 @@
                                 <th>Nama</th>
                                 <th>Jenis Kelamin</th>
                                 <th>Umur</th>
+                                <th>Kategori</th>
                                 <th>No HP</th>
                                 <th>Golongan Darah</th>
                                 <th>Foto</th>
@@ -59,6 +60,12 @@
                                     <td>{{ $row->jenis_kelamin }}</td>
                                     <td>
                                         {{ \Carbon\Carbon::parse($row->tanggal_lahir)->age }} tahun
+                                    </td>
+                                    <td>
+                                        @php
+                                            $usia = \Carbon\Carbon::parse($row->tanggal_lahir)->age;
+                                        @endphp
+                                        {{ $usia > 17 ? 'Dewasa' : 'Anak-Anak' }}
                                     </td>
                                     <td>{{ $row->no_hp }}</td>
                                     <td class="text-center align-middle">{{ $row->golongan_darah ?? '-' }}</td>

@@ -159,6 +159,28 @@
 
                     <input type="hidden" name="rekam_medis_id" value="{{ $rekam_medis->id }}">
 
+                    @if ($rekam_medis->berat_badan)
+                        <div class="form-group mb-3">
+                            <label for="berat_badan" class="form-label"><b>Berat Badan</b></label>
+                            <div class="input-group">
+                                <input type="number" step="0.1" class="form-control" placeholder="Contoh: 35.5"
+                                    value="{{ $rekam_medis->berat_badan }}" readonly>
+                                <span class="input-group-text">kg</span>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if ($rekam_medis->tensi)
+                        <div class="form-group mb-3">
+                            <label for="tensi" class="form-label"><b>Tensi</b></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Contoh: 110/70"
+                                    value="{{ $rekam_medis->tensi }}" readonly>
+                                <span class="input-group-text">mmHg</span>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="form-group">
                         <label for="keluhan" class="form-label"><b>Keluhan</b><span
                                 class="text-danger">*</span></label>
@@ -366,14 +388,12 @@
                             💊 Diproses Apotek
                         </button>
 
-                        @can('apotek')
-                            @if ($rekam_medis->biaya_total)
-                                <a href="{{ route('resep_obat.cetak', [$rekam_medis->pasien_id, $rekam_medis->id]) }}"
-                                    target="_blank" class="btn btn-outline-secondary">
-                                    🖨️ Cetak Resep
-                                </a>
-                            @endif
-                        @endcan
+                        @if ($rekam_medis->biaya_total)
+                            <a href="{{ route('resep_obat.cetak', [$rekam_medis->pasien_id, $rekam_medis->id]) }}"
+                                target="_blank" class="btn btn-outline-secondary">
+                                🖨️ Cetak Resep
+                            </a>
+                        @endif
                     </div>
 
                 </div>

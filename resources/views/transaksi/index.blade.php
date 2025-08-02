@@ -50,6 +50,7 @@
                                 <th class="text-center align-middle">No Antrean</th>
                                 <th class="text-center align-middle">No RM</th>
                                 <th class="text-center align-middle">Pasien</th>
+                                <th class="text-center align-middle">Kategori Usia</th>
                                 <th class="text-center align-middle">Status</th>
                                 {{-- <th class="text-center align-middle">Resep Dokter</th> --}}
                                 <th class="text-center align-middle">Biaya</th>
@@ -79,6 +80,12 @@
                                     <td class="text-center align-middle">{{ $row->no_antrean ?? '-' }}</td>
                                     <td class="text-center align-middle">{{ $row->pasien->no_rm ?? '-' }}</td>
                                     <td class="text-center align-middle">{{ $row->pasien->nama_lengkap ?? '-' }}</td>
+                                    <td class="text-center align-middle">
+                                        @php
+                                            $usia = \Carbon\Carbon::parse($row->pasien->tanggal_lahir)->age;
+                                        @endphp
+                                        {{ $usia > 17 ? 'Dewasa' : 'Anak-Anak' }}
+                                    </td>
                                     <td class="text-center align-middle">
                                         @php
                                             $status = $row->status_kedatangan;
