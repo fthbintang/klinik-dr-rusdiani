@@ -355,8 +355,7 @@
                     <div class="mt-4 float-end">
                         <button id="btn-simpan-dokter"
                             class="btn btn-success
-                            @if ($rekam_medis->biaya_total || Gate::denies('dokter')) disabled @endif"
-                            @cannot('dokter') disabled @endcannot>
+                            @if ($rekam_medis->biaya_total) disabled @endif">
                             ✅ Simpan
                         </button>
 
