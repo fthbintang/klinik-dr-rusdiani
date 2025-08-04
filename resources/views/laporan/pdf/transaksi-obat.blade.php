@@ -88,8 +88,9 @@
             <tr>
                 <td class="text-center">{{ $loop->iteration }}</td>
                 <td>{{ $penjualanObat->kode_transaksi }}</td>
-                <td>{{ $penjualanObat->pasien->nama_lengkap == 'Pasien' ? 'N/A' : $penjualanObat->pasien->nama_lengkap
-                    ; }}</td>
+                <td>{{ $penjualanObat->pasien ? ($penjualanObat->pasien->nama_lengkap == 'Pasien' ? 'N/A' :
+                    $penjualanObat->pasien->nama_lengkap
+                    ) : 'Tanpa Nama'; }}</td>
                 <td>{{ $penjualanObat->tanggal_transaksi }}</td>
                 <td>Rp {{ number_format($penjualanObat->total_harga, 0, ',', '.') }}</td>
                 <td>{{ $penjualanObat->catatan }}</td>
