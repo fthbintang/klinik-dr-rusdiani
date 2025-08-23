@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Poli extends Model
 {
@@ -11,4 +12,9 @@ class Poli extends Model
 
     protected $table = 'poli';
     protected $guarded = ['id'];
+
+    public function dokter(): HasMany
+    {
+        return $this->hasMany(Dokter::class);
+    }
 }

@@ -74,6 +74,16 @@
                     </li>
                 @endcan
 
+                {{-- DOKTER (Admin) --}}
+                @can('admin')
+                    <li class="sidebar-item {{ request()->is('dashboard/dokter*') ? 'active' : '' }}">
+                        <a href="{{ route('dokter.index') }}" class="sidebar-link">
+                            <i class="bi bi-person-bounding-box"></i>
+                            <span>Dokter</span>
+                        </a>
+                    </li>
+                @endcan
+
                 {{-- JADWAL DOKTER (Admin) --}}
                 @can('admin')
                     <li class="sidebar-item {{ request()->is('dashboard/jadwal_dokter*') ? 'active' : '' }}">
