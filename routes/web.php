@@ -19,6 +19,7 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PenjualanObatController;
 use App\Http\Controllers\PendaftaranPasienController;
 use App\Http\Controllers\PendaftaranAkunPasienController;
+use App\Http\Controllers\PoliController;
 
 // PENDAFTARAN AKUN PASIEN
 Route::get('/pendaftaran_akun_pasien', [PendaftaranAkunPasienController::class, 'index'])->name('pendaftaran_akun_pasien');
@@ -100,11 +101,19 @@ Route::prefix('dashboard')->middleware(['auth', 'role:Admin'])->group(function (
     Route::put('/pengguna/update/{user}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/pengguna/delete/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 
+    // POLI
+    Route::get('/poli', [PoliController::class, 'index'])->name('poli.index');
+    Route::get('/poli/edit/{poli}', [PoliController::class, 'edit'])->name('poli.edit');
+    Route::get('/poli/create', [PoliController::class, 'create'])->name('poli.create');
+    Route::post('/poli/store', [PoliController::class, 'store'])->name('poli.store');
+    Route::put('/poli/update/{poli}', [PoliController::class, 'update'])->name('poli.update');
+    Route::delete('/poli/delete/{poli}', [PoliController::class, 'destroy'])->name('poli.destroy');
+
     // JADWAL DOKTER
     Route::get('/jadwal_dokter', [JadwalDokterController::class, 'index'])->name('jadwal_dokter.index');
     Route::post('/jadwal_dokter/store', [JadwalDokterController::class, 'store'])->name('jadwal_dokter.store');
 
-     // LAPORAN
+    // LAPORAN
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/laporan/cetak-obat', [LaporanController::class, 'exportObat'])->name('laporan.export-obat');
     Route::get('/laporan/cetak-obat-masuk', [LaporanController::class, 'exportObatMasuk'])->name('laporan.export-obat-masuk');
