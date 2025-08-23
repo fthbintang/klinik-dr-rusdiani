@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Dokter;
 use App\Models\Obat;
 use App\Models\Pasien;
 use App\Models\PenjualanObat;
+use App\Models\Poli;
 use App\Models\RekamMedis;
 use App\Models\ResepObat;
 use App\Models\Supplier;
@@ -20,12 +22,14 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory(5)->create();
+        Poli::factory(3)->create();
+        Dokter::factory(3)->create();
         Supplier::factory(5)->create();
         Obat::factory(10)->create();
-        Pasien::factory(50)->create();
+        Pasien::factory(20)->create();
         RekamMedis::factory(30)->create();
         ResepObat::factory(30)->create();
-        PenjualanObat::factory(50)->create();
+        PenjualanObat::factory(20)->create();
 
         User::create([
             'nama_lengkap' => 'Yuri',

@@ -68,7 +68,8 @@
                                                 class="btn icon btn-warning">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <form action="#" method="POST" class="d-inline form-delete">
+                                            <form action="{{ route('dokter.destroy', $row->id) }}" method="POST"
+                                                class="d-inline form-delete">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" class="btn icon btn-danger btn-delete">

@@ -83,4 +83,18 @@ class DokterController extends Controller
             return back()->withInput();
         }
     }
+
+    public function destroy(Dokter $dokter)
+    {
+        try {
+            $dokter->delete();
+    
+            Alert::success('Berhasil', 'Data dokter berhasil dihapus');
+            return redirect()->route('dokter.index');
+        } catch (\Exception $e) {
+            Log::error('Gagal hapus dokter', ['error' => $e->getMessage()]);
+            Alert::error('Gagal', 'Terjadi kesalahan saat menghapus data');
+            return back();
+        }
+    }
 }
