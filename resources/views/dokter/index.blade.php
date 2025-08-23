@@ -29,7 +29,7 @@
                         <h5 class="card-title">Data {{ $title }}</h5>
                     </div>
                     <div class="col-sm-4 d-flex justify-content-end">
-                        <a href="#" class="btn btn-success">Tambah Data</a>
+                        <a href="{{ route('dokter.create') }}" class="btn btn-success">Tambah Data</a>
                     </div>
                 </div>
             </div>
@@ -53,16 +53,19 @@
                             @foreach ($dokter as $row)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $row->nama_dokter }}</td>
-                                    <td>{{ $row->poli->nama_poli }}</td>
-                                    <td>{{ $row->no_str }}</td>
-                                    <td>{{ $row->no_sip }}</td>
-                                    <td>{{ $row->jenis_kelamin }}</td>
-                                    <td>{{ $row->tanggal_lahir }}</td>
-                                    <td>{{ $row->alamat }}</td>
+                                    <td>{{ $row->nama_dokter ?? '-' }}</td>
+                                    <td>{{ $row->poli->nama_poli ?? '-' }}</td>
+                                    <td>{{ $row->no_str ?? '-' }}</td>
+                                    <td>{{ $row->no_sip ?? '-' }}</td>
+                                    <td>{{ $row->jenis_kelamin ?? '-' }}</td>
+                                    <td>
+                                        {{ $row->tanggal_lahir ? \Carbon\Carbon::parse($row->tanggal_lahir)->format('d-m-Y') : '-' }}
+                                    </td>
+                                    <td>{{ $row->alamat ?? '-' }}</td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <a href="#" class="btn icon btn-warning">
+                                            <a href="{{ route('dokter.edit', $row->id) }}"
+                                                class="btn icon btn-warning">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                             <form action="#" method="POST" class="d-inline form-delete">

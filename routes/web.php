@@ -112,6 +112,10 @@ Route::prefix('dashboard')->middleware(['auth', 'role:Admin'])->group(function (
 
     // DOKTER
     Route::get('/dokter', [DokterController::class, 'index'])->name('dokter.index');
+    Route::get('/dokter/create', [DokterController::class, 'create'])->name('dokter.create');
+    Route::post('/dokter/store', [DokterController::class, 'store'])->name('dokter.store');
+    Route::get('/dokter/edit/{dokter}', [DokterController::class, 'edit'])->name('dokter.edit');
+    Route::put('/dokter/update/{dokter}', [DokterController::class, 'update'])->name('dokter.update');
 
     // JADWAL DOKTER
     Route::get('/jadwal_dokter', [JadwalDokterController::class, 'index'])->name('jadwal_dokter.index');

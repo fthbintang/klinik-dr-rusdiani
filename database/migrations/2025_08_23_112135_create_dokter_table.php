@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('nama_dokter');
             $table->foreignId('poli_id')->constrained('poli')->onDelete('cascade');
-            $table->string('no_str');
-            $table->string('no_sip');
+            $table->string('no_str')->nullable();
+            $table->string('no_sip')->nullable();
             $table->string('jenis_kelamin');
-            $table->string('tanggal_lahir');
+            $table->string('tanggal_lahir')->nullable();
             $table->string('alamat')->nullable();
             $table->timestamps();
         });
