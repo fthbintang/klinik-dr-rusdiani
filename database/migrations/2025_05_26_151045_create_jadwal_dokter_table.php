@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('jadwal_dokter', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('dokter_id')->constrained('dokter')->onDelete('cascade');
             $table->string('hari');
             $table->time('jam_mulai');
             $table->time('jam_selesai');
