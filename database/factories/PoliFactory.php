@@ -16,8 +16,17 @@ class PoliFactory extends Factory
      */
     public function definition(): array
     {
+        $namaPoli = $this->faker->randomElement([
+            'Poli Umum',
+            'Poli Gigi',
+            'Poli Anak',
+            'Poli Kandungan',
+            'Poli Kulit & Kelamin',
+            'Poli THT'
+        ]);
+
         return [
-            //
+            'nama_poli' => $namaPoli
         ];
     }
 }

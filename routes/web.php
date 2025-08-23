@@ -15,6 +15,7 @@ use App\Http\Controllers\ObatKeluarController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\BerandaPasienController;
+use App\Http\Controllers\DokterController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PenjualanObatController;
 use App\Http\Controllers\PendaftaranPasienController;
@@ -108,6 +109,14 @@ Route::prefix('dashboard')->middleware(['auth', 'role:Admin'])->group(function (
     Route::post('/poli/store', [PoliController::class, 'store'])->name('poli.store');
     Route::put('/poli/update/{poli}', [PoliController::class, 'update'])->name('poli.update');
     Route::delete('/poli/delete/{poli}', [PoliController::class, 'destroy'])->name('poli.destroy');
+
+    // DOKTER
+    Route::get('/dokter', [DokterController::class, 'index'])->name('dokter.index');
+    Route::get('/dokter/create', [DokterController::class, 'create'])->name('dokter.create');
+    Route::post('/dokter/store', [DokterController::class, 'store'])->name('dokter.store');
+    Route::get('/dokter/edit/{dokter}', [DokterController::class, 'edit'])->name('dokter.edit');
+    Route::put('/dokter/update/{dokter}', [DokterController::class, 'update'])->name('dokter.update');
+    Route::delete('/dokter/delete/{dokter}', [DokterController::class, 'destroy'])->name('dokter.destroy');
 
     // JADWAL DOKTER
     Route::get('/jadwal_dokter', [JadwalDokterController::class, 'index'])->name('jadwal_dokter.index');
