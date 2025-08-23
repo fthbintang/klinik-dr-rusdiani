@@ -64,6 +64,16 @@
                     </li>
                 @endcan
 
+                {{-- POLI (Admin) --}}
+                @can('admin')
+                    <li class="sidebar-item {{ request()->is('dashboard/poli*') ? 'active' : '' }}">
+                        <a href="{{ route('poli.index') }}" class="sidebar-link">
+                            <i class="bi bi-box"></i>
+                            <span>Poli</span>
+                        </a>
+                    </li>
+                @endcan
+
                 {{-- JADWAL DOKTER (Admin) --}}
                 @can('admin')
                     <li class="sidebar-item {{ request()->is('dashboard/jadwal_dokter*') ? 'active' : '' }}">
