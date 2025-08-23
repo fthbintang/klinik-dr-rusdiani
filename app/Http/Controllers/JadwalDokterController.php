@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dokter;
 use App\Models\JadwalDokter;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -9,32 +10,44 @@ use Illuminate\Support\Facades\Validator;
 
 class JadwalDokterController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
+        // Semua dokter untuk dropdown
+        $dokterList = Dokter::all();
+
+        $selectedDokter = null;
+        $jadwal_dokter = [];
+
+        // Jika ada dokter_id yang dipilih
+        if ($request->has('dokter_id') && $request->dokter_id) {
+            $selectedDokter = Dokter::find($request->dokter_id);
+
+            if ($selectedDokter) {
+                // Ambil jadwal dokter dan keyBy hari
+                $jadwal_dokter = JadwalDokter::where('dokter_id', $selectedDokter->id)
+                    ->get()
+                    ->keyBy('hari');
+            }
+        }
+
         return view('jadwal_dokter.index', [
             'title' => 'Jadwal Dokter',
-            'jadwal_dokter' => JadwalDokter::all()->keyBy('hari'),
+            'dokterList' => $dokterList,
+            'selectedDokter' => $selectedDokter,
+            'jadwal_dokter' => $jadwal_dokter,
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        $dokterId = $request->input('dokter_id');
         $jadwalData = $request->input('jadwal', []);
-    
+
+        if (!$dokterId) {
+            Alert::error('Error', 'Dokter belum dipilih.');
+            return redirect()->back();
+        }
+
         $rules = [];
         foreach ($jadwalData as $index => $data) {
             if (isset($data['aktif'])) {
@@ -42,21 +55,21 @@ class JadwalDokterController extends Controller
                 $rules["jadwal.$index.jam_selesai"] = 'required';
             }
         }
-    
+
         $messages = [
             'required' => 'Wajib diisi.',
         ];
-    
-        // Buat validator manual supaya bisa tambah error custom
+
+        // Validator manual
         $validator = Validator::make($request->all(), $rules, $messages);
-    
-        // Validasi custom: jam_mulai harus lebih awal dari jam_selesai
+
+        // Validasi jam mulai < jam selesai
         $validator->after(function ($validator) use ($jadwalData) {
             foreach ($jadwalData as $index => $data) {
                 if (isset($data['aktif'])) {
                     $jamMulai = $data['jam_mulai'] ?? null;
                     $jamSelesai = $data['jam_selesai'] ?? null;
-    
+
                     if ($jamMulai && $jamSelesai && strtotime($jamMulai) >= strtotime($jamSelesai)) {
                         $validator->errors()->add(
                             "jadwal.$index.jam_mulai",
@@ -66,59 +79,32 @@ class JadwalDokterController extends Controller
                 }
             }
         });
-    
-        $validator->validate(); // akan otomatis redirect jika ada error
-    
-        // Proses simpan dan hapus berdasarkan data asli (bukan hasil validasi)
+
+        $validator->validate(); // redirect jika error
+
+        // Simpan atau hapus jadwal berdasarkan dokter_id
         foreach ($jadwalData as $data) {
             $hari = $data['hari'];
-    
+
             if (isset($data['aktif'])) {
                 JadwalDokter::updateOrCreate(
-                    ['hari' => $hari],
+                    [
+                        'dokter_id' => $dokterId,
+                        'hari' => $hari
+                    ],
                     [
                         'jam_mulai' => $data['jam_mulai'],
                         'jam_selesai' => $data['jam_selesai'],
                     ]
                 );
             } else {
-                JadwalDokter::where('hari', $hari)->delete();
+                JadwalDokter::where('dokter_id', $dokterId)
+                    ->where('hari', $hari)
+                    ->delete();
             }
         }
-    
+
         Alert::success('Sukses!', 'Jadwal dokter berhasil diperbarui.');
         return redirect()->back();
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(JadwalDokter $jadwalDokter)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(JadwalDokter $jadwalDokter)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, JadwalDokter $jadwalDokter)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(JadwalDokter $jadwalDokter)
-    {
-        //
     }
 }

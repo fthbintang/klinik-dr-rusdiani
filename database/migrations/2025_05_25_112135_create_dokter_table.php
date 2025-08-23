@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('no_str')->nullable();
             $table->string('no_sip')->nullable();
             $table->string('jenis_kelamin');
-            $table->string('tanggal_lahir')->nullable();
-            $table->string('alamat')->nullable();
+            $table->date('tanggal_lahir')->nullable();
+            $table->text('alamat')->nullable();
             $table->timestamps();
         });
     }
