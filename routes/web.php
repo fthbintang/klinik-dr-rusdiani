@@ -168,6 +168,7 @@ Route::prefix('pasien')->middleware(['auth', 'role:Pasien'])->group(function () 
     Route::get('/beranda/antrean/terdepan', [BerandaPasienController::class, 'antreanTerdepanPasien']);
     Route::get('/beranda/pendaftaran', [PendaftaranPasienController::class, 'index'])->name('pendaftaran_pasien.index');
     Route::get('/beranda/pendaftaran/create', [PendaftaranPasienController::class, 'create'])->name('pendaftaran_pasien.create');
+    Route::get('/dokter/{dokter}/jadwal', [PendaftaranPasienController::class, 'getJadwalDokter']);
     Route::post('/beranda/pendaftaran/store', [PendaftaranPasienController::class, 'store'])->name('pendaftaran_pasien.store');
     Route::get('/beranda/pendaftaran/pasien/rekam_medis/{pasien}/resep_obat/{rekam_medis}', [PendaftaranPasienController::class, 'detail_resep_obat'])->name('pendaftaran_pasien.resep_obat.index');
 });
