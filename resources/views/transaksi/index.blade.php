@@ -177,7 +177,7 @@
             @endcan
         </div>
 
-        @if ($rekam_medis->isEmpty())
+        {{-- @if ($rekam_medis->isEmpty())
             <div class="alert alert-warning text-center">
                 Tidak ada transaksi pada tanggal ini.
             </div>
@@ -278,11 +278,7 @@
                                                         @endif
                                                     @endcan
                                                     @canany(['admin', 'dokter', 'apotek'])
-                                                        @if (
-                                                            $row->status_kedatangan == 'Diperiksa' ||
-                                                                $row->status_kedatangan == 'Beli Obat' ||
-                                                                $row->status_kedatangan == 'Pengambilan Obat' ||
-                                                                $row->status_kedatangan == 'Selesai')
+                                                        @if ($row->status_kedatangan == 'Diperiksa' || $row->status_kedatangan == 'Beli Obat' || $row->status_kedatangan == 'Pengambilan Obat' || $row->status_kedatangan == 'Selesai')
                                                             <a href="{{ route('transaksi.resep_obat', ['pasien' => $row->pasien->id, 'rekam_medis' => $row->id]) }}"
                                                                 class="btn icon btn-info">
                                                                 <i class="bi bi-clipboard2"></i>
@@ -313,7 +309,154 @@
                     </div>
                 </div>
             @endforeach
+        @endif --}}
+
+        @php
+            $user = auth()->user();
+        @endphp
+
+        @if ($rekam_medis->isEmpty())
+            <div class="alert alert-warning text-center">
+                Tidak ada transaksi pada tanggal ini.
+            </div>
+        @else
+            @php
+                $rekamByDokter = $rekam_medis->groupBy(
+                    fn($item) => $item->dokter->nama_dokter ?? 'Dokter Tidak Diketahui',
+                );
+            @endphp
+
+            @foreach ($rekamByDokter as $dokterNama => $rekamDokter)
+                {{-- Jika role = Dokter, hanya tampilkan rekam medis milik dirinya --}}
+                @if ($user->role !== 'Dokter' || $user->nama_lengkap === $dokterNama)
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                Dokter: {{ $dokterNama }}
+                                <small
+                                    class="text-muted">({{ $rekamDokter->first()->dokter->poli->nama_poli ?? '-' }})</small>
+                            </h5>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr style="white-space: nowrap;">
+                                            <th class="text-center">Tanggal</th>
+                                            <th class="text-center">No Antrean</th>
+                                            <th class="text-center">No RM</th>
+                                            <th class="text-center">Pasien</th>
+                                            <th class="text-center">Kategori</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Biaya</th>
+                                            <th class="text-center">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php $previousStatus = null; @endphp
+                                        @foreach ($rekamDokter as $row)
+                                            @if ($previousStatus !== $row->status_kedatangan)
+                                                <tr class="table-light">
+                                                    <td colspan="8"
+                                                        class="fw-bold text-start py-2 px-3 border-top border-secondary">
+                                                        <i class="bi bi-arrow-right-circle-fill me-1 text-primary"></i>
+                                                        Status: {{ $row->status_kedatangan }}
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                            <tr>
+                                                <td class="text-center">
+                                                    {{ $row->tanggal_kunjungan ? \Carbon\Carbon::parse($row->tanggal_kunjungan)->translatedFormat('l, d F Y') : '-' }}
+                                                </td>
+                                                <td class="text-center">{{ $row->no_antrean ?? '-' }}</td>
+                                                <td class="text-center">{{ $row->pasien->no_rm ?? '-' }}</td>
+                                                <td class="text-center">{{ $row->pasien->nama_lengkap ?? '-' }}</td>
+                                                <td class="text-center">
+                                                    @php
+                                                        $usia = \Carbon\Carbon::parse($row->pasien->tanggal_lahir)->age;
+                                                    @endphp
+                                                    {{ $usia > 17 ? 'Dewasa' : 'Anak-Anak' }}
+                                                </td>
+                                                <td class="text-center">
+                                                    @php
+                                                        $status = $row->status_kedatangan;
+                                                        $badgeClass = match ($status) {
+                                                            'Booking' => 'bg-info',
+                                                            'Datang' => 'bg-primary',
+                                                            'Diperiksa' => 'bg-warning',
+                                                            'Selesai' => 'bg-success',
+                                                            'Tidak Datang' => 'bg-danger',
+                                                            'Beli Obat' => 'bg-secondary',
+                                                            'Menunggu Obat' => 'bg-dark',
+                                                            default => 'bg-secondary',
+                                                        };
+                                                    @endphp
+                                                    <span
+                                                        class="badge {{ $badgeClass }}">{{ $status ?? '-' }}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    @if ($row->biaya_total)
+                                                        <b>{{ 'Rp' . number_format($row->biaya_total, 0, ',', '.') }}</b>
+                                                    @else
+                                                        <b>-</b>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex gap-1 justify-content-center">
+                                                        @can('admin')
+                                                            @if ($row->status_kedatangan == 'Datang')
+                                                                <a href="#" class="btn icon btn-info btn-call-pasien"
+                                                                    data-id="{{ $row->id }}">
+                                                                    <i class="bi bi-forward-fill"></i>
+                                                                </a>
+                                                            @elseif ($row->status_kedatangan == 'Booking')
+                                                                <a href="#"
+                                                                    class="btn icon btn-info btn-konfirmasi-kedatangan"
+                                                                    data-id="{{ $row->id }}">
+                                                                    <i class="bi bi-forward-fill"></i>
+                                                                </a>
+                                                            @endif
+                                                        @endcan
+                                                        @canany(['admin', 'dokter', 'apotek'])
+                                                            @if (
+                                                                $row->status_kedatangan == 'Diperiksa' ||
+                                                                    $row->status_kedatangan == 'Beli Obat' ||
+                                                                    $row->status_kedatangan == 'Pengambilan Obat' ||
+                                                                    $row->status_kedatangan == 'Selesai')
+                                                                <a href="{{ route('transaksi.resep_obat', ['pasien' => $row->pasien->id, 'rekam_medis' => $row->id]) }}"
+                                                                    class="btn icon btn-info">
+                                                                    <i class="bi bi-clipboard2"></i>
+                                                                </a>
+                                                            @endif
+                                                        @endcanany
+                                                        @can('admin')
+                                                            @if ($row->status_kedatangan != 'Selesai')
+                                                                <form action="{{ route('transaksi.destroy', $row->id) }}"
+                                                                    method="POST" class="d-inline form-delete-user">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="button"
+                                                                        class="btn icon btn-danger btn-delete-user">
+                                                                        <i class="bi bi-trash"></i>
+                                                                    </button>
+                                                                </form>
+                                                            @endif
+                                                        @endcan
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            @php $previousStatus = $row->status_kedatangan; @endphp
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            @endforeach
         @endif
+
     </section>
 
 

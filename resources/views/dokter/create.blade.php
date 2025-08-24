@@ -99,6 +99,17 @@
                     @enderror
                 </div>
 
+                {{-- No HP --}}
+                <div class="form-group mb-3">
+                    <label for="no_hp" class="form-label"><b>No HP</b></label>
+                    <input type="text" name="no_hp" id="no_hp"
+                        class="form-control @error('no_hp') is-invalid @enderror" placeholder="08xxxxxxxxxx"
+                        value="{{ old('no_hp') }}">
+                    @error('no_hp')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 {{-- Tanggal Lahir --}}
                 <div class="form-group mb-3">
                     <label for="tanggal_lahir" class="form-label"><b>Tanggal Lahir</b></label>
@@ -116,6 +127,29 @@
                     <textarea name="alamat" id="alamat" rows="3" class="form-control @error('alamat') is-invalid @enderror"
                         placeholder="Alamat...">{{ old('alamat') }}</textarea>
                     @error('alamat')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- Username --}}
+                <div class="form-group mb-3">
+                    <label for="username" class="form-label"><b>Username</b><span
+                            class="text-danger">*</span></label>
+                    <input type="text" name="username" id="username"
+                        class="form-control @error('username') is-invalid @enderror" placeholder="Username..."
+                        value="{{ old('username') }}">
+                    @error('username')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- Password --}}
+                <div class="form-group mb-4">
+                    <label for="password" class="form-label"><b>Password</b><span
+                            class="text-danger">*</span></label>
+                    <input type="password" name="password" id="password"
+                        class="form-control @error('password') is-invalid @enderror" placeholder="Password...">
+                    @error('password')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

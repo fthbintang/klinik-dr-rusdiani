@@ -23,13 +23,13 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(5)->create();
         Poli::factory(3)->create();
-        Dokter::factory(3)->create();
+        // Dokter::factory(3)->create();
         Supplier::factory(5)->create();
         Obat::factory(10)->create();
         Pasien::factory(20)->create();
-        RekamMedis::factory(30)->create();
-        ResepObat::factory(30)->create();
-        PenjualanObat::factory(20)->create();
+        // RekamMedis::factory(30)->create();
+        // ResepObat::factory(30)->create();
+        // PenjualanObat::factory(20)->create();
 
         User::create([
             'nama_lengkap' => 'Yuri',
@@ -92,15 +92,15 @@ class DatabaseSeeder extends Seeder
             'agama'             => 'Islam',
         ]);
 
-        User::create([
-            'nama_lengkap' => 'dokter',
-            'nama_panggilan' => 'dokter',
-            'jenis_kelamin' => 'Laki-laki',
-            'role' => 'Dokter',
-            'alamat' => 'Banjarmasin',
-            'username' => 'dokter',
-            'password' => bcrypt('dokter')
-        ]);
+        // User::create([
+        //     'nama_lengkap' => 'dokter',
+        //     'nama_panggilan' => 'dokter',
+        //     'jenis_kelamin' => 'Laki-laki',
+        //     'role' => 'Dokter',
+        //     'alamat' => 'Banjarmasin',
+        //     'username' => 'dokter',
+        //     'password' => bcrypt('dokter')
+        // ]);
 
         User::create([
             'nama_lengkap' => 'Apotek',

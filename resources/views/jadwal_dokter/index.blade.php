@@ -35,7 +35,7 @@
                                 @foreach ($dokterList as $dok)
                                     <option value="{{ $dok->id }}"
                                         {{ request('dokter_id') == $dok->id ? 'selected' : '' }}>
-                                        dr. {{ $dok->nama_dokter }}
+                                        {{ $dok->nama_dokter }}
                                     </option>
                                 @endforeach
                             </select>
