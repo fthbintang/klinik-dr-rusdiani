@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Obat;
+use App\Models\Dokter;
 use App\Models\Pasien;
 use App\Models\ResepObat;
 use App\Models\RekamMedis;
@@ -39,12 +40,23 @@ class PendaftaranPasienController extends Controller
     {
         $pasien = Auth::user()->pasien;
 
-        // Ambil daftar hari yang tersedia dari tabel jadwal_dokter
-        $hariTersedia = JadwalDokter::pluck('hari')->toArray(); // Contoh: ['Senin', 'Rabu', 'Jumat']
+        // Ambil semua dokter
+        $dokter = Dokter::with('poli')->get();
 
-        // Ambil 7 hari ke depan yang cocok dengan hari tersedia
+        return view('role_pasien_layout.pendaftaran.create', [
+            'title' => 'Pendaftaran',
+            'pasien' => $pasien,
+            'dokter' => $dokter
+        ]);
+    }
+
+    public function getJadwalDokter(Dokter $dokter)
+    {
+        $hariTersedia = JadwalDokter::where('dokter_id', $dokter->id)
+            ->pluck('hari')
+            ->toArray();
+
         $opsiTanggal = [];
-
         for ($i = 0; $i < 7; $i++) {
             $tanggal = Carbon::now()->addDays($i);
             $namaHari = $tanggal->translatedFormat('l');
@@ -52,42 +64,63 @@ class PendaftaranPasienController extends Controller
             if (in_array($namaHari, $hariTersedia)) {
                 $opsiTanggal[] = [
                     'tanggal' => $tanggal->toDateString(),
-                    'label' => $namaHari . ', ' . $tanggal->translatedFormat('d F Y'),
+                    'label' => $namaHari . ', ' . $tanggal->translatedFormat('d F Y')
                 ];
             }
         }
 
-        return view('role_pasien_layout.pendaftaran.create', [
-            'title' => 'Pendaftaran',
-            'pasien' => $pasien,
-            'opsiTanggal' => $opsiTanggal
-        ]);
+        return response()->json($opsiTanggal);
     }
 
     public function store(Request $request)
     {
         $validatedData = $request->validate([
             'pasien_id'         => 'required|exists:pasien,id',
+            'dokter_id'         => 'required|exists:dokter,id',
             'tanggal_kunjungan' => 'required|date|after_or_equal:today',
             'keluhan'           => 'required|string|max:255',
+            'alergi_obat'       => 'nullable|string|max:255',
         ]);
-    
+
         try {
             $tanggalKunjungan = $validatedData['tanggal_kunjungan'];
-    
-            // Hitung jumlah antrean untuk tanggal tersebut
-            $jumlahAntrean = RekamMedis::whereDate('tanggal_kunjungan', $tanggalKunjungan)->count();
+
+            // Ambil dokter beserta poli
+            $dokter = Dokter::with('poli')->findOrFail($validatedData['dokter_id']);
+            $namaPoli = $dokter->poli->nama_poli ?? 'UM';
+
+            // Hitung jumlah antrean untuk dokter tersebut pada tanggal yang sama
+            $jumlahAntrean = RekamMedis::whereDate('tanggal_kunjungan', $tanggalKunjungan)
+                ->where('dokter_id', $dokter->id)
+                ->count();
             $nomorAntrean = str_pad($jumlahAntrean + 1, 2, '0', STR_PAD_LEFT);
-            $noAntrean = 'UM-' . $nomorAntrean;
-    
-            // Tambahkan ke data validasi
+
+            // Ambil inisial nama dokter dari 2 huruf terakhir nama belakang
+            $namaParts = explode(' ', $dokter->nama_dokter);
+            $namaBelakang = end($namaParts);
+            $inisialDokter = strtoupper(substr($namaBelakang, -2));
+
+            // Ambil inisial poli lebih deskriptif
+            $words = explode(' ', $namaPoli);
+            if (count($words) > 1) {
+                $inisialPoli = strtoupper(substr($words[1], 0, 4)); // kata kedua, 4 huruf
+            } else {
+                $inisialPoli = strtoupper(substr($words[0], 0, 3)); // kata pertama, 3 huruf
+            }
+
+            // Format no_antrean: <inisial_dokter>-<inisial_poli>-<nomor>
+            $noAntrean = $inisialDokter . '-' . $inisialPoli . '-' . $nomorAntrean;
+
+            // Tambahkan field otomatis
             $validatedData['no_antrean'] = $noAntrean;
-            $validatedData['status_kedatangan'] = 'Booking';
-    
+            $validatedData['status_kedatangan'] = 'Booking'; // selalu Booking
+            $validatedData['jam_datang'] = null; // kosong karena status Booking
+
             RekamMedis::create($validatedData);
-    
+
             Alert::success('Sukses!', 'Pendaftaran Berhasil Ditambah');
             return redirect()->route('pendaftaran_pasien.index');
+
         } catch (\Exception $e) {
             Log::error('Gagal menyimpan pendaftaran: ' . $e->getMessage());
             Alert::error('Error', 'Terjadi kesalahan saat menyimpan data');

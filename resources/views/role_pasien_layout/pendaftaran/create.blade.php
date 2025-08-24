@@ -43,25 +43,25 @@
                     @enderror
                 </div>
 
+                {{-- Dokter --}}
+                <div class="form-group mb-3">
+                    <label for="dokter_id" class="form-label"><b>Dokter</b><span class="text-danger">*</span></label>
+                    <select name="dokter_id" id="dokter_id" class="form-control" required>
+                        <option value="">-- Pilih Dokter --</option>
+                        @foreach ($dokter as $item)
+                            <option value="{{ $item->id }}">{{ $item->nama_dokter }} -
+                                {{ $item->poli->nama_poli }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- Jadwal Dokter --}}
                 <div class="form-group mb-3">
                     <label for="tanggal_kunjungan" class="form-label"><b>Tanggal Kunjungan</b><span
                             class="text-danger">*</span></label>
-                    <select name="tanggal_kunjungan" id="tanggal_kunjungan"
-                        class="form-control @error('tanggal_kunjungan') is-invalid @enderror">
-
-                        @forelse ($opsiTanggal as $item)
-                            <option value="{{ $item['tanggal'] }}"
-                                {{ old('tanggal_kunjungan') == $item['tanggal'] ? 'selected' : '' }}>
-                                {{ $item['label'] }}
-                            </option>
-                        @empty
-                            <option disabled>Jadwal belum tersedia</option>
-                        @endforelse
-
+                    <select name="tanggal_kunjungan" id="tanggal_kunjungan" class="form-control" required>
+                        <option value="">-- Pilih Tanggal --</option>
                     </select>
-                    @error('tanggal_kunjungan')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="form-group mb-3">
@@ -73,6 +73,17 @@
                     @enderror
                 </div>
 
+                {{-- Alergi Obat --}}
+                <div class="form-group mb-3">
+                    <label for="alergi_obat" class="form-label"><b>Alergi Obat</b></label>
+                    <textarea name="alergi_obat" id="alergi_obat" class="form-control @error('alergi_obat') is-invalid @enderror"
+                        rows="2" placeholder="Alergi obat...">{{ old('alergi_obat') }}</textarea>
+                    @error('alergi_obat')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+
                 {{-- Tombol Submit --}}
                 <div class="text-end">
                     <button type="submit" class="btn btn-primary">Simpan</button>
@@ -80,5 +91,56 @@
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dokterSelect = document.getElementById('dokter_id');
+            const tanggalSelect = document.getElementById('tanggal_kunjungan');
+
+            dokterSelect.addEventListener('change', function() {
+                const dokterId = this.value;
+
+                if (!dokterId) {
+                    tanggalSelect.innerHTML = '<option value="">-- Pilih Tanggal --</option>';
+                    return;
+                }
+
+                // SweetAlert loading
+                Swal.fire({
+                    title: 'Memuat jadwal dokter...',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+
+                // Fetch jadwal dokter sesuai route prefix 'pasien'
+                fetch("{{ url('pasien/dokter') }}/" + dokterId + "/jadwal")
+                    .then(res => res.json())
+                    .then(data => {
+                        tanggalSelect.innerHTML = '';
+                        if (data.length > 0) {
+                            data.forEach(item => {
+                                const opt = document.createElement('option');
+                                opt.value = item.tanggal;
+                                opt.textContent = item.label; // bisa 'Hari, dd M Y'
+                                tanggalSelect.appendChild(opt);
+                            });
+                        } else {
+                            const opt = document.createElement('option');
+                            opt.value = '';
+                            opt.textContent = 'Jadwal belum tersedia';
+                            opt.disabled = true;
+                            tanggalSelect.appendChild(opt);
+                        }
+                    })
+                    .catch(err => {
+                        Swal.fire('Error', 'Gagal mengambil jadwal dokter', 'error');
+                    })
+                    .finally(() => {
+                        Swal.close(); // Tutup loading
+                    });
+            });
+        });
+    </script>
+
 
 </x-layout>
