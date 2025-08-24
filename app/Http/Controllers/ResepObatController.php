@@ -8,6 +8,7 @@ use App\Models\ResepObat;
 use App\Models\ObatKeluar;
 use App\Models\RekamMedis;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -39,6 +40,32 @@ class ResepObatController extends Controller
             'obatTersimpan' => $obatTersimpan,
             'from' => 'rekam_medis'
         ]);
+    }
+
+    public function cetakSuratRujukan(Request $request, $id)
+    {
+        $rekam_medis = RekamMedis::with(['pasien', 'dokter'])->findOrFail($id);
+
+        // Ambil tujuan dari input user
+        $tujuan = $request->input('tujuan', '...................');
+
+        // Hitung jumlah surat yang sudah dibuat tahun ini
+        $count = RekamMedis::where('surat_rujukan', true)
+                    ->whereYear('created_at', date('Y'))
+                    ->count() + 1;
+
+        // Format nomor surat
+        $nomorSurat = sprintf("%03d/SR/%02d/%s", $count, date('m'), date('Y'));
+
+        // Tandai bahwa rekam medis ini sudah pernah dibuatkan surat rujukan
+        $rekam_medis->surat_rujukan = true;
+        $rekam_medis->save();
+
+        // Kirim ke view PDF
+        $pdf = Pdf::loadView('pdf.surat_rujukan', compact('rekam_medis', 'tujuan', 'nomorSurat'))
+            ->setPaper('A4', 'portrait');
+
+        return $pdf->stream('surat_rujukan_' . $rekam_medis->pasien->nama_lengkap . '.pdf');
     }
 
     public function store(Request $request, RekamMedis $rekam_medis)
@@ -123,6 +150,7 @@ class ResepObatController extends Controller
             'rekam_medis_id' => 'required|exists:rekam_medis,id',
             'keluhan'        => 'nullable|string|max:255',
             'diagnosis'      => 'nullable|string|max:255',
+            'alergi_obat'    => 'nullable|string|max:255',
             'tindakan'       => 'nullable|string|max:255',
         ]);
     
@@ -131,6 +159,7 @@ class ResepObatController extends Controller
                 ->update([
                     'keluhan' => $validatedData['keluhan'],
                     'diagnosis' => $validatedData['diagnosis'],
+                    'alergi_obat' => $validatedData['alergi_obat'],
                     'tindakan' => $validatedData['tindakan'],
                 ]);
     

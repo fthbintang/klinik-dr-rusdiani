@@ -66,6 +66,9 @@ Route::prefix('dashboard')->middleware(['auth', 'role:Admin,Dokter,Apotek'])->gr
     Route::post('/pasien/rekam_medis/resep_obat/{rekam_medis}/proses-apotek', [ResepObatController::class, 'proses_apotek'])->name('resep_obat.proses_apotek');
     Route::delete('/pasien/rekam_medis/resep_obat/{resep_obat}/delete', [ResepObatController::class, 'destroy'])->name('resep_obat.destroy');
 
+    Route::get('/pasien/rekam_medis/resep_obat/{id}/rujukan', [ResepObatController::class, 'cetakSuratRujukan'])->name('resep.cetakRujukan');
+
+
     // TRANSAKSI
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
     Route::get('/transaksi/create', [TransaksiController::class, 'create'])->name('transaksi.create');

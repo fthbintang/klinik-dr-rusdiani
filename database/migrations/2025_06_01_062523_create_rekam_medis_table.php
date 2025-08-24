@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('rekam_medis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pasien_id')->constrained('pasien')->onDelete('cascade');
+            $table->foreignId('dokter_id')->constrained('dokter')->onDelete('cascade');
             $table->integer('berat_badan')->nullable();
             $table->string('tensi')->nullable();
             $table->string('no_antrean');
@@ -23,8 +24,10 @@ return new class extends Migration
             $table->time('jam_diperiksa')->nullable();
             $table->time('jam_selesai')->nullable();
             $table->text('keluhan')->nullable();
+            $table->text('alergi_obat')->nullable();
             $table->text('diagnosis')->nullable();
             $table->text('tindakan')->nullable();
+            $table->boolean('surat_rujukan')->nullable()->default(false);
             $table->boolean('disetujui_dokter')->nullable()->default(false);
             $table->integer('biaya_jasa')->nullable();
             $table->integer('biaya_total')->nullable();
