@@ -21,6 +21,11 @@ class RekamMedis extends Model
         return $this->belongsTo(Pasien::class);
     }
 
+    public function dokter(): BelongsTo
+    {
+        return $this->belongsTo(Dokter::class);
+    }
+
     public function resep_obat(): HasMany
     {
         return $this->hasMany(ResepObat::class);

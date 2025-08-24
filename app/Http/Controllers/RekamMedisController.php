@@ -11,7 +11,7 @@ class RekamMedisController extends Controller
 {
     public function index(Pasien $pasien)
     {
-        $rekam_medis = RekamMedis::with('pasien.user')
+        $rekam_medis = RekamMedis::with(['pasien.user', 'dokter.poli'])
             ->where('pasien_id', $pasien->id)
             ->orderBy('tanggal_kunjungan', 'desc')
             ->get();

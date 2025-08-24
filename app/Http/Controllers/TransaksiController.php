@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Models\Dokter;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class TransaksiController extends Controller
@@ -49,7 +50,8 @@ class TransaksiController extends Controller
     {
         return view('transaksi.create', [
             'title' => 'Tambah Transaksi',
-            'pasien' => Pasien::all()
+            'pasien' => Pasien::all(),
+            'dokter' => Dokter::all()
         ]);
     }
 
@@ -58,10 +60,12 @@ class TransaksiController extends Controller
         $validatedData = $request->validate([
             'tanggal_kunjungan'  => 'required|date|after_or_equal:today',
             'pasien_id'          => 'required|exists:pasien,id',
+            'dokter_id'          => 'required|exists:dokter,id',
             'keluhan'            => 'required|string|max:255',
+            'alergi_obat'        => 'nullable|string|max:255',
             'biaya_jasa'         => 'required|string',
-            'berat_badan'        => 'nullable|numeric|min:0|max:300', // tambahkan validasi berat badan
-            'tensi'              => 'nullable|string|max:20',         // tambahkan validasi tensi
+            'berat_badan'        => 'nullable|numeric|min:0|max:300',
+            'tensi'              => 'nullable|string|max:20'
         ]);
 
         try {
@@ -71,10 +75,32 @@ class TransaksiController extends Controller
             $tanggalKunjungan = $validatedData['tanggal_kunjungan'];
             $isToday = $tanggalKunjungan === now()->toDateString();
 
-            // Hitung jumlah antrean berdasarkan tanggal kunjungan
-            $jumlahAntrean = RekamMedis::whereDate('tanggal_kunjungan', $tanggalKunjungan)->count();
+            // Ambil dokter beserta poli
+            $dokter = Dokter::with('poli')->findOrFail($validatedData['dokter_id']);
+            $namaPoli = $dokter->poli->nama_poli ?? 'UM';
+
+            // Hitung jumlah antrean untuk dokter tersebut pada tanggal yang sama
+            $jumlahAntrean = RekamMedis::whereDate('tanggal_kunjungan', $tanggalKunjungan)
+                ->where('dokter_id', $dokter->id)
+                ->count();
+
             $nomorAntrean = str_pad($jumlahAntrean + 1, 2, '0', STR_PAD_LEFT);
-            $noAntrean = 'UM-' . $nomorAntrean;
+
+            // Ambil inisial nama dokter dari 2 huruf terakhir nama belakang
+            $namaParts = explode(' ', $dokter->nama_dokter);
+            $namaBelakang = end($namaParts);
+            $inisialDokter = strtoupper(substr($namaBelakang, -2));
+
+            // Ambil inisial poli lebih deskriptif
+            $words = explode(' ', $namaPoli);
+            if (count($words) > 1) {
+                $inisialPoli = strtoupper(substr($words[1], 0, 4)); // ambil kata kedua 4 huruf pertama
+            } else {
+                $inisialPoli = strtoupper(substr($words[0], 0, 3)); // ambil 3 huruf pertama
+            }
+
+            // Format no_antrean: <inisial_dokter>-<inisial_poli>-<nomor>
+            $noAntrean = $inisialDokter . '-' . $inisialPoli . '-' . $nomorAntrean;
 
             // Tambahan field otomatis
             $validatedData['no_antrean'] = $noAntrean;

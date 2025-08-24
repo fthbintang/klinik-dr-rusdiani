@@ -74,6 +74,23 @@
                     @enderror
                 </div>
 
+                <div class="form-group mb-3">
+                    <label for="dokter_id" class="form-label"><b>Pilih Dokter</b><span
+                            class="text-danger">*</span></label>
+                    <select name="dokter_id" id="dokter_id"
+                        class="form-select @error('dokter_id') is-invalid @enderror">
+                        <option value="">-- Pilih Dokter --</option>
+                        @foreach ($dokter as $item)
+                            <option value="{{ $item->id }}" {{ old('dokter_id') == $item->id ? 'selected' : '' }}>
+                                {{ $item->nama_dokter }} ({{ $item->poli->nama_poli ?? '-' }})
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('dokter_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <div class="form-group mb-3" id="form-berat-badan" style="display: none;">
                     <label for="berat_badan" class="form-label"><b>Berat Badan (kg)</b></label>
                     <input type="number" step="0.1" name="berat_badan" id="berat_badan" class="form-control"
@@ -91,6 +108,15 @@
                     <textarea name="keluhan" id="keluhan" class="form-control @error('keluhan') is-invalid @enderror" rows="3"
                         placeholder="Keluhan...">{{ old('keluhan') }}</textarea>
                     @error('keluhan')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="alergi_obat" class="form-label"><b>Alergi Obat</b></label>
+                    <textarea name="alergi_obat" id="alergi_obat" class="form-control @error('alergi_obat') is-invalid @enderror"
+                        rows="2" placeholder="Contoh: Paracetamol, Amoxicillin">{{ old('alergi_obat') }}</textarea>
+                    @error('alergi_obat')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
