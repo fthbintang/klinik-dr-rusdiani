@@ -27,7 +27,7 @@ return new class extends Migration
             $table->text('alergi_obat')->nullable();
             $table->text('diagnosis')->nullable();
             $table->text('tindakan')->nullable();
-            $table->string('surat_rujukan')->nullable();
+            $table->boolean('surat_rujukan')->nullable()->default(false);
             $table->boolean('disetujui_dokter')->nullable()->default(false);
             $table->integer('biaya_jasa')->nullable();
             $table->integer('biaya_total')->nullable();
