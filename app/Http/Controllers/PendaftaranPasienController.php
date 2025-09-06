@@ -12,7 +12,9 @@ use App\Models\JadwalDokter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Mail\SendEmailDaftarPasien;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PendaftaranPasienController extends Controller
@@ -25,10 +27,10 @@ class PendaftaranPasienController extends Controller
         if (!$user->pasien) {
             abort(403, 'Halaman ini hanya untuk pasien.');
         }
-        
+
         $pasien = $user->pasien;
         $rekam_medis = RekamMedis::with('pasien')->where('pasien_id', $pasien->id)->latest()->get();
-        
+
         return view('role_pasien_layout.pendaftaran.index', [
             'title' => 'Pendaftaran Pasien',
             'rekam_medis' => $rekam_medis,
@@ -119,11 +121,17 @@ class PendaftaranPasienController extends Controller
             RekamMedis::create($validatedData);
 
             Alert::success('Sukses!', 'Pendaftaran Berhasil Ditambah');
-            return redirect()->route('pendaftaran_pasien.index');
 
+            $pasien = Pasien::where('id', $validatedData['pasien_id'])->first();
+
+            // dd($validatedData);
+
+            Mail::to('arianur098@gmail.com')->send(new SendEmailDaftarPasien($pasien, $validatedData));
+
+            return redirect()->route('pendaftaran_pasien.index');
         } catch (\Exception $e) {
             Log::error('Gagal menyimpan pendaftaran: ' . $e->getMessage());
-            Alert::error('Error', 'Terjadi kesalahan saat menyimpan data');
+            Alert::error('Error', $e->getMessage());
             return back()->withInput();
         }
     }
@@ -153,5 +161,4 @@ class PendaftaranPasienController extends Controller
             'from' => 'pendaftaran_pasien'
         ]);
     }
-    
 }
