@@ -66,6 +66,7 @@ class DokterController extends Controller
 
             // Data untuk tabel users
             'no_hp'          => 'nullable|string|max:20',
+            'email'          => 'required|email',
             'username'       => 'required|string|max:50|unique:users,username',
             'password'       => 'required|string|min:6',
         ]);
@@ -90,6 +91,7 @@ class DokterController extends Controller
                 'tanggal_lahir' => $validatedData['tanggal_lahir'] ?? null,
                 'no_hp'         => $validatedData['no_hp'],
                 'alamat'        => $validatedData['alamat'] ?? null,
+                'email'         => $validatedData['email'],
                 'foto'          => null,
                 'role'          => 'Dokter',
                 'username'      => $validatedData['username'],

@@ -34,6 +34,8 @@
 
                 <input type="hidden" name="pasien_id" value="{{ $pasien->id }}" readonly>
 
+                <input type="hidden" name="email" value="{{ auth()->user()->email }}" readonly>
+
                 <div class="form-group mb-3">
                     <label for="nama" class="form-label"><b>Nama</b></label>
                     <input type="text" id="nama" class="form-control" value="{{ $pasien->nama_lengkap }}"

@@ -90,6 +90,17 @@
                         @enderror
                     </div>
 
+                    {{-- Email --}}
+                    <div class="form-group mb-3">
+                        <label for="email" class="form-label"><b>Email</b><span class="text-danger">*</span></label>
+                        <input type="text" name="email" id="email"
+                            class="form-control @error('email') is-invalid @enderror" value="{{ $user->email }}"
+                            readonly>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     {{-- Alamat --}}
                     <div class="form-group">
                         <label for="alamat"><b>Alamat</b></label>
@@ -120,7 +131,8 @@
 
                     {{-- Role --}}
                     <div class="form-group mb-3">
-                        <label for="role" class="form-label"><b>Role</b><span class="text-danger">*</span></label>
+                        <label for="role" class="form-label"><b>Role</b><span
+                                class="text-danger">*</span></label>
                         <input type="text" name="role" id="role"
                             class="form-control @error('role') is-invalid @enderror" value="{{ $user->role }}"
                             readonly>

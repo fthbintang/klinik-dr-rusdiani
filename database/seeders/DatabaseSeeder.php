@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         // Dokter::factory(3)->create();
         Supplier::factory(5)->create();
         Obat::factory(10)->create();
-        Pasien::factory(20)->create();
+        Pasien::factory(10)->create();
         // RekamMedis::factory(30)->create();
         // ResepObat::factory(30)->create();
         // PenjualanObat::factory(20)->create();
@@ -38,18 +38,9 @@ class DatabaseSeeder extends Seeder
             'role' => 'Admin',
             'alamat' => 'Banjarmasin',
             'username' => 'admin',
+            'email' => 'yuri@gmail.com',
             'password' => bcrypt('admin')
         ]);
-
-        // User::create([
-        //     'nama_lengkap' => 'Pasien',
-        //     'nama_panggilan' => 'pasien',
-        //     'jenis_kelamin' => 'Laki-laki',
-        //     'role' => 'Pasien',
-        //     'alamat' => 'Banjarmasin',
-        //     'username' => 'pasien',
-        //     'password' => bcrypt('pasien')
-        // ]);
 
         // Buat user terlebih dahulu
         $user = User::create([
@@ -59,6 +50,7 @@ class DatabaseSeeder extends Seeder
             'role'           => 'Pasien',
             'alamat'         => 'Banjarmasin',
             'username'       => 'pasien',
+            'email'          => 'pasien@gmail.com',
             'password'       => bcrypt('pasien')
         ]);
 
@@ -109,6 +101,7 @@ class DatabaseSeeder extends Seeder
             'role' => 'Apotek',
             'alamat' => 'Banjarmasin',
             'username' => 'apotek',
+            'email' => 'apotek@gmail.com',
             'password' => bcrypt('apotek')
         ]);
     }

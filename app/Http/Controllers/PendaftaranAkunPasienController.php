@@ -24,10 +24,11 @@ class PendaftaranAkunPasienController extends Controller
             'nama_panggilan'   => 'required|string|max:255',
             'jenis_kelamin'    => 'required|in:Laki-laki,Perempuan',
             'tanggal_lahir'    => 'required|date',
-            'no_hp'            => 'nullable|string|max:20',
-            'alamat'           => 'nullable|string|max:255',
+            'no_hp'            => 'required|string|max:20',
+            'alamat'           => 'required|string|max:255',
             'role'             => 'required|string|max:255',
             'username'         => 'required|string|max:255|unique:users,username',
+            'email'            => 'required|string|email|max:255|unique:users,email',
             'password'         => 'required|string|min:6',
             'foto'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:512',
         ]);
@@ -37,7 +38,18 @@ class PendaftaranAkunPasienController extends Controller
             $validatedData['password'] = bcrypt($validatedData['password']);
 
             // Simpan user dulu
-            $user = User::create($validatedData);
+            $user = User::create([
+                'nama_lengkap' => $validatedData['nama_lengkap'],
+                'nama_panggilan' => $validatedData['nama_panggilan'],
+                'jenis_kelamin' => $validatedData['jenis_kelamin'],
+                'tanggal_lahir' => $validatedData['tanggal_lahir'],
+                'no_hp' => $validatedData['no_hp'],
+                'alamat' => $validatedData['alamat'],
+                'role' => $validatedData['role'],
+                'username' => $validatedData['username'],
+                'email' => $validatedData['email'],
+                'password' => $validatedData['password'],
+            ]);
 
             // Jika ada foto, simpan ke storage
             if ($request->hasFile('foto')) {
@@ -79,4 +91,5 @@ class PendaftaranAkunPasienController extends Controller
             return back()->withInput()->with('error', 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.');
         }
     }
+
 }
