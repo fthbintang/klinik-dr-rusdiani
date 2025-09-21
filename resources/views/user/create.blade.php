@@ -112,6 +112,18 @@
                         </div>
                     </div>
                     <div class="col-md-6">
+                        {{-- Email --}}
+                        <div class="mb-3">
+                            <label for="email" class="form-label"><b>Email</b><span
+                                    class="text-danger">*</span></label>
+                            <input type="email" name="email"
+                                class="form-control @error('email') is-invalid @enderror"
+                                placeholder="Masukkan Email..." value="{{ old('email') }}" required>
+                            @error('email')
+                                <div class="text-error">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         {{-- Foto --}}
                         <div class="form-group mb-3">
                             <label for="foto" class="form-label"><b>Foto</b></label>

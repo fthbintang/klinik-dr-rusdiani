@@ -129,6 +129,15 @@
             </div>
 
             <div class="mb-3">
+                <label class="form-label">Email<span class="text-danger">*</span></label>
+                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                    placeholder="Masukkan Email..." value="{{ old('email') }}" required>
+                @error('email')
+                    <div class="text-error">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
                 <label class="form-label">No. HP<span class="text-danger">*</span></label>
                 <input type="text" name="no_hp" class="form-control @error('no_hp') is-invalid @enderror"
                     placeholder="Masukkan nomor HP aktif" value="{{ old('no_hp') }}">
@@ -160,8 +169,9 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label class="form-label">Username<span class="text-danger">*</span></label>
-                    <input type="text" name="username" class="form-control @error('username') is-invalid @enderror"
-                        required placeholder="Buat username" value="{{ old('username') }}">
+                    <input type="text" name="username"
+                        class="form-control @error('username') is-invalid @enderror" required
+                        placeholder="Buat username" value="{{ old('username') }}">
                     @error('username')
                         <div class="text-error">{{ $message }}</div>
                     @enderror

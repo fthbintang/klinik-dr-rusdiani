@@ -36,6 +36,7 @@ class UserFactory extends Factory
             'foto' => null,
             'role' => $this->faker->randomElement(['Dokter', 'Admin', 'Apotek', 'Pasien']),
             'username' => $this->faker->unique()->userName(),
+            'email'          => $this->faker->unique()->safeEmail(),
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
         ];

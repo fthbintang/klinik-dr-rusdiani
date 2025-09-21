@@ -46,6 +46,7 @@ class UserController extends Controller
             'alamat'           => 'nullable|string|max:255',
             'role'             => 'required|string|max:255',
             'username'         => 'required|string|max:255|unique:users,username',
+            'email'             => 'required|email',
             'password'         => 'required|string|min:6',
             'foto'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:512',
         ]);
@@ -116,6 +117,7 @@ class UserController extends Controller
             'alamat'           => 'nullable|string|max:255',
             'role'             => 'required|string|max:255',
             'username'         => 'required|string|max:255|unique:users,username,' . $user->id,
+            'email'             => 'required|email',
             'password'         => 'nullable|string|min:6',
             'foto'             => 'nullable|image|mimes:jpeg,png,jpg,gif|max:512',
         ]);

@@ -115,6 +115,17 @@
                         </div>
                     </div>
                     <div class="col-md-6">
+                        {{-- No STR --}}
+                        <div class="form-group mb-3">
+                            <label for="email" class="form-label"><b>Email</b></label>
+                            <input type="email" name="email" id="email"
+                                class="form-control @error('email') is-invalid @enderror" placeholder="Email..."
+                                value="{{ old('email', $user->email) }}" required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         {{-- Foto --}}
                         <div class="form-group mb-3">
                             <label for="foto" class="form-label"><b>Foto</b></label>

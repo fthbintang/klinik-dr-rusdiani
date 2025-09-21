@@ -47,6 +47,7 @@ class PasienController extends Controller
             'no_hp'              => 'required|string|max:20',
             'tempat_lahir'       => 'required|string|max:100',
             'tanggal_lahir'      => 'required|date',
+            'email'              => 'required|email',
             'alamat'             => 'nullable|string|max:255',
             'pekerjaan'          => 'nullable|string|max:100',
             'status_perkawinan'  => 'nullable|in:Belum Menikah,Menikah,Cerai',
@@ -80,6 +81,7 @@ class PasienController extends Controller
             $user->nama_panggilan   = $validatedData['nama_panggilan'];
             $user->jenis_kelamin    = $validatedData['jenis_kelamin'];
             $user->tanggal_lahir    = $validatedData['tanggal_lahir'];
+            $user->email            = $validatedData['email'];
             $user->no_hp            = $validatedData['no_hp'] ?? null;
             $user->alamat           = $validatedData['alamat'] ?? null;
             $user->username         = $validatedData['nik'];
@@ -158,6 +160,7 @@ class PasienController extends Controller
             'no_hp'              => 'required|string|max:20',
             'tempat_lahir'       => 'required|string|max:100',
             'tanggal_lahir'      => 'required|date',
+            'email'              => 'required|email',
             'alamat'             => 'nullable|string|max:255',
             'pekerjaan'          => 'nullable|string|max:100',
             'status_perkawinan'  => 'nullable|in:Belum Menikah,Menikah,Cerai',
@@ -178,6 +181,7 @@ class PasienController extends Controller
                 $user->nama_panggilan   = $validatedData['nama_panggilan'];
                 $user->jenis_kelamin    = $validatedData['jenis_kelamin'];
                 $user->tanggal_lahir    = $validatedData['tanggal_lahir'];
+                $user->email            = $validatedData['email'];
                 $user->no_hp            = $validatedData['no_hp'] ?? null;
                 $user->alamat           = $validatedData['alamat'] ?? null;
     
